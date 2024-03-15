@@ -1,0 +1,42 @@
+---
+title: "Lecture 05"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+install.packages("pacman")
+
+```
+
+```{r}
+#library(pacman)
+pacman::p_load(ggplot2, tidyverse)
+?trees
+
+head(trees)
+```
+
+```{r}
+# estimate linear model
+lm1 <- lm(Volume ~ Girth, data=trees)
+summary(lm1)
+
+```
+
+```{r}
+# make prediction
+# pdf("scatter1.pdf", width=5, height=4)
+par(mar=c(4.5, 4.5, 2, 2))
+plot(Volume ~ Girth, xlab='Diameter (in)', 
+     ylab = 'Volume (ft^3)', data=trees, cex=0.9)
+abline(lm1, lwd=1.5)
+pred0 = predict(lm1, newdata=data.frame(Girth=17))
+abline(v=17, col='blue', lty=2, lwd=1.5)
+abline(h=pred0, col='blue', lty=2, lwd=1.5)
+text(18, 20, "x*=17", cex=0.9)
+text(9.5, 53, expression(paste(hat(y), textstyle("*")) == 49.2), cex=0.9)
+text(20, 69, expression(hat(y)))
+```

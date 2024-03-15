@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ben Lawrence">
+
+<title>HW2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="HW2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="HW2_files/libs/quarto-html/quarto.js"></script>
+<script src="HW2_files/libs/quarto-html/popper.min.js"></script>
+<script src="HW2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="HW2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="HW2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="HW2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="HW2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="HW2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="HW2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">HW2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ben Lawrence </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="hw2" class="level2">
+<h2 class="anchored" data-anchor-id="hw2">HW2</h2>
+<section id="exercise-1" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1">Exercise 1</h3>
+<section id="a-what-are-the-assumptions-for-the-simple-linear-regression-model-describe-at-least-two-diagnostics-that-are-commonly-used-to-check-these-assumptions." class="level4">
+<h4 class="anchored" data-anchor-id="a-what-are-the-assumptions-for-the-simple-linear-regression-model-describe-at-least-two-diagnostics-that-are-commonly-used-to-check-these-assumptions.">(a) What are the assumptions for the simple linear regression model? Describe at least two diagnostics that are commonly used to check these assumptions.</h4>
+<ol type="1">
+<li><span class="math inline">\(Y\)</span> is related to <span class="math inline">\(x\)</span> by the linear regression model <span class="math inline">\(Y_i=\beta_0+\beta_1x_i+e_i\)</span> and <span class="math inline">\(E(Y| X=x_i)=\beta_0+\beta_1x_i\)</span></li>
+<li>The residuals <span class="math inline">\(e_1,e_2,\dots,e_n\)</span> are independent of each other.</li>
+<li>The residuals have a common variance of <span class="math inline">\(\sigma^2\)</span>.</li>
+<li>The residuals are normally distributed with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(\sigma^2\)</span>. I.e., <span class="math inline">\(e |X\sim N(0,\sigma^2)\)</span></li>
+</ol>
+<p>One diagnostic is to simply observe a scatter plot of <span class="math inline">\((x_i,y_i)\)</span> . If the points do not appear subjectively linear, then it is likely inappropriate to use simple linear regression to model the data. There may be too much variance unexplained by the model. This can also be checked by observing the <span class="math inline">\(R^2\)</span> value and determining if it is close enough to <span class="math inline">\(1\)</span> .</p>
+<p>Another diagnostic is to examine the assumption of constant variance. If there are high leverage points in the data, it may be that the residuals do not have a constant variance. To further investigate whether these points call into question the appropriateness of a linear model, we may standardize the residuals based on the standard error of the sample and plot the standardized residuals vs.&nbsp;their fitted values. If there is a pattern in the residuals (such as a funnel), this suggests our assumption of constant variance may not be valid.</p>
+</section>
+<section id="b-what-does-it-mean-for-a-point-to-be-an-outlier-for-simple-linear-regression-what-rule-is-commonly-used-to-classify-points-as-outliers" class="level4">
+<h4 class="anchored" data-anchor-id="b-what-does-it-mean-for-a-point-to-be-an-outlier-for-simple-linear-regression-what-rule-is-commonly-used-to-classify-points-as-outliers">(b) What does it mean for a point to be an outlier? For simple linear regression, what rule is commonly used to classify points as outliers?</h4>
+<p>A point is an outlier if it does not follow the pattern set by the majority of the data. A rule of thumb is if a point has a standardized residual that is outside the interval <span class="math inline">\([-2,2]\)</span> , then the point is an outlier. For large data sets the interval may be expanded to <span class="math inline">\([-4,4]\)</span>. There is no objective reason for these exact intervals, they are simply common rules meant to identify potential outliers and motivate further tests of assumed constant variance in the model.</p>
+</section>
+<section id="c-what-does-it-mean-for-a-point-to-have-high-leverage-for-simple-linear-regression-what-rule-is-commonly-used-to-classify-points-of-high-leverage" class="level4">
+<h4 class="anchored" data-anchor-id="c-what-does-it-mean-for-a-point-to-have-high-leverage-for-simple-linear-regression-what-rule-is-commonly-used-to-classify-points-of-high-leverage">(c) What does it mean for a point to have high leverage? For simple linear regression, what rule is commonly used to classify points of high leverage?</h4>
+<p>If a point has high leverage, it’s x value is far from <span class="math inline">\(\bar x\)</span>, that is, far from the mean or cluster of x values for the majority of the data. A popular rule is to classify a point <span class="math inline">\(x_i\)</span> as a point of high leverage if</p>
+<p><span class="math display">\[
+h_i&gt;2\times average(h_i)=2\times \frac{2}{n}=\frac{4}{n}
+\]</span></p>
+</section>
+<section id="d-for-simple-linear-regression-what-are-the-formulas-for-the-error-epsilon_i-residual-hat-e_i-and-standardized-residual-r_i-what-is-varepsilon_i-and-varhat-e_i-describe-two-reasons-why-it-is-useful-to-look-at-a-plot-of-the-standardized-residuals-versus-the-fitted-values." class="level4">
+<h4 class="anchored" data-anchor-id="d-for-simple-linear-regression-what-are-the-formulas-for-the-error-epsilon_i-residual-hat-e_i-and-standardized-residual-r_i-what-is-varepsilon_i-and-varhat-e_i-describe-two-reasons-why-it-is-useful-to-look-at-a-plot-of-the-standardized-residuals-versus-the-fitted-values.">(d) For simple linear regression what are the formulas for the error <span class="math inline">\(\epsilon_i\)</span>, residual, <span class="math inline">\(\hat e_i\)</span>, and standardized residual, <span class="math inline">\(r_i\)</span>? What is <span class="math inline">\(Var(\epsilon_i)\)</span> and <span class="math inline">\(Var(\hat e_i)\)</span> ? Describe two reasons why it is useful to look at a plot of the standardized residuals versus the fitted values.</h4>
+<p>Error:</p>
+<p><span class="math display">\[
+\epsilon_i=y_i-\beta_0-\beta_1x_i
+\]</span></p>
+<p>Residual:</p>
+<p><span class="math display">\[
+\hat e_i=\hat y_i-\hat\beta_0-\hat\beta_1x_i
+\]</span></p>
+<p>Standardized Residual:</p>
+<p><span class="math inline">\(r_i=\frac{\hat e_i}{\hat\sigma\sqrt{1-h_i}}\)</span>, where <span class="math inline">\(\hat\sigma=\sqrt{\frac{1}{n-2}\sum_{j=1}^n\hat e_j^2}\)</span></p>
+<p>The respective variances are as follows:</p>
+<p><span class="math display">\[
+Var(\epsilon_i)=\sigma^2
+\]</span></p>
+<p><span class="math display">\[
+Var(\hat e_i)=\sigma^2[1-h_i]
+\]</span> The first reason it is useful to look at a plot of standardized residuals is because it allows you observe how close the respective variances of the residuals are based on a single reference. If we were to look at a plot of nonstandardized residuals they would include high leverage points (if they exist). These points heavily skew the trendline and may minimize the nonstandardized residual. When we take the leverage into account through standardizing we can better visualize the size of the variances of high leverage points.</p>
+<p>The second reason is similar to why it is useful to use a standard normal distribution instead of a raw normal distribution. By dividing the residuals by the estimate of the population variance we may see how many standard deviations each residual’s variance is from its predicted value. This gives us an easy metric to use when evaluating the residual variances.</p>
+</section>
+</section>
+<section id="exercise-2-mark-the-following-as-either-true-or-false.-provide-a-brief-explanation-if-you-marked-the-answer-as-false." class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-mark-the-following-as-either-true-or-false.-provide-a-brief-explanation-if-you-marked-the-answer-as-false.">Exercise 2: Mark the following as either True or False. Provide a brief explanation if you marked the answer as False.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Cars <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"used_cars.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Cars<span class="sc">$</span>clean_price <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">gsub</span>(<span class="st">"[</span><span class="sc">\\</span><span class="st">$,]"</span>, <span class="st">""</span>, Cars<span class="sc">$</span>price))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+</div>
+</div>
+<p>(a) A plot of the residuals versus fitted values is especially useful for checking the assumptions linearity and constant variance.</p>
+</section>
+<section id="true" class="level3">
+<h3 class="anchored" data-anchor-id="true">True</h3>
+<p>(b) The log transformations is most commonly used to stablilize the variance for count data.</p>
+</section>
+<section id="true-1" class="level3">
+<h3 class="anchored" data-anchor-id="true-1">True</h3>
+<p>(c) When considering transformations for a simple linear regression model, it is always necessary to transform both the predictor and response variable.</p>
+</section>
+<section id="false" class="level3">
+<h3 class="anchored" data-anchor-id="false">False</h3>
+<p>Take, as a counter example, a model where we select the response variable to be the sales price of a car and the predictor variable to be the car’s model year. (Data obtained from Kaggle: <a href="https://www.kaggle.com/datasets/taeefnajib/used-car-price-prediction-dataset"><strong>LINK</strong></a>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Cars <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"used_cars_updated.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Year <span class="ot">=</span> Cars<span class="sc">$</span>model_year</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Price <span class="ot">=</span> Cars<span class="sc">$</span>price_int</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we plot the Model Year vs.&nbsp;the Sales Price we observe the following</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">=</span> <span class="fu">lm</span>(Price <span class="sc">~</span> Year, <span class="at">data=</span>Cars)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Year, Price, <span class="at">main=</span><span class="st">"Sales Price of Car vs. Model Year"</span>, <span class="at">xlab=</span><span class="st">"Year"</span>,<span class="at">ylab=</span><span class="st">"USD"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm1,<span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The relationship between the Sales Price and Model Year is visually nonlinear and if we look at a summary of the linear model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Price ~ Year, data = Cars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+ -42960  -22438  -13289    2696 2936577 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -5139644.5   402272.6  -12.78   &lt;2e-16 ***
+Year            2572.1      199.6   12.89   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 77140 on 4007 degrees of freedom
+Multiple R-squared:  0.0398,    Adjusted R-squared:  0.03956 
+F-statistic: 166.1 on 1 and 4007 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>we observe that the <span class="math inline">\(R^2\)</span> value is near <span class="math inline">\(0\)</span>, implying almost non of the sample variance is explained by the model. This is a case where transforming one or both of the variables could help stabilize error variance. If we transform the Sales Price variable we find that</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>log_Price <span class="ot">=</span> <span class="fu">log</span>(Price)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">=</span> <span class="fu">lm</span>(log_Price <span class="sc">~</span> Year, <span class="at">data=</span>Cars)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_Price ~ Year, data = Cars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.8383 -0.4063 -0.0812  0.3307  5.5118 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -1.652e+02  3.460e+00  -47.73   &lt;2e-16 ***
+Year         8.706e-02  1.717e-03   50.71   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6635 on 4007 degrees of freedom
+Multiple R-squared:  0.3909,    Adjusted R-squared:  0.3907 
+F-statistic:  2571 on 1 and 4007 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The <span class="math inline">\(R^2\)</span> value has increased. And visually we can observe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Year,log_Price, <span class="at">main=</span><span class="st">"Sales Price vs. Model Year"</span>, <span class="at">ylab=</span><span class="st">"log(USD)"</span>,<span class="at">xlab=</span><span class="st">"Year"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm2,<span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>that the relationship appears “more linear” than before. It is instructive to note that we have not transformed the Model Year variable. This is because these values are not random variables. The variance of the error terms in our SLR model do not depend on the predictor variable. By transforming only the response variable with a logarithm we have decreased the effect of large price jumps. If we did the same thing with the model year, which already has a uniform spacing, we would not significantly improve the model. Indeed we observe that</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>log_Year <span class="ot">=</span> <span class="fu">log</span>(Year)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>lm3 <span class="ot">=</span> <span class="fu">lm</span>(log_Price <span class="sc">~</span> log_Year,<span class="at">data=</span>Cars)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_Price ~ log_Year, data = Cars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.8396 -0.4062 -0.0818  0.3314  5.5112 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -1321.621     26.297  -50.26   &lt;2e-16 ***
+log_Year      175.054      3.456   50.65   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6639 on 4007 degrees of freedom
+Multiple R-squared:  0.3903,    Adjusted R-squared:  0.3902 
+F-statistic:  2565 on 1 and 4007 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>the <span class="math inline">\(R^2\)</span> value of the model has not significantly changed. If we plot the transformed variables we can see that</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(log_Year,log_Price, <span class="at">main=</span><span class="st">"Sales Price vs. Model Year"</span>, <span class="at">ylab=</span><span class="st">"log(USD)"</span>,<span class="at">xlab=</span><span class="st">"log(Year)"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm3,<span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>visually the two models are almost identical. So it is not necessary to transform both variables. If anything, it is preferable to only transform the response variable for ease of interpretation.</p>
+<p>(d) When fitting a simple linear regression model, the most important piece of information is the <span class="math inline">\(R^2\)</span> (coefficient of determination). An <span class="math inline">\(R^2\)</span> close to 1 always indicates that a straight line is a good fit to the data.</p>
+</section>
+<section id="false-1" class="level3">
+<h3 class="anchored" data-anchor-id="false-1">False</h3>
+<p>Consider the counterexample of Anscombe’s four datasets.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>anscombe <span class="ot">=</span> <span class="fu">read.table</span>(<span class="st">"anscombe.txt"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(anscombe)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Figure 3.1 on page 46</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x1,y1,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">20</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">14</span>),<span class="at">main=</span><span class="st">"Data Set 1"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lsfit</span>(x1,y1))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x2,y2,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">20</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">14</span>),<span class="at">main=</span><span class="st">"Data Set 2"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lsfit</span>(x2,y2))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x3,y3,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">20</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">14</span>),<span class="at">main=</span><span class="st">"Data Set 3"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lsfit</span>(x3,y3))</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x4,y4,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">20</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">14</span>),<span class="at">main=</span><span class="st">"Data Set 4"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lsfit</span>(x4,y4))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Regression output on page 47</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(y1<span class="sc">~</span>x1)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y1 ~ x1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.92127 -0.45577 -0.04136  0.70941  1.83882 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   3.0001     1.1247   2.667  0.02573 * 
+x1            0.5001     0.1179   4.241  0.00217 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.237 on 9 degrees of freedom
+Multiple R-squared:  0.6665,    Adjusted R-squared:  0.6295 
+F-statistic: 17.99 on 1 and 9 DF,  p-value: 0.00217</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">=</span> <span class="fu">lm</span>(y2<span class="sc">~</span>x2)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y2 ~ x2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9009 -0.7609  0.1291  0.9491  1.2691 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)    3.001      1.125   2.667  0.02576 * 
+x2             0.500      0.118   4.239  0.00218 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.237 on 9 degrees of freedom
+Multiple R-squared:  0.6662,    Adjusted R-squared:  0.6292 
+F-statistic: 17.97 on 1 and 9 DF,  p-value: 0.002179</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">=</span> <span class="fu">lm</span>(y3<span class="sc">~</span>x3)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y3 ~ x3)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.1586 -0.6146 -0.2303  0.1540  3.2411 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   3.0025     1.1245   2.670  0.02562 * 
+x3            0.4997     0.1179   4.239  0.00218 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.236 on 9 degrees of freedom
+Multiple R-squared:  0.6663,    Adjusted R-squared:  0.6292 
+F-statistic: 17.97 on 1 and 9 DF,  p-value: 0.002176</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">=</span> <span class="fu">lm</span>(y4<span class="sc">~</span>x4)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y4 ~ x4)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-1.751 -0.831  0.000  0.809  1.839 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   3.0017     1.1239   2.671  0.02559 * 
+x4            0.4999     0.1178   4.243  0.00216 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.236 on 9 degrees of freedom
+Multiple R-squared:  0.6667,    Adjusted R-squared:  0.6297 
+F-statistic:    18 on 1 and 9 DF,  p-value: 0.002165</code></pre>
+</div>
+</div>
+<p>We can observe that each of these models have similar <span class="math inline">\(R^2\)</span> values, but only set 1 and 3 visually appear to have a linear fit. If we were to plot the residuals for these datasets (see p.&nbsp;48) we would observe that only dataset 1 has a random distribution that we would expect from our assumption that <span class="math inline">\(e_i \sim N(0,\sigma^2)\)</span>.</p>
+<p>(e) Transformations are useful for linearizing the relationship between the explanatory <span class="math inline">\((X)\)</span> and response <span class="math inline">\((Y)\)</span> variables, and for overcoming problems due to nonconstant variance.</p>
+</section>
+<section id="true-2" class="level3">
+<h3 class="anchored" data-anchor-id="true-2">True</h3>
+</section>
+<section id="exercise-3-this-exercise-uses-a-data-set-on-national-statistics-obtained-from-the-united-nations-and-collected-between-2009-2011.-the-data-set-contains-several-variables-including-ppgdp-the-gross-national-product-per-person-in-us-dollars-and-fertility-the-total-fertility-rate-number-of-children-per-woman." class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-this-exercise-uses-a-data-set-on-national-statistics-obtained-from-the-united-nations-and-collected-between-2009-2011.-the-data-set-contains-several-variables-including-ppgdp-the-gross-national-product-per-person-in-us-dollars-and-fertility-the-total-fertility-rate-number-of-children-per-woman.">Exercise 3: This exercise uses a data set on national statistics obtained from the United Nations, and collected between 2009-2011. The data set contains several variables, including ppgdp, the gross national product per person in US dollars, and fertility, the total fertility rate (number of children per woman).</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>UN11 <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"UN11.csv"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      country     region fertility   ppgdp lifeExpF pctUrban
+1 Afghanistan       Asia     5.968   499.0    49.49       23
+2     Albania     Europe     1.525  3677.2    80.40       53
+3     Algeria     Africa     2.142  4473.0    75.00       67
+4      Angola     Africa     5.135  4321.9    53.17       59
+5    Anguilla  Caribbean     2.000 13750.1    81.10      100
+6   Argentina Latin Amer     2.172  9162.1    79.89       93</code></pre>
+</div>
+</div>
+<section id="a-make-a-scatterplot-with-fertility-on-the-y-axis-and-ppgdp-on-the-x-axis.-explain-why-we-should-consider-log-transformations-for-this-data." class="level4">
+<h4 class="anchored" data-anchor-id="a-make-a-scatterplot-with-fertility-on-the-y-axis-and-ppgdp-on-the-x-axis.-explain-why-we-should-consider-log-transformations-for-this-data.">(a) Make a scatterplot with fertility on the y-axis and ppgdp on the x-axis. Explain why we should consider log transformations for this data.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fertility <span class="ot">=</span> UN11<span class="sc">$</span>fertility</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>ppgdp <span class="ot">=</span> UN11<span class="sc">$</span>ppgdp</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ppgdp,fertility,<span class="at">main=</span><span class="st">"Fertility vs. GDP Per Capita"</span>,<span class="at">xlab=</span><span class="st">"GDP Per Capita"</span>,<span class="at">ylab=</span><span class="st">"Total Fertility Rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see visually that predictor and response do not have a linear relationship. The trend visually appears logarithmic so it reasonable to consider a log transformation to investigate if a linear relationship may be found.</p>
+</section>
+<section id="b-make-a-scatterplot-of-logfertility-versus-logppgdp-and-add-the-least-squares-regression-line.-does-the-association-appear-to-be-reasonably-linear" class="level4">
+<h4 class="anchored" data-anchor-id="b-make-a-scatterplot-of-logfertility-versus-logppgdp-and-add-the-least-squares-regression-line.-does-the-association-appear-to-be-reasonably-linear">(b) Make a scatterplot of log(fertility) versus log(ppgdp) and add the least squares regression line. Does the association appear to be reasonably linear?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_fertility <span class="ot">=</span> <span class="fu">log</span>(UN11<span class="sc">$</span>fertility)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_ppgdp <span class="ot">=</span> <span class="fu">log</span>(UN11<span class="sc">$</span>ppgdp)  </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>log_ppgdp, UN11<span class="sc">$</span>log_fertility, <span class="at">main=</span><span class="st">"Fertility vs. GDP Per Capita"</span>, <span class="at">xlab=</span><span class="st">"Log(GDP Per Capita)"</span>, <span class="at">ylab=</span><span class="st">"Log(Total Fertility Rate)"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">=</span> <span class="fu">lm</span>(log_fertility <span class="sc">~</span> log_ppgdp, <span class="at">data=</span>UN11)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model_1, <span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From a visual perspective, this relationship does appear reasonably linear.</p>
+</section>
+<section id="c-use-the-lm-function-to-fit-a-simple-linear-regression-model-with-logfertility-as-the-response-variable-and-logppgdp-as-the-explanatory-variable.-use-the-summary-function-to-print-the-results." class="level4">
+<h4 class="anchored" data-anchor-id="c-use-the-lm-function-to-fit-a-simple-linear-regression-model-with-logfertility-as-the-response-variable-and-logppgdp-as-the-explanatory-variable.-use-the-summary-function-to-print-the-results.">(c) Use the lm() function to fit a simple linear regression model with log(fertility) as the response variable, and log(ppgdp) as the explanatory variable. Use the summary() function to print the results.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_fertility ~ log_ppgdp, data = UN11)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.79828 -0.21639  0.02669  0.23424  0.95596 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.66551    0.12057   22.11   &lt;2e-16 ***
+log_ppgdp   -0.20715    0.01401  -14.79   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3071 on 197 degrees of freedom
+Multiple R-squared:  0.526, Adjusted R-squared:  0.5236 
+F-statistic: 218.6 on 1 and 197 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="d-write-down-the-equation-for-the-least-squares-line." class="level4">
+<h4 class="anchored" data-anchor-id="d-write-down-the-equation-for-the-least-squares-line.">(d) Write down the equation for the least squares line.</h4>
+<p><span class="math display">\[
+\hat y=2.66551-0.20715x
+\]</span></p>
+</section>
+<section id="e-interpret-the-slope-of-the-regression-model." class="level4">
+<h4 class="anchored" data-anchor-id="e-interpret-the-slope-of-the-regression-model.">(e) Interpret the slope of the regression model.</h4>
+<p>Since we are dealing with the log base <span class="math inline">\(e\)</span> transformations of fertility and ppgdp the slope cannot be related as a constant rate of change between the original variables. The most we can say is for every 1 unit increase in log(ppgdp) there will be a 0.20715 unit decrease in log(fertility). This interpretation is not particularly useful nor intuitive so it is probably best to speak of interpretations of the model with a set value of ppgdp where we may predict corresponding fertility using the model. For example if there was a country with a gpd per capita of $1000, then the model predicts a fertility rate of approximately 3.437 children per woman (this will be explored in the following parts).</p>
+</section>
+<section id="f-for-a-locality-not-in-the-data-with-ppgdp-1000-obtain-a-point-prediction-and-a-95-prediction-interval-for-logfertility.-if-the-interval-ab-is-a-95-prediction-interval-for-logfertility-then-a-95-prediction-interval-for-fertility-is-given-by-expaexpb.-use-this-results-to-get-a-95-prediction-interval-for-fertility." class="level4">
+<h4 class="anchored" data-anchor-id="f-for-a-locality-not-in-the-data-with-ppgdp-1000-obtain-a-point-prediction-and-a-95-prediction-interval-for-logfertility.-if-the-interval-ab-is-a-95-prediction-interval-for-logfertility-then-a-95-prediction-interval-for-fertility-is-given-by-expaexpb.-use-this-results-to-get-a-95-prediction-interval-for-fertility.">(f) For a locality not in the data with ppgdp = 1000, obtain a point prediction and a 95% prediction interval for log(fertility). If the interval (a,b) is a 95% prediction interval for log(fertility), then a 95% prediction interval for fertility is given by (exp(a),exp(b)). Use this results to get a 95% prediction interval for fertility.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>predict_1000 <span class="ot">=</span> <span class="fu">predict</span>(model_1, <span class="fu">data.frame</span>(<span class="at">log_ppgdp =</span> <span class="fu">log</span>(<span class="dv">1000</span>)), <span class="at">interval =</span> <span class="st">"prediction"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>predict_1000</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit       lwr      upr
+1 1.234567 0.6258791 1.843256</code></pre>
+</div>
+</div>
+<p>From the prediction of log(fertility) we can run a calculation with the inverse function of <span class="math inline">\(log_e\)</span> to return to our previous variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(predict_1000)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr     upr
+1 3.436891 1.869889 6.31707</code></pre>
+</div>
+</div>
+<p>This result indicates that our model predicts a ppgdp=10000 should have a fertility rate of <span class="math inline">\(\approx 3.437\)</span> with a 95% prediction interval of <span class="math inline">\(\approx (1.87,6.32)\)</span>.</p>
+</section>
+<section id="g-make-a-plot-of-the-standardized-residuals-versus-fitted-values-and-a-qq-plot-of-the-standardized-residuals.-comment-on-whether-or-not-the-assumptions-for-simple-linear-regression-appear-to-be-satisfied." class="level4">
+<h4 class="anchored" data-anchor-id="g-make-a-plot-of-the-standardized-residuals-versus-fitted-values-and-a-qq-plot-of-the-standardized-residuals.-comment-on-whether-or-not-the-assumptions-for-simple-linear-regression-appear-to-be-satisfied.">(g) Make a plot of the standardized residuals versus fitted values, and a <span class="math inline">\(QQ\)</span> plot of the standardized residuals. Comment on whether or not the assumptions for simple linear regression appear to be satisfied.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>s_resid <span class="ot">=</span> <span class="fu">rstandard</span>(model_1)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>fitted <span class="ot">=</span> <span class="fu">fitted</span>(model_1)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fitted,s_resid, <span class="at">ylab=</span><span class="st">"Standardized Residuals"</span>, <span class="at">xlab=</span><span class="st">"Fitted Values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(s_resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW2_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Visually, we can observe the plot of standardized residuals vs.&nbsp;fitted values shows no clear pattern, and appear evenly distributed. This suggests the variance of the errors are constant.</p>
+<p>From the QQ plot, we observe a linear relationship between theoretical quantiles and observed values of our standardized residuals. This suggest the errors are normal, giving additional evidence to our model’s validity. The two plots provide evidence that our assumptions for linear regression are satisfied.</p>
+</section>
+<section id="h-which-countries-are-flagged-as-outliers-that-is-which-countries-have-standardized-residuals-outside-the-interval-from--2-to-2.-in-your-view-does-it-seem-necessary-to-remove-any-of-these-points-and-then-refit-the-model." class="level4">
+<h4 class="anchored" data-anchor-id="h-which-countries-are-flagged-as-outliers-that-is-which-countries-have-standardized-residuals-outside-the-interval-from--2-to-2.-in-your-view-does-it-seem-necessary-to-remove-any-of-these-points-and-then-refit-the-model.">(h) Which countries are flagged as outliers? That is, which countries have standardized residuals outside the interval from -2 to 2. In your view, does it seem necessary to remove any of these points, and then refit the model.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">=</span> <span class="fu">which</span>(s_resid <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">|</span> s_resid <span class="sc">&gt;</span> <span class="dv">2</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>countries <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Country =</span> UN11[outliers, ]<span class="sc">$</span>country, <span class="at">standardized_residual =</span> s_resid[outliers] )</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>countries</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   Country standardized_residual
+4                   Angola              2.300469
+23  Bosnia and Herzegovina             -2.605868
+58       Equatorial Guinea              3.125847
+118                Moldova             -2.491501
+134            North Korea             -2.262277
+196               Viet Nam             -2.094041
+198                 Zambia              2.126417</code></pre>
+</div>
+</div>
+<p>Countries that are outside the interval are listed above. I do not believe it is necessary to remove any of these points. None of the countries have standardized residuals far outside of the interval. Visually, the scatter plot shows that many other countries are contributing to the the variance not explained by our model (the low <span class="math inline">\(R^2\)</span> value). Deleting these outliers would likely not significantly increase the variance explained by our model and would also delete information likley reflective of the population trend in the relationship between ppgdp and a country’s fertility rate.</p>
+</section>
+</section>
+</section>
+<section id="bonus" class="level2">
+<h2 class="anchored" data-anchor-id="bonus">Bonus</h2>
+<p>Consider the model <span class="math inline">\(Y_i=\mu+\epsilon_i\)</span>, where <span class="math inline">\(\mu\)</span> is a parameter representing the population mean and <span class="math inline">\(\epsilon \sim N(0,\sigma^2)\)</span> independently for <span class="math inline">\(i=1,\cdots,n\)</span>. The prediction for the response variable is given by <span class="math inline">\(\hat y=\bar y\)</span>, where <span class="math inline">\(\bar y=\frac{1}{n}\sum_{i=1}^ny_i\)</span> is the sample mean. Derive a <span class="math inline">\(1-\alpha\)</span> prediction interval for a single new value of the response variable. Is the prediction interval wider or narrower than a <span class="math inline">\(1-\alpha\)</span> confidence interval for the population mean <span class="math inline">\(\mu\)</span>? Assume that a population variance <span class="math inline">\(\sigma^2\)</span> is unknown and needs to be estimated.</p>
+<p>The confidence interval for <span class="math inline">\(\mu\)</span> is given by</p>
+<p><span class="math display">\[
+\bar y\pm t(\alpha/2,n-1)s\sqrt{\frac{1}{n}}
+\]</span></p>
+<p>and the prediction interval for <span class="math inline">\(y_{new}\)</span> is given by</p>
+<p><span class="math display">\[
+\bar y \pm t(\alpha/2,n-1)s\sqrt{1+\frac{1}{n}}
+\]</span></p>
+<p>So, in this case, the prediction interval would be larger since <span class="math inline">\(1+\frac{1}{n}&gt;\frac{1}{n}\)</span>.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

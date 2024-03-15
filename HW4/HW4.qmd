@@ -1,0 +1,47 @@
+---
+title: "HW4"
+---
+
+# Homework 4
+
+## Exercise 1
+
+The multiple linear regression model can be written as $Y=X\beta+e$, where $\text{Var(e)}=\sigma^2I$ and $I$ is the $n \times n$ identity matrix. The fitted values are given by
+
+$$
+\hat Y=X\hat \beta=X(X^TX)^{-1}X^TY=HY
+$$
+
+where $H=X(X^TX)^{-1}X^T$
+
+\(a\) Show that $HH^T=HH=H$. Note that a matrix that has this property is called idempotent.
+
+\(b\) Show that $\rm E(\hat Y)=X\beta$
+
+\(c\) Show that $\rm Var(\hat Y)=\sigma^2H$
+
+## Exercise 2
+
+In lecture 10 we showed the variance-covariance matrix for the $(p+1)\times1$ vector, $\hat \beta$, of least squares estimates is given by $\rm Var(\hat \beta)=\sigma^2(X^TX)^{-1}$. Derive the $2\times2$ variance-covariance matrix for least squares estimates, $\hat\beta=(\hat\beta_0,\hat\beta_1)^T$, for simple linear regression:
+
+$$
+\rm Var(\hat\beta)= 
+\begin{pmatrix}
+\rm Var(\hat\beta_0) & \rm Cov(\hat\beta_0,\hat\beta_1) \\
+\rm Cov(\hat\beta_1,\hat\beta_0) & \rm Var(\hat\beta_1) \\
+\end{pmatrix}
+$$
+
+Additionally, use your result to verify that $\rm Var(\hat\beta_0)=\sigma^2(\frac{1}{n}+\frac{\bar x^2}{SXX})$ and $\rm Var(\hat\beta_1)=\sigma^2/SXX$, where $\rm SXX=\sum_{i=1}^n(x_i-\bar x)^2$. \[Hint: it might be useful to use the identity $\sum_{i=1}^n(x_i-\bar x)^2=\sum x_i^2-n\bar x^2$\]
+
+## Exercise 3
+
+For this exercise use the $\rm Boston$ data set from the $\rm MASS$ package. Consider the multiple linear regression model with $\rm medv$ as the response and $\rm dis, rm, tax$ and $\rm chas$ as predictor variables.
+
+\(a\) In R, compute the vector of least squares estimates $\hat\beta=(X^TX)^{-1}X^TY$. Then verify that the results are the same as the parameter estimates provided by the $\rm lm()$ function.
+
+\(b\) In R, compute the variance-covariance matrix $\rm Var(\hat\beta)=\sigma^2(X^TX)^{-1}$ (plug in $\sigma^2=\rm RSS/(n-p-1)$ as the estimate for $\sigma^2$). Then verify that the square root of the diagonal entries of this matrix are the same as the standard errors provided by the the $\rm lm()$ function.
+
+```{r}
+1 + 1
+```

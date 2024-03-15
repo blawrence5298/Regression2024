@@ -1,0 +1,59 @@
+---
+title: "Lecture 15"
+output: html_document
+---
+
+## Lecture 15
+
+Categorical Predictors and Interactions
+
+T
+
+```{r}
+1 + 1
+
+```
+
+An **outlier** is a point that has a response value ($y_i$) that does not follow the trend set by the data
+
+We can classify a point as an outlier if its standardized residual falls outside the interval from **-2 to 2**. For large data sets, change this rule **-4 to 4** (otherwise, too many points would be flagged).
+
+Just because a point is an outlier and / or has high leverage does not mean we must ignore that point and remove it from the model. Rather, outliers and / or high leverage points should be investigated, and can provide important insights about the data. Sometimes outliers and / or leverage points indicate a problem with the data that can be corrected.
+
+Residual plots are one of the most useful diagnostics for a multiple linear regression model.
+
+The most important diagnostic is a plot of the residuals, $\hat e_i$, versus the fitted values, $\hat y_i$. Alternatively, we can use the standardized residuals, $r_i$, instead of the raw residuals.
+
+Ideally, the residual plots should show no obvious patterns or nonconstant variability, and the points are randomly scattered around 0.
+
+Recall, the data set from Zagat surveys of customers of 168 Italian restaurants in New York City. We considered the following multiple linear regression model:
+
+$$
+Y=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon
+$$
+
+```{r}
+nyc <- read.csv("nyc.csv")
+
+head(nyc)
+```
+
+```{r}
+library(ISLR)
+
+head(Credit)
+```
+
+The response variable is Balance, the average credit card balance in dollars
+
+The predictors of interest are Income and Student a dummy variable indicating student status
+
+```{r}
+lm1 <- lm(Balance ~ Income + Student, data=Credit)
+
+contrasts(Credit$Student)
+```
+
+```{r}
+summary(lm1)
+```

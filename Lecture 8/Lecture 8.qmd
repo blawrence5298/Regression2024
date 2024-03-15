@@ -1,0 +1,53 @@
+---
+title: "Lecture 8"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+install.packages("alr4")
+```
+
+```{r}
+profsalary <- read.table("profsalary.txt", header = TRUE)
+
+```
+
+```{r}
+head(profsalary)
+```
+
+```{r}
+lm2 <- lm(Salary ~ Experience + I(Experience^2), data=profsalary)
+summary(lm2)
+
+plot(Salary ~ Experience, data=profsalary, 
+     ylab='Salary', xlab='Years of Experience')
+curve(predict(lm2, newdata = data.frame(x = x)), add = TRUE, col = "red")
+```
+
+```{r}
+plot(profsalary$Experience, resid(lm2),
+     xlab='Years of Experience', ylab='Residuals')
+```
+
+```{r}
+x_new <- data.frame(Experience = 10)
+predict(lm2, newdata=x_new, interval="prediction")
+```
+
+```{r}
+range(profsalary$Experience)
+
+```
+
+```{r}
+x_grd <- seq(1,36, by=0.5)
+x_new <- data.frame(Experience = x_grd)
+preds <- predict(lm2, newdata = x_new)
+plot(Salary ~ Experience, data=profsalary,
+     ylab='Salary', xlab='Years of Experience')
+lines(x_grd, preds, col='blue', lwd=2.5)
+```

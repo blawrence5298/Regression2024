@@ -1,0 +1,368 @@
+---
+title: "HW1"
+author: Ben Lawrence
+output:
+  html_document:
+    self_contained: true
+---
+
+## Exercise 0
+
+#### Provide a link to your github page
+
+You may access my github repo for this class using this [**LINK**](https://github.com/blawrence5298/Regression2024)
+
+## Exercise 1
+
+#### The following is a regression summary from R for a linear regression model between an explanatory variable $x$ and a response variable $y$. The data contain $n=50$ points. Assume that all conditions for SLR are satisfied.
+
+<img src="/HW1_files/figure-html/hw1_rsummary.png" style="width: 80%; height: auto;"/>
+
+### Part a
+
+#### Write the equation for the least squares regression line.
+
+According to the summary provided, $\hat\beta_0 \approx -1.10$ and $\hat\beta_1 \approx 2.26$. So
+
+$$
+\hat y_i=\hat\beta_0+\hat\beta_1x_i=-1.10+2.26x_i
+$$
+
+### Part b
+
+#### R performs a t-test to test whether the slope is significantly different than 0. State the null and alternative hypothesis for this test. Based on the $p$-value what is the conclusion of the test? (i.e., reject or do not reject the null hypothesis)
+
+$H_0:$ There is not a significant linear relationship between $x$ and $y$. I.e. $\beta_1=0$.
+
+$H_A$ : There is a significant linear relationship between $x$ and $y$. I.e. $\beta_1 \neq0$.
+
+Based on the p-value in the summary, we reject the null hypothesis, because there is a near 0 likelihood of obtaining a test statistic as extreme as the missing t-value, which is calculated in part d.
+
+### Part c
+
+#### Calculate the missing $p$-value for the intercept.
+
+To find the missing p-value we will run a t-test with $H_0: \beta_0=0$ and $H_A : \beta_0 \neq 0$. We may obtain our t statistic using
+
+$$
+T=\frac{\hat\beta_0-0}{se(\hat\beta_0)}
+$$
+
+Which follows a t-distribution with $n-2$ degrees of freedom. In r we obtain
+
+```{r}
+T = -1.1016/0.4082
+
+pt(T, df=48)
+```
+
+So $Pr(>|t|)\approx 0.00479$
+
+### Part d
+
+#### Calculate the missing t-statistic for the slope.
+
+The missing t-statistic for the slope is given by
+
+$$
+T=\frac{\hat\beta_1-0}{se(\hat\beta_1)}
+$$
+
+We may calculate this in r
+
+```{r}
+2.2606/0.0981
+```
+
+So $T\approx23.0$.
+
+### Part e
+
+#### Calculate a 95% confidence interval for the slope of the regression line. Does this interval agree with the results of the hypothesis test?
+
+The confidence interval for the slope of the regression line may be calculated using
+
+$$
+\hat\beta_1 \pm t(1-\frac{0.95}{2},n-2)se(\hat\beta_1) 
+$$ In r we obtain
+
+```{r}
+lower_limit = 2.2606 - qt(0.975,48)*0.0981
+upper_limit = 2.2606 + qt(0.975,48)*0.0981
+
+cat(lower_limit,upper_limit,"\n")
+```
+
+So our confidence interval is approximately $(2.06,2.46)$. This agrees with the results of our hypothesis test. We are 95% confident that $\beta_1$ (the population slope) will fall in the interval. Since the interval does not include 0, this supports the alternative hypothesis that $\beta_1 \neq 0$.
+
+## Exercise 2
+
+#### Consider the linear regression model through the origin given by $Y_i=\beta x_i+e_i$ for $i=1,\cdots,n$. Assume $e_i\sim N(0,\sigma^2)$, that is, the errors are independent and normally distributed with constant variance.
+
+### Part a
+
+#### Show that the least squares regression estimate of the slope is given by
+
+$$
+\hat\beta=\frac{\sum_{i=1}^nx_iy_i}{\sum_{i=1}^nx_i^2}
+$$
+
+Note that $R(\hat\beta)=\sum_{i=1}^n(y_i-\hat\beta x_i)^2$.
+
+To minimize $R(\hat\beta)$ we take its derivative and will calculate the critical value(s) by setting the derivative equal to zero.
+
+$$
+\begin{align*}
+\frac{dR}{d\hat\beta}=-2\sum_{i=1}^nx_i(y_i-\hat\beta x_i)\\
+-2\sum_{i=1}^nx_i(y_i-\hat\beta x_i)=0\\
+\implies \sum_{i=1}^nx_i(y_i-\hat\beta x_i)=0\\
+\implies \sum_{i=1}^n(x_iy_i-\hat\beta x_i^2)=0\\
+\implies \sum_{i=1}^nx_iy_i-\sum_{i=1}^n\hat\beta x_i^2=0\\
+\implies \hat\beta\sum_{i=1}^n x_i^2=\sum_{i=1}^nx_iy_i\\
+\implies\hat\beta=\frac{\sum_{i=1}^nx_iy_i}{\sum_{i=1}^nx_i^2} \checkmark
+\end{align*}
+$$
+
+### Part b
+
+#### Show that $E(\hat\beta)=\beta$.
+
+First note that if $\hat\beta_0=0$, then the observed values are given by $y_i=\beta x_i+e_i$
+
+As we demonstrated in part a, $\hat\beta=\frac{\sum_{i=1}^n x_iy_i}{\sum_{i=1}^n x_i^2}$
+
+Substituting for $y_i$ we obtain
+
+$$\hat\beta=\frac{\sum x_i(\beta x_i+e_i)}{\sum x_i^2}=\frac{\sum \beta x_i^2+e_ix_i}{\sum x_i^2}=\beta\frac{\sum x_i^2}{\sum x_i^2}+\frac{\sum e_ix_i}{\sum x_i^2}=\beta +\frac{\sum e_ix_i}{\sum x_i^2}$$
+
+Thus the expected value of $\hat\beta$ is given by
+
+$$
+E(\hat\beta)=E(\beta) +E(\frac{\sum e_ix_i}{\sum x_i^2})
+$$
+
+Note that $\beta$ and $x_i$ are not random variables, and we assume that the $e_i$s are normally distributed with mean zero. Thus we may apply the expectations in the following manner
+
+$$
+E(\hat\beta)=\beta+\frac{\sum E(e_i x_i)}{\sum x_i^2}=\beta+\frac{\sum x_iE(e_i)}{\sum x_i^2}=\beta+\frac{0}{\sum x_i^2 }\\
+\space\\
+=\beta \checkmark
+$$
+
+### Part c
+
+#### Show that $Var(\hat\beta)=\frac{\sigma^2}{\sum_{i=1}^nx_i^2}$.
+
+We may follow a similar approach when taking the variance of $\hat\beta$ .
+
+$$
+Var(\hat\beta) = Var(\beta+\frac{\sum e_i x_i}{\sum x_i^2})=Var(\beta) + Var( \frac{\sum e_ix_i}{\sum x_i^2})
+$$
+
+Since $\beta$ is not a random variable, we take its variance to be zero
+
+$$
+Var(\hat\beta) = 0+Var(\frac{\sum e_i x_i}{\sum x_i^2})=\frac{Var(\sum e_ix_i)}{\sum x_i^2\sum x_i^2}=\frac{\sum x_i^2Var(e_i)}{\sum x_i^2\sum x_i^2}=\frac{Var(e_i)}{\sum x_i^2}
+$$
+
+And from our assumptions we also know that $Var(e_i) = \sigma^2$ , thus
+
+$$
+Var(\hat\beta) = \frac{\sigma^2}{\sum_{i=1}^n x_i^2} \checkmark
+$$
+
+## Exercise 3
+
+#### The website [www.playbill.com](https://www.playbill.com/) provides weekly reports on the box office ticket sales for plays on Broadway in New York. We shall consider the data for the week October 11-17, 2004 (referred to below as current week). The data are in the form of the gross box office results for the current week and the gross box office results for the previous week (i.e., October 3-10, 2004). The data are available on the book website <http://gattonweb.uky.edu/sheather/book/> in the file playbill.csv
+
+#### Fit the following model to the data: $Y\sim \beta_0+\beta_1x+e$, where $Y$ is the gross box office results for the current week (in dollars) and $x$ is the gross box office result for the previous week (in dollars). Complete the following tasks:
+
+### Part a
+
+#### Use **read.csv()** to load the playbill.csv data file into R. Make a scatter plot of the response versus the explanatory variable, and superimpose the least squares regression line.
+
+```{r}
+#reading the csv
+data = read.csv("playbill.csv")
+
+# Making a scatter plot of the Sales from the Current Week vs. the Sales from Last Week
+plot(data$LastWeek, data$CurrentWeek, main="Current Sales vs Previous", xlab="Last Week", ylab="Current Week")
+
+# Adding a Least Squares Regression Line
+model = lm(CurrentWeek ~ LastWeek,data=data)
+abline(model, col="red")
+
+
+```
+
+### Part b
+
+#### Calculate a 95% confidence interval for the intercept and slope of the regression model, $\beta_0$ and $\beta_1$. Is $1$ a plausible value for $\beta_1$?
+
+```{r}
+#Summary of the Least Squares Model
+summary(model)
+```
+
+From the summary we construct the confidence interval for the intercept with
+
+$$
+\hat{\beta_0}\pm t(\frac{0.05}{2},n-2)se(\hat{\beta_0}) = 6805\pm t(0.025,16)(9929)
+$$
+
+Using r, we obtain the interval.
+
+```{r}
+lower_limit = 6805 - qt(0.975,16)*(9929)
+upper_limit = 6805 + qt(0.975,16)*(9929)
+cat("Lower limit:", lower_limit, "\nUpper limit:", upper_limit)
+```
+
+A similar method may be used to obtain a confidence interval for the slope. For the sake of efficiency, the confint( ) function will be used to confirm the above result and obtain the slope's interval.
+
+```{r}
+confint(model,level = 0.95)
+```
+
+1 is a Plausible value for $\beta_1$ because it lies within the confidence interval.
+
+### Part c
+
+#### Use the fitted regression model to estimate the gross box office results for the current week (in dollars) for a production with \$400,000 in gross box office the previous week. Find a 95% prediction interval for the gross box office results for the current week (in dollars) for a production with \$400,000 in gross box office the previous week. Is \$450,000 a feasible value for the gross box office results in the current week, for a production with \$400,000 in gross box office the previous week?
+
+We proceed by calculating the key values needed for the prediction interval
+
+```{r}
+#mean of the previous week sales
+x_bar = mean(data$LastWeek)
+x_bar
+
+#sum of squares of the previous
+SXX = sum((data$LastWeek - x_bar)^2)
+SXX
+
+#variance of the residuals
+S = summary(model)$sigma
+S
+
+#estimate of current week sales
+y_hat = predict(model, data.frame(LastWeek=400000))
+cat(y_hat, "\n")
+```
+
+The prediction interval is given by
+
+$$
+\hat{y}^*\pm t(\alpha/2,n-2)S\sqrt{(1+\frac{1}{n}+\frac{(x^*-\bar{x})^2}{SXX})}
+$$
+
+which we may calculate using r
+
+```{r}
+
+#Calculate the interval direcly
+lower_bound = y_hat - qt(0.975,16)*S*sqrt((1+(1/18)+((400000 - x_bar)^2)/(SXX)))
+upper_bound = y_hat + qt(0.975,16)*S*sqrt((1+(1/18)+((400000 - x_bar)^2)/(SXX)))
+
+cat("Lower bound:", lower_bound, "\nUpper bound:", upper_bound, "\n")
+
+
+#Confirm calculation using the predict function
+predict(model, data.frame(LastWeek = 400000), interval = "prediction")
+
+
+```
+
+We can see that \$450,000 is outside the upper bound of this interval, which indicates it is likely not a feasible value for a production with \$400,000 in sales in the previous week.
+
+### Part d
+
+#### Some promoters of Broadway use the prediction rule that next week's gross box office results will be equal to this week's gross box office results. Comment on the appropriateness of this rule.
+
+We may investigate this rule by finding a prediction interval for every predictor value in our sample.
+
+```{r}
+#Create a new data frame with the values of LastWeek
+new_data = data.frame(LastWeek = data$LastWeek)
+head(new_data)
+
+#Use the predict function to find a prediction interval for each value
+intervals = predict(model, new_data, interval="prediction")
+
+#We check to see if the each value in new_data lies within it's interval
+within_interval = new_data$LastWeek >= intervals[, "lwr"] & new_data$LastWeek <= intervals[, "upr"]
+
+# Create a new data frame to display results
+results = data.frame(LastWeek = new_data$LastWeek, LowerBound = intervals[, "lwr"], UpperBound = intervals[, "upr"], WithinInterval = within_interval)
+head(results)
+
+# Count the number of FALSE in the WithinInterval column
+false_count = sum(!results$WithinInterval)
+
+# Print the count
+cat("Number of times WithinInterval is FALSE:", false_count, "\n")
+```
+
+We can see here that each value in our sample for LastWeek lies within its prediction interval. Meaning that it is plausible that next week's gross results could be equal to the previous week's. However the intervals are somewhat large with respect to sales numbers. It is also plausible that a production which made \$695,437 in the previous week could make anywhere from \$650,496 to \$729,065 in the next week. This is a difference of tens of thousands of dollars and is likely relevant for Broadway promoters. So while the rule is a useful starting point, the variation makes it impractical to rely upon.
+
+## Exercise 4
+
+#### For this question use the oldfaith data set from the alr4 package. The oldfaith data set gives information about eruptions of the Old Faithful Geyser during October 1980. Variables are Duration in seconds of the current eruption, and the Interval, the time in minutes to the next eruption. The data were collected by volunteers and were provided by the late Roderick Hutchinson. Apart from missing data for the period from midnight to 6 a.m., this is a complete record of eruptions for that month.
+
+### Part a
+
+#### Use the lm() function to perform a simple linear regression with Interval as the response and Duration as the predictor. Use the summary() function to print the results.
+
+Here we read in the OldFaith dataset, create our linear model, and obtain a summary
+
+```{r}
+#reading the csv
+data = read.csv("OldFaith.csv")
+
+# linear regression model
+model = lm(Interval ~ Duration,data=data)
+
+#regression summary
+summary(model)
+```
+
+### Part b
+
+#### Make a scatter plot of Interval vs. Duration. Superimpose the least squares regression line on the scatter plot.
+
+```{r}
+#scatter plot and regression line
+
+plot(data$Duration, data$Interval, main="Old Faithful Eruption Interval vs. Duration", xlab="Duration of Eruption (sec)", ylab="Interval to Next Eruption (sec)")
+
+abline(model, col="red")
+```
+
+### Part c
+
+#### An individual has just arrived at the end of an eruption that lasted 250 seconds. What is the predicted amount of time the individual will have to wait until the next eruption? Calculate a 95% prediction interval for the time the individual will have to wait for the next eruption.
+
+If an individual has arrived after a duration of 250 seconds we may predict the next eruption interval using r
+
+```{r}
+estimate = predict(model, data.frame(Duration=250))
+
+cat("Number of seconds till the next eruption:",estimate,"\n")
+```
+
+We may also calculate the prediction interval using r
+
+```{r}
+#Note the default for the predict function is a 95% interval
+interval = predict(model,data.frame(Duration=250),interval="prediction")
+
+# print the bounds
+cat("Lower Bound:", interval[, "lwr"], "\n")
+cat("Upper Bound:", interval[, "upr"], "\n")
+```
+
+### Part d
+
+#### Interpret the coefficient of determination $(R^2)$
+
+The coefficient of determination for our model is 0.8029, indicating that 80.29% of the variance in the data is explained by our model. The correlation between the duration of the last Old Faithful eruption and the time interval to the next interval is relatively strong. Our model may be used to predict eruption intervals, given the duration of the previous eruption. However the predictions cannot be relied upon to an extreme precision, given the extra variance not accounted for by our model. It may also be prudent to consider other variables related to Yellowstone's geography or internal geyser chemistry that could account for the extra variance. It may also be useful to analyze eruption data from different dates for cross validation purposes.

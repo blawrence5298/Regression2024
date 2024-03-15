@@ -1,0 +1,220 @@
+---
+title: "Midterm1-Ch3 Exercises"
+author: "Benjamin Lawrence"
+date: "2024-02-20"
+output: pdf_document
+---
+
+## **Homework Review for Midterm**
+
+**Homework 1:**
+
+The following is a regression summary from R for a linear regression model between an explanatory variable x and a response variable y. The data contain $n=50$ points. Assume that all the conditions for SLR are satisfied.
+
+\(a\) Write the equation for the least squares regression line.
+
+$$
+\hat y=-1.016+2.2606x
+$$
+
+\(b\) R performs a t-test to test whether the slope is significantly different than 0. State the null and alternative hypothesis for this test.
+
+$H_0$ : $\beta_1=0$
+
+$H_A$ : $\beta_1 \neq0$
+
+Based on the $p\text{-value}$ what is the conclusion of the test?
+
+The p-value in this case is less than $2\times10^{-16}$, which is less than any reasonable $\alpha$ so we reject the null hypothesis.
+
+\(c\) Calculate the missing $p \text{-value}$ for the intercept.
+
+The corresponding $p\text{-value}$ for a t value of -2.699 with a sample corresponding to 48 degrees of freedom may be calculated with r (don't forget this is a two-tailed test)
+
+```{r}
+2*pt(-2.699,48)
+```
+
+(d) Calculate the missing t-statistic for the slope.
+
+$$
+T=\frac{\hat\beta_1}{\rm se(\hat\beta_1)}=\frac{2.2606}{0.0981}
+$$
+
+```{r}
+2.2606/0.0981
+```
+
+\(e\) Calculate a 95% confidence interval for the slope of the regression line. Does this interval agree with the results of the hypothesis test?
+
+The confidence interval is given by
+
+$$
+\hat\beta_1 \pm \rm T(1-\alpha/2,n-2)\rm se(\hat\beta_1)
+$$
+
+```{r}
+lower = 2.2606 - qt(0.975,48) * 0.0981
+upper = 2.2606 + qt(0.975,48) * 0.0981
+
+cat(lower,upper,"\n")
+```
+
+The interval does not contain 0 which supports the results of our hypothesis test.
+
+Consider the linear regression model through the origin given by $Y_i=\beta x+e_i$ for $i=1,\dots,n$. Assume $e_i \sim \rm N(0,\sigma^2)$, that is, the errors are independent and normally distributed with constant variance.
+
+\(a\) Show that the least squares estimate of the slope is given by
+
+$$
+\hat\beta=\frac{\sum_{i=1}^nx_iy_i}{\sum_{i=1}^nx_i^2}
+$$
+
+The sum of square residuals function can be written as $\rm R(\hat\beta)=\sum_{i=1}^n(y_i-\hat\beta x_i)^2$.
+
+We minimize this by finding the derivative, setting it to 0, and solving for $\hat\beta$. The derivative of $\rm R$ is given by $\rm R^\prime=2\sum_{i=1}^n(y_i-\hat\beta x_i)(-x_i)=2\sum_{i=1}^n(\hat\beta x_i^2-x_iy_i)$. And so
+
+$$
+\sum_{i=1}^n (\hat\beta x_i^2-x_iy_i)=0
+\\ \implies \hat\beta\sum_{i=1}^nx_i^2-\sum_{i=1}^nx_iy_i=0
+\\ \implies\ \hat\beta\sum_{i=1}^n
+x_i^2=\sum_{i=1}^nx_iy_i
+\\ \hat\beta= \frac{\sum_{i=1}^nx_iy_i}{\sum_{i=1}^nx_i^2} \checkmark$$
+
+\(b\) Show that $\rm E(\hat\beta)=\beta$
+
+$$
+\rm E(\hat\beta)=\rm E(\frac{\sum_{i=1}^nx_iy_i}{\sum_{i=1}^nx_i^2})
+\\=\rm \frac{\sum_{i=1}^n\rm E(x_iy_i)}{\sum_{i=1}^n \rm E(x_i^2)} 
+\\=\rm \frac{\sum_{i=1}^n\rm E(\beta x_i^2+x_ie_i)}{\sum_{i=1}^n (x_i^2)} 
+\\=\rm \frac{\beta\sum_{i=1}^n( x_i^2)+ \sum_{i=1}^n x_i\rm E(e_i)}{\sum_{i=1}^n (x_i^2)}
+\\=\rm \frac{\beta\sum_{i=1}^n( x_i^2)+ 0}{\sum_{i=1}^n (x_i^2)}
+\\ = \beta \checkmark  
+$$
+
+\(c\) Show that $\rm Var(\hat\beta)=\frac{\sigma^2}{\sum_{i=1}^nx_i^2}$
+
+$$
+\rm Var(\hat\beta)=\frac{\sum_{i=1}^nx_i^2V(Y_i)}{(\sum_{i=1}^nx_i^2)^2}
+\\= \frac{\sigma^2\sum_{i=1}^nx_i^2}{(\sum_{i=1}^nx_i^2)^2}
+\\ = \frac{\sigma^2}{\sum_{i=1}^nx_i^2} \checkmark
+$$
+
+Fit the following model to the data: $Y=\beta_0+\beta_1x+e$ where $Y$ is the gross box office results for the current week (in dollars) and $x$ is the gross box office result for the previous week (in dollars). Complete the following tasks.
+
+**Homework 2**
+
+\(a\) What are the assumptions for the simple linear regression model? Describe at least two diagnotstics that are commonly used to check these assumptions.
+
+-   $Y$ is related to $x$ by the model $Y_i=\beta_0+\beta_1x_i+\epsilon_i$
+
+-   The errors $\epsilon_1,\epsilon_2,\dots,\epsilon_n \sim N(0,\sigma^2)$ and are independent of each other
+
+The diagnostics are plots of residuals vs. fits and QQ plot of the residuals.
+
+Btw the code for these plots are
+
+```{r}
+library(ggplot2)
+UN11 <- read.csv("UN11.csv")
+```
+
+```{r}
+ggplot(UN11, aes(fitted(model), rstandard(model))) +
+  geom_point() +
+  geom_hline(yintercept=0) +
+  xlab("Fitted Values") + ylab("Standardized Residuals")
+```
+
+\(b\) What does it mean for a point to be an outlier? For simple linear regression, what rule is commonly used to classify points as outliers?
+
+An outlier is a point that does not follow the pattern set by the bulk of the data, when one takes into account the given model.
+
+A rule of thumb is to classify a point as an outlier if its standardized residual falls outside $(-2,2)$. For large data sets, the interval is adjusted to $(-4,4)$.
+
+\(c\) What does it mean for a point to have high leverage? For simple linear regression, what rule is commonly used to classify points of high leverage?
+
+A leverage point is a point whose x-values are distant from other x-values.
+
+A popular rule is to classify $x_i$ as a point of high leverage in a simple linear regression model if
+
+$$
+h_i>2\times \text{average}(h_i)=2\times\frac{2}{n}=\frac{4}{n}
+$$
+
+\(d\) For simple linear regression, what are the formulas for the error, $\epsilon_i$, residual, $\hat\epsilon_i$, and standardized residual, $r_i$? What is $Var(\epsilon_i)$ and $Var(\hat\epsilon_i)$? Describe two reasons why it is useful to look at a plot of the standardized residuals versus the fitted values.
+
+$$
+\epsilon_i=Y_i-(\beta_0+\beta_1x_i), \hat\epsilon_i=Y_i-(\hat\beta_0+\hat\beta_1x_i), \text{and }r_i=\frac{\hat\epsilon_i}{\hat\sigma\sqrt{1-h_i}},
+$$
+
+where $\hat\sigma=\sqrt{\frac{1}{n-2}\sum_{i=1}^n\hat\epsilon_i^2}$ is the residual standard error (the estimate of $\sigma$).
+
+$$
+Var(\epsilon_i)=\sigma^2 \text{ and }Var(\hat\epsilon_i)=\sigma^2[1-h_i].
+$$
+
+Two reason why looking at the standardized residuals is 1) the residuals have different variance than the $\epsilon\rm s$ and 2) it is a better display of looking at the validity of assumptions when there exist high leverage points in the data.
+
+**Quadratic/Polynomial Regression Lecture Review**
+
+```{r}
+profsalary <- read.table("profsalary.txt", header=TRUE)
+head(profsalary)
+```
+
+```{r}
+lm1 <- lm(Salary ~ Experience, data=profsalary)
+plot(Salary ~ Experience, data=profsalary, ylab="Salary", xlab="Years of Experience")
+abline(lm1)
+```
+
+This is the polynomial regression code
+
+```{r}
+lm2 <- lm(Salary ~ Experience + I(Experience^2), data=profsalary)
+summary(lm2)
+```
+
+```{r}
+plot(profsalary$Experience,resid(lm2), xlab="Years of Experience", ylab="Residuals")
+```
+
+For a curve one can use
+
+```{r}
+range(profsalary$Experience)
+```
+
+```{r}
+x_grd <- seq(1, 36, by=0.5)
+x_new <- data.frame(Experience = x_grd)
+preds <- predict(lm2, newdata = x_new)
+plot(Salary ~ Experience, data=profsalary, ylab="Salary", xlab="Years of Experience")
+lines(x_grd, preds, col="blue", lwd=2.5)
+```
+
+We could also use curve if we are lazy
+
+```{r}
+plot(Salary ~ Experience, data=profsalary, ylab="Salary", xlab="Years of Experience")
+curve(34.72+2.872*x-0.053*x^2, 1, 36, add=T)
+```
+
+```{r}
+ggplot(data=profsalary, aes(Experience, Salary)) + 
+  geom_point() + 
+  stat_smooth(method='lm',formula = y ~ poly(x, 2))
+```
+
+**Histogram**
+
+```{r}
+resids1 <- rstandard(lm1)
+hist(resids1)
+```
+
+```{r}
+resids2 <- rstandard(lm2)
+hist(resids2)
+```

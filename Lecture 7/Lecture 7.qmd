@@ -1,0 +1,39 @@
+---
+title: "Lecture 7"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+set.seed(1)
+x <- rnorm(500)
+hist(x)
+qqnorm(x)
+qqline(x, col="red")
+```
+
+```{r}
+set.seed(1)
+x <- rt(500, df=5)
+hist(x)
+qqnorm(x)
+qqline(x, col="red")
+```
+
+```{r}
+install.packages("alr4")
+```
+
+```{r}
+library(alr4)
+```
+
+```{r}
+head(brains)
+```
+
+```{r}
+
+```

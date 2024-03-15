@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Interactive Web App</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="InteractiveViz_files/libs/clipboard/clipboard.min.js"></script>
+<script src="InteractiveViz_files/libs/quarto-html/quarto.js"></script>
+<script src="InteractiveViz_files/libs/quarto-html/popper.min.js"></script>
+<script src="InteractiveViz_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="InteractiveViz_files/libs/quarto-html/anchor.min.js"></script>
+<link href="InteractiveViz_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="InteractiveViz_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="InteractiveViz_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="InteractiveViz_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="InteractiveViz_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="InteractiveViz_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="InteractiveViz_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="InteractiveViz_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="InteractiveViz_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="InteractiveViz_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="InteractiveViz_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="InteractiveViz_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="InteractiveViz_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interactive Web App</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="interactive-visualizations-tests" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-visualizations-tests">Interactive Visualizations Tests</h2>
+<p>In this document I plan to test out some interactive r libraries as a substitute for power bi visualizations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample data</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create scatterplot with hover text limited to 2 decimal places</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(df, <span class="at">x =</span> <span class="sc">~</span>x, <span class="at">y =</span> <span class="sc">~</span>y, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'markers'</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">hoverinfo =</span> <span class="st">'text'</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">'X:'</span>, <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, x), <span class="st">'Y:'</span>, <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, y))) <span class="co"># Using sprintf to format text</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-6e16c2883c26dd1edd48" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-6e16c2883c26dd1edd48">{"x":{"visdat":{"50cc553f3cdb":["function () ","plotlyVisDat"]},"cur_data":"50cc553f3cdb","attrs":{"50cc553f3cdb":{"x":{},"y":{},"mode":"markers","marker":{"size":10},"hoverinfo":"text","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"x"},"yaxis":{"domain":[0,1],"automargin":true,"title":"y"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.5604756465522126,-0.23017748948327996,1.558708314149124,0.070508391424576003,0.12928773516094624,1.715064986883281,0.4609162059892023,-1.265061234606534,-0.68685285189352607,-0.44566197009995806,1.2240817974394615,0.35981382705736381,0.40077145059405217,0.11068271594511971,-0.55584113475407493,1.7869131368030782,0.49785047822923939,-1.9666171566296382,0.70135590156368555,-0.47279140772793404,-1.0678237059868452,-0.21797491465829513,-1.0260044483072397,-0.72889122929114025,-0.62503926784925667,-1.6866933107424134,0.83778704449452468,0.15337311783651522,-1.1381369370119476,1.2538149210699268,0.42646422147681357,-0.29507148299227115,0.89512566104502223,0.87813348753304221,0.82158108163748711,0.688640254100091,0.55391765353758882,-0.061911710576721679,-0.30596266373991676,-0.38047100101238268,-0.6947069789205127,-0.20791727801959878,-1.2653963515682645,2.1689559653385126,1.2079619983049905,-1.1231085832033492,-0.40288483529907598,-0.46665535362321886,0.77996511833631788,-0.083369066471829276,0.2533185139947548,-0.028546755348703018,-0.04287045729131609,1.3686022840144576,-0.22577098565926762,1.5164706044295397,-1.5487528042302212,0.58461374963606916,0.12385424384461378,0.21594156874397272,0.37963948275988207,-0.50232345310930226,-0.3332073836694201,-1.0185753831070887,-1.0717912264755778,0.30352864140425806,0.44820977862942618,0.053004226730504145,0.92226746787973757,2.0500846856271444,-0.4910311660565353,-2.3091688756408124,1.0057385244622565,-0.70920076258239262,-0.688008616467358,1.0255713696966988,-0.28477300705100889,-1.2207177122545356,0.1813034797491502,-0.13889136243904462,0.005764185899886933,0.3852804011263305,-0.37066003179240936,0.64437654851883297,-0.22048656181875062,0.33178196391569692,1.0968390131493477,0.43518149083380286,-0.32593158553122675,1.1488076184510938,0.99350385596211943,0.54839695950806999,0.23873173511144119,-0.62790607603937143,1.3606524485300076,-0.60025958714712691,2.1873329930165766,1.5326106261851893,-0.23570035910047687,-1.0264209003067808],"y":[-0.710406563699301,0.25688370915652953,-0.24669187846237361,-0.34754259939773319,-0.9516185672650157,-0.045027724808920269,-0.78490446945707582,-1.6679419365881367,-0.38022652028776244,0.91899660906076597,-0.57534696260839191,0.60796432222503338,-1.617882708289164,-0.055561965524539438,0.51940720394346229,0.3011533621667144,0.10567619414894333,-0.64070600830537638,-0.84970434603358225,-1.0241287906049132,0.11764659710012587,-0.94747461418480217,-0.49055744370066834,-0.25609219219824725,1.8438620052322074,-0.65194990169545852,0.23538657228485693,0.077960849563710771,-0.96185663413012856,-0.071308086123598666,1.4445508584233488,0.45150405307921465,0.04123292199293993,-0.42249683233962482,-2.0532472215405155,1.1313372134141755,-1.460640070924822,0.73994751087733446,1.9091035692174834,-1.4438931609717993,0.70178433537471085,-0.26219748940246801,-1.5721441591454877,-1.5146676537817514,-1.6015361735745934,-0.53090652217030299,-1.4617555849958999,0.68791677297582754,2.1001089405256717,-1.2870304760351789,0.78773884747517808,0.7690422410009099,0.33220257895011768,-1.0083766082770078,-0.11945260663065868,-0.28039533517024667,0.56298953322047984,-0.37243875610382904,0.97697338668562073,-0.37458085776701383,1.0527114655793319,-1.0491770066660657,-1.2601552447581124,3.2410399349424046,-0.41685758816043178,0.29822759154071532,0.63656967403384868,-0.48378062570874358,0.51686204431360905,0.36896452738508601,-0.21538050764169339,0.065293033525315264,-0.034067253738463997,2.1284518990161811,-0.74133609627282837,-1.0959962670746639,0.037788399171078818,0.31048074944313703,0.43652347891018295,-0.45836533271110569,-1.063326133971191,1.2631851760894901,-0.34965038795355474,-0.86551286265337402,-0.23627956894109653,-0.19717589434855221,1.1099202897136404,0.084737292197196459,0.75405378518452149,-0.49929201717226079,0.21444530958160127,-0.3246859114908347,0.094583528173571421,-0.89536335797754163,-1.3108015333279719,1.9972133847479665,0.60070882367241762,-1.251271361624944,-0.61116591668042086,-1.1854800845973104],"mode":"markers","marker":{"color":"rgba(31,119,180,1)","size":10,"line":{"color":"rgba(31,119,180,1)"}},"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"text":["X: -0.56 Y: -0.71","X: -0.23 Y: 0.26","X: 1.56 Y: -0.25","X: 0.07 Y: -0.35","X: 0.13 Y: -0.95","X: 1.72 Y: -0.05","X: 0.46 Y: -0.78","X: -1.27 Y: -1.67","X: -0.69 Y: -0.38","X: -0.45 Y: 0.92","X: 1.22 Y: -0.58","X: 0.36 Y: 0.61","X: 0.40 Y: -1.62","X: 0.11 Y: -0.06","X: -0.56 Y: 0.52","X: 1.79 Y: 0.30","X: 0.50 Y: 0.11","X: -1.97 Y: -0.64","X: 0.70 Y: -0.85","X: -0.47 Y: -1.02","X: -1.07 Y: 0.12","X: -0.22 Y: -0.95","X: -1.03 Y: -0.49","X: -0.73 Y: -0.26","X: -0.63 Y: 1.84","X: -1.69 Y: -0.65","X: 0.84 Y: 0.24","X: 0.15 Y: 0.08","X: -1.14 Y: -0.96","X: 1.25 Y: -0.07","X: 0.43 Y: 1.44","X: -0.30 Y: 0.45","X: 0.90 Y: 0.04","X: 0.88 Y: -0.42","X: 0.82 Y: -2.05","X: 0.69 Y: 1.13","X: 0.55 Y: -1.46","X: -0.06 Y: 0.74","X: -0.31 Y: 1.91","X: -0.38 Y: -1.44","X: -0.69 Y: 0.70","X: -0.21 Y: -0.26","X: -1.27 Y: -1.57","X: 2.17 Y: -1.51","X: 1.21 Y: -1.60","X: -1.12 Y: -0.53","X: -0.40 Y: -1.46","X: -0.47 Y: 0.69","X: 0.78 Y: 2.10","X: -0.08 Y: -1.29","X: 0.25 Y: 0.79","X: -0.03 Y: 0.77","X: -0.04 Y: 0.33","X: 1.37 Y: -1.01","X: -0.23 Y: -0.12","X: 1.52 Y: -0.28","X: -1.55 Y: 0.56","X: 0.58 Y: -0.37","X: 0.12 Y: 0.98","X: 0.22 Y: -0.37","X: 0.38 Y: 1.05","X: -0.50 Y: -1.05","X: -0.33 Y: -1.26","X: -1.02 Y: 3.24","X: -1.07 Y: -0.42","X: 0.30 Y: 0.30","X: 0.45 Y: 0.64","X: 0.05 Y: -0.48","X: 0.92 Y: 0.52","X: 2.05 Y: 0.37","X: -0.49 Y: -0.22","X: -2.31 Y: 0.07","X: 1.01 Y: -0.03","X: -0.71 Y: 2.13","X: -0.69 Y: -0.74","X: 1.03 Y: -1.10","X: -0.28 Y: 0.04","X: -1.22 Y: 0.31","X: 0.18 Y: 0.44","X: -0.14 Y: -0.46","X: 0.01 Y: -1.06","X: 0.39 Y: 1.26","X: -0.37 Y: -0.35","X: 0.64 Y: -0.87","X: -0.22 Y: -0.24","X: 0.33 Y: -0.20","X: 1.10 Y: 1.11","X: 0.44 Y: 0.08","X: -0.33 Y: 0.75","X: 1.15 Y: -0.50","X: 0.99 Y: 0.21","X: 0.55 Y: -0.32","X: 0.24 Y: 0.09","X: -0.63 Y: -0.90","X: 1.36 Y: -1.31","X: -0.60 Y: 2.00","X: 2.19 Y: 0.60","X: 1.53 Y: -1.25","X: -0.24 Y: -0.61","X: -1.03 Y: -1.19"],"type":"scatter","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial y-intercept for the horizontal line</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>initial_intercept <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example data for scatter plot</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>x_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>y_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a scatter plot</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>fig <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_trace</span>(<span class="at">x =</span> x_vals, <span class="at">y =</span> y_vals, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'markers'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_trace</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">20</span>), <span class="at">y =</span> <span class="fu">c</span>(initial_intercept, initial_intercept), </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>, <span class="at">name =</span> <span class="st">'Adjustable Line'</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define steps for the slider</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>steps <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">20</span>, <span class="at">by =</span> <span class="dv">1</span>)) {</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  step <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"restyle"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">args =</span> <span class="fu">list</span>(<span class="st">"y"</span>, <span class="fu">list</span>(<span class="fu">c</span>(i, i)), <span class="dv">1</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">as.character</span>(i)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  steps[[<span class="fu">length</span>(steps) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> step</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Add slider to the plot</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>fig <span class="ot">&lt;-</span> fig <span class="sc">%&gt;%</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">sliders =</span> <span class="fu">list</span>(</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">active =</span> initial_intercept,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">currentvalue =</span> <span class="fu">list</span>(<span class="at">prefix =</span> <span class="st">"Intercept: "</span>),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">steps =</span> steps</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">20</span>), <span class="at">autorange =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">20</span>), <span class="at">autorange =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="plotly html-widget html-fill-item" id="htmlwidget-23e11579ab285b5c7c2a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-23e11579ab285b5c7c2a">{"x":{"visdat":{"50cc4ef6585f":["function () ","plotlyVisDat"]},"cur_data":"50cc4ef6585f","attrs":{"50cc4ef6585f":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[1,2,3,4],"y":[10,11,12,13],"type":"scatter","mode":"markers","inherit":true},"50cc4ef6585f.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[-1,20],"y":[5,5],"type":"scatter","mode":"lines","name":"Adjustable Line","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"sliders":[{"active":5,"currentvalue":{"prefix":"Intercept: "},"steps":[{"method":"restyle","args":["y",[[-1,-1]],1],"label":"-1"},{"method":"restyle","args":["y",[[0,0]],1],"label":"0"},{"method":"restyle","args":["y",[[1,1]],1],"label":"1"},{"method":"restyle","args":["y",[[2,2]],1],"label":"2"},{"method":"restyle","args":["y",[[3,3]],1],"label":"3"},{"method":"restyle","args":["y",[[4,4]],1],"label":"4"},{"method":"restyle","args":["y",[[5,5]],1],"label":"5"},{"method":"restyle","args":["y",[[6,6]],1],"label":"6"},{"method":"restyle","args":["y",[[7,7]],1],"label":"7"},{"method":"restyle","args":["y",[[8,8]],1],"label":"8"},{"method":"restyle","args":["y",[[9,9]],1],"label":"9"},{"method":"restyle","args":["y",[[10,10]],1],"label":"10"},{"method":"restyle","args":["y",[[11,11]],1],"label":"11"},{"method":"restyle","args":["y",[[12,12]],1],"label":"12"},{"method":"restyle","args":["y",[[13,13]],1],"label":"13"},{"method":"restyle","args":["y",[[14,14]],1],"label":"14"},{"method":"restyle","args":["y",[[15,15]],1],"label":"15"},{"method":"restyle","args":["y",[[16,16]],1],"label":"16"},{"method":"restyle","args":["y",[[17,17]],1],"label":"17"},{"method":"restyle","args":["y",[[18,18]],1],"label":"18"},{"method":"restyle","args":["y",[[19,19]],1],"label":"19"},{"method":"restyle","args":["y",[[20,20]],1],"label":"20"}]}],"xaxis":{"domain":[0,1],"automargin":true,"range":[-1,20],"autorange":false,"title":[]},"yaxis":{"domain":[0,1],"automargin":true,"range":[-1,20],"autorange":false,"title":[]},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1,2,3,4],"y":[10,11,12,13],"type":"scatter","mode":"markers","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[-1,20],"y":[5,5],"type":"scatter","mode":"lines","name":"Adjustable Line","marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

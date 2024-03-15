@@ -1,0 +1,154 @@
+---
+title: "Chapter3_Study"
+---
+
+## Chapter 3 Study Notes
+
+This chapter begins by looking at the assumption of SLR which is
+
+$$
+E(Y\mid X=x)=\beta_0+\beta_1x \text{ and }Var(Y\mid X=x)=\sigma^2
+$$
+
+The point of the chapter is to investigate whether or not these assumptions are appropriate. When the relationship is not linear or the variance is nonconstant, transformations may be used to "overcome problems with assumptions due to nonconstant variance or nonlinearity, as well as enabling us to fit models for specific purposes, such as to estimate percentage effects". What percentage effects are? I will continue to read.
+
+Here we look at Anscombe's Four Data sets.
+
+```{r}
+#Read in the sets
+Anscombe = read.table("anscombe.txt")
+head(Anscombe)
+attach(anscombe)
+
+```
+
+```{r}
+# Data Set 1
+plot(x1,y1,xlim=c(4,20),ylim=c(3,14),main="Data Set 1")
+abline(lsfit(x1,y1))
+```
+
+```{r}
+#Data Set 2
+plot(x2,y2,xlim=c(4,20),ylim=c(3,14),main="Data Set 2")
+abline(lsfit(x2,y2))
+```
+
+```{r}
+#Data Set 3
+plot(x3,y3,xlim=c(4,20),ylim=c(3,14),main="Data Set 3")
+abline(lsfit(x3,y3))
+```
+
+```{r}
+#Data Set 4
+plot(x4,y4,xlim=c(4,20),ylim=c(3,14),main="Data Set 4")
+abline(lsfit(x4,y4))
+```
+
+For each of these datasets the regression model is actually the same.
+
+$$
+\hat y=3.0+0.5x.
+$$
+
+In all of these datasets a linear relationship is only appropriate for dataset 1. The others are curved or, in the case of dataset 3, has an extreme outlier.
+
+A tool we can use to validate a regression model is a plot of residuals (or standardized residuals). Here we will plot the residuals.
+
+```{r,fig.width=8, fig.height=8}
+m1 <- lm(y1~x1)
+# summary(m1)
+m2 <- lm(y2~x2)
+# summary(m2)
+m3 <- lm(y3~x3)
+# summary(m3)
+m4 <- lm(y4~x4)
+# summary(m4)
+
+par(mfrow=c(2,2))
+plot(x1,m1$residuals,ylab="Residuals",xlim=c(4,20),ylim=c(-3.5,3.5),main="Data Set 1")
+plot(x2,m2$residuals,ylab="Residuals",xlim=c(4,20),ylim=c(-3.5,3.5),main="Data Set 2")
+plot(x3,m3$residuals,ylab="Residuals",xlim=c(4,20),ylim=c(-3.5,3.5),main="Data Set 3")
+plot(x4,m4$residuals,ylab="Residuals",xlim=c(4,20),ylim=c(-3.5,3.5),main="Data Set 4")
+```
+
+A plot of residuals against $X$ that produces a random pattern indicates an appropriate model has been fit to the data. In contrast, a plot of residuals agains $X$ that produces a discernible pattern indicates an incorrect model has been fit to the data.
+
+A way of checking whether a valid simple linear regression model has been fit is to plot residuals versus $x$ and look for patterns. If no pattern is found then this inidcates that the model provides an adequate summary of the data.
+
+Suppose that the true model is a straight line
+
+$$
+Y_i=\rm E(Y_i\mid X_i=x_i) +e_i=\beta_0+\beta_1x_i+e_i
+$$
+
+where $e_i=\text{random fluctuation (or error) in }Y_i$ and is such that $\rm E(e_i )=0$ and that we fit a straight line $\hat y_i=\hat \beta_0+\hat\beta_1x_i$.
+
+Then, assuming that the least squares estimates $\hat\beta_0 \text{ and }\hat\beta_1$ are close to the unknown population parameters $\beta_0$ and $\beta_1$. we find that
+
+$$
+\hat e_i=y_i-\hat y_i=(\beta_0-\hat\beta_0)+(\beta_1-\hat\beta_1)x_i+e_i\approx e_i
+$$ From this, we assume that residuals should resemble random errors (or at least approach a distribution identical to the errors as the samples approach the population). If the residuals vary with $x$ then this indicates that an incorrect model has been fit. For example, if the true model is quadratic, i.e.
+
+$$
+y_i=\beta_0+\beta_1x_i+\beta_2x_i^2+e_i
+$$
+
+and we fit the straight line
+
+$$
+\hat y_i=\hat\beta_0 +\hat\beta_1x_i
+$$
+
+then we find
+
+$$
+\hat e_i=y_i-\hat y_i=(\beta_0-\hat\beta_0)+(\beta_1-\hat\beta_1)x_i+\beta_2x_i^2+e_i\approx\beta_2x_i^2+e_i
+$$
+
+That is, the residuals, will resemble a quadratic function of $x$.
+
+Suppose that $Y$ is a quadratic function of $X$ without any random error. Then the residuals from the straight-line fit of $Y$ and $X$ will have a quadratic pattern like we observed before. Then we would need a quadratic term in our model which approaches the population value. Below we will list Regression Diagnostics that we can use to check the validity of all apsects of regression models.
+
+1.  Determine whether the proposed regression model is a valid model. The main tools to validate regression assumptions are plots of **standardized residuals**. The plots enable us to assess visually whether the assumptions are being violated and point to what should be done to overcome these violations (i.e. add another term or employ transformations).
+2.  Determine which (if any) of the data points have x-values that have an unusually large effect on the estimated regression model ( such points are called **leverage points** ).
+3.  Determine which (if any) of the data points are **outliers**, that is, points which do not follow the pattern set by the bulk of the data, when one takes into account the given model.
+4.  If leverage points exist, determine whether each is a **bad leverage point**. If a bad leverage point exists we shall assess its influence on the fitted model.
+5.  Examine whether the assumption of constant variance of the errors is reasonable.
+6.  If the data are collected over time, examine whether the data are correlated over time.
+7.  If the sample size is small or prediction intervals are of interest, examine whether the assumption that the errors are normally distributed is reasonable.
+
+**Leverage points** are data points which exercise considerable influence on the fitted model as a result of its $x$ value being far from the cluster that creates the trend or fit.
+
+A **good leverage point** is typically a point which follows the trend, while a **bad leverage point** is a point that goes against the larger trend.
+
+A bad leverage point is a leverage point that is also an **outlier**, a point which does not follow the overall fit.
+
+Recall from the previous chapter that
+
+$$
+\hat y_i=\hat\beta_0+\hat\beta_1x_i
+$$ where, $\hat\beta_0=\bar y-\hat\beta_1\bar x$ and $\hat\beta_1=\sum_{j=1}^nc_jy_j$, where $c_j=\frac{x_j-\bar x}{SXX}$. So that
+
+$$
+\hat y_i=\bar y-\hat\beta_1\bar x+\hat\beta_1x_i\\
+=\bar y+\hat\beta_1(x_i-\bar x)\\
+=\frac{1}{n}\sum_{j=1}^ny_j+\sum_{j=1}^n\frac{x_j-\bar x}{SXX}y_j(x_i-\bar x)\\
+=\sum_{j=1}^n \left[\frac{1}{n}+\frac{(x_i-\bar x)(x_j-\bar x)}{SXX}\right]y_j\\
+=\sum_{j=1}^n\rm h_{ij}y_j
+$$
+
+We can express a predicted value, $\hat y_i$ as
+
+$$
+\hat y_i=h_{ii}y_i+\sum_{j\neq i}h_{ij}y_j
+$$
+
+where,
+
+$$
+h_{ii}=\frac{1}{n}+\frac{(x_i-\bar x)^2}{\sum_{j=1}^n(x_j-\bar x)^2}
+$$
+
+The term $h_{ii}$ is called the **leverage of the** $i$**th data point**. The top line of the second term in the formula, $(x_i-\bar x)^2$, measures the distance $x_i$ is away from the bulk of the $x$'s, via the squared distance $x_i$ is away from the mean of the $x$'s. Secondly, notice that $h_{ii}$ shows how $y_i$ affects $\hat y_i$. When $h_{ii}$ approaches $1$

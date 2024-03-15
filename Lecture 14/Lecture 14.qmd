@@ -1,0 +1,37 @@
+---
+title: "Lecture 14"
+---
+
+## Lecture 14
+
+```{r}
+library(Stat2Data)
+data(HousesNY)
+```
+
+Using the NY housing data, the full model is given by
+
+$$
+\text{Price = } \beta_0+\beta_1\text{Beds}+\beta_2\text{Baths}+\beta_3\text{Size}+\beta_4\text{Lot}+\epsilon
+$$
+
+In R, conduct a partial F-test for the following hypotheses:
+
+$$
+H_0:\beta_1=\beta_2=\beta_4=0 \\
+H_A: \text{at least one of }\beta_1,\beta_2,\beta_4 \neq 0
+$$
+
+```{r}
+lm_partial <- lm(Price ~ Beds + Baths + Lot, data = HousesNY)
+
+summary(lm_partial)
+```
+
+```{r}
+lm_full <- lm(Price ~ Beds + Baths + Size + Lot, data=HousesNY)
+summary(lm_full)
+
+lm_partial2 <- lm(Price ~ Size, data=HousesNY)
+anova(lm_partial2)
+```

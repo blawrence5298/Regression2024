@@ -1,0 +1,141 @@
+---
+title: "Lecture 9"
+---
+
+## Labs on SLR
+
+Multiple Linear Regression
+
+For this lab we will use the Fandango dataset
+
+```{r}
+install.packages("fivethirtyeight")
+```
+
+```{r}
+library(fivethirtyeight)
+```
+
+```{r}
+head(fandango)
+```
+
+Are the movie ratings on Fandango higher than other websites?
+
+```{r}
+summary(fandango$fandango_ratingvalue)
+```
+
+```{r}
+summary(fandango$imdb_norm)
+```
+
+From these statistics it is plausible that the ratings on fandango are inflated.
+
+```{r}
+Fandango = fandango$fandango_ratingvalue
+Imdb = fandango$imdb_norm
+lm1 = lm(Fandango ~ Imdb, data = fandango)
+```
+
+```{r}
+summary(lm1)
+```
+
+$$
+\hat{fandango} = 1.7239 +0.62974x
+$$
+
+```{r}
+plot(Fandango ~ Imdb,data=fandango,
+     ylab="Fandango Rating", xlab="IMDb Rating",
+     xlim=c(2,4.8), ylim = c(2,4.8))
+abline(lm1)
+abline(0, 1, lty=2)
+```
+
+```{r}
+plot(Fandango ~ Imdb, data=fandango)
+```
+
+```{r}
+attributes(lm1)
+```
+
+```{r}
+coef(lm1)
+```
+
+```{r}
+head(resid(lm1))
+```
+
+```{r}
+head(predict(lm1))
+```
+
+```{r}
+confint(lm1)
+```
+
+```{r}
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+
+plot(predict(lm1), resid(lm1),xlab="Fitted values", ylab="Residuals")
+abline(h=0)
+
+hist(resid(lm1), main="", xlab="Residuals")
+```
+
+```{r}
+qqnorm(rstandard(lm1))
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(fandango, aes(Imdb, Fandango)) + 
+  geom_point() + geom_smoot(method = "lm", se="FALSE") +
+  xlab("IMDb")
+```
+
+Now we begin Lab 2 where we will do simulation
+
+```{r}
+n = 50
+beta0 = 2
+beta1 = 3
+sigma = 5
+
+set.seed(99)
+x = rnorm(n)
+e = rnorm(n, mean=0, sd=sigma)
+y = beta0 + beta1 * x + e
+
+lm1 = lm(y ~ x)
+summary(lm1)
+```
+
+```{r}
+n <- 50 # sample size
+beta0 <- 2 # population intercept
+beta1 <- 3 # population slope
+sigma <- 5
+set.seed(56)
+x <- rnorm(n)
+e <- rnorm(n, mean=0, sd=sigma)
+y <- beta0 + beta1 * x + e
+# estimate SLR model from simulated data
+lm1 <- lm(y ~ x)
+summary(lm1)
+```
+
+```{r}
+par(mar=c(4.5,4.5,2,2)) #adjust margins
+plot(y ~ x)
+abline(beta0, beta1, lwd=1.5, lty=1) # population regression line
+abline(lm1, lwd=1.5, lty=2) # least squares estimate
+legend('bottomright', lwd=1.5, lty=c(1, 2), c('Population', 'Estimate'))
+```

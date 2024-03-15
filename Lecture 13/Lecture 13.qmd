@@ -1,0 +1,15 @@
+---
+title: "Lecture 13"
+---
+
+## Lecture 13
+
+Analysis of variance table:\
+
+![](images/clipboard-674883757.png)
+
+Most computer packages will provide some version of this table. The F-Distribution has two parameters that define it. The
+
+```{r}
+1 + 1
+```
