@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ben Lawrence">
+
+<title>Homework 5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="HW5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="HW5_files/libs/quarto-html/quarto.js"></script>
+<script src="HW5_files/libs/quarto-html/popper.min.js"></script>
+<script src="HW5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="HW5_files/libs/quarto-html/anchor.min.js"></script>
+<link href="HW5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="HW5_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="HW5_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="HW5_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="HW5_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="HW5_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="HW5_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="HW5_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="HW5_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="HW5_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="HW5_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="HW5_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="HW5_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Homework 5</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ben Lawrence </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="homework-5" class="level1">
+<h1>Homework 5</h1>
+<p>The Human Development Index (HDI) is a an index developed by the United Nations to assess the development of a country. The HDI is calculated by combining three indicators: life expectancy at birth, average education, and gross national income per capita. The following are definitions for variables found in the data set.</p>
+<ul>
+<li><p><span class="math inline">\(\text{hdi_2018:}\)</span> HDI for the year 2018</p></li>
+<li><p><span class="math inline">\(\text{median_age:}\)</span> Median age (years) in 2015</p></li>
+<li><p><span class="math inline">\(\text{pctpop65:}\)</span> Percent of population 65 and older in 2018</p></li>
+<li><p><span class="math inline">\(\text{pct_internet:}\)</span> Percent of population that uses the internet in 2017-2018</p></li>
+<li><p><span class="math inline">\(\text{pct_labour:}\)</span> Percent of country’s working-age population that engages actively in the labour market, either by working or looking for work in 2018</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>hdi2018 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"hdi2018.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hdi2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      country hdi_2018 median_age   pctpop65 pct_internet pct_labour
+1 Afghanistan    0.496       17.2 0.02688172         13.5       66.0
+2     Albania    0.791       34.9 0.13793103         71.8       56.1
+3     Algeria    0.759       27.5 0.06398104         59.6       41.3
+4      Angola    0.574       16.4 0.02272727         14.3       77.7
+5   Argentina    0.830       30.5 0.11036036         74.3       60.5
+6     Armenia    0.760       33.8 0.10000000         64.7       58.8</code></pre>
+</div>
+</div>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>(a) Fit a multiple linear regression model with <span class="math inline">\(\text{hdi_2018}\)</span> as the response, and the other four variables as predictors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(hdi_2018 <span class="sc">~</span> median_age <span class="sc">+</span> pctpop65 <span class="sc">+</span> pct_internet <span class="sc">+</span> pct_labour, <span class="at">data=</span>hdi2018)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = hdi_2018 ~ median_age + pctpop65 + pct_internet + 
+    pct_labour, data = hdi2018)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.194838 -0.034699  0.003272  0.031096  0.122529 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.3374494  0.0319098  10.575  &lt; 2e-16 ***
+median_age    0.0080796  0.0011337   7.127  2.7e-11 ***
+pctpop65     -0.0697020  0.1022759  -0.682    0.496    
+pct_internet  0.0028967  0.0002451  11.817  &lt; 2e-16 ***
+pct_labour   -0.0001738  0.0003809  -0.456    0.649    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.05193 on 172 degrees of freedom
+Multiple R-squared:  0.8882,    Adjusted R-squared:  0.8856 
+F-statistic: 341.5 on 4 and 172 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>(b) Using the model fit in (a), is there evidence of a relationship between <span class="math inline">\(\text{hdi_2018}\)</span> and at least one of the predictor variables? Write the null and alternative hypothesis, report the F-test statistic and <span class="math inline">\(p\)</span>-value, and state your conclusion.</p>
+<p><span class="math inline">\(\rm H_0:\beta_1=\beta_2=\beta_3=\beta_4=0\)</span></p>
+<p><span class="math inline">\(\rm H_A: \text{at least one }\beta_j \neq0\)</span></p>
+<p>The F-test statistic is 341.5, leading to a p-value of near 0, <span class="math inline">\(2.2\times10^{-16}\)</span>. So yes, according to the F-test, there is evidence of a relationship between <span class="math inline">\(\text{hdi_2018}\)</span> and at least one of the predictor variables.</p>
+<p>(c) Using the model fit in (a), which predictor variables are statistically significant according to the individual t-tests?</p>
+<p>According to the t-values <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_3\)</span> are significant. One may use a p-value of 0.05 to determine this, but <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_4\)</span> fall outside any reasonable significance range, so according to the t-tests they would not be significant predictors.</p>
+<p>(d) Fit a reduced model with <span class="math inline">\(\text{median_age}\)</span> and <span class="math inline">\(\text{pct_internet}\)</span> as predictors. Use the <span class="math inline">\(\text{anova()}\)</span> function to conduct a partial F-test that compares this reduced model with the full model specified in (a). Make sure to write the null and alternative hypotheses, report the <span class="math inline">\(p\)</span>-value, and state your conclusion.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(hdi_2018 <span class="sc">~</span> median_age <span class="sc">+</span> pct_internet, <span class="at">data =</span> hdi2018)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = hdi_2018 ~ median_age + pct_internet, data = hdi2018)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.191236 -0.034675  0.002006  0.030777  0.126611 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.3341527  0.0142820  23.397   &lt;2e-16 ***
+median_age   0.0075581  0.0007706   9.807   &lt;2e-16 ***
+pct_internet 0.0029287  0.0002392  12.244   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.05172 on 174 degrees of freedom
+Multiple R-squared:  0.8878,    Adjusted R-squared:  0.8865 
+F-statistic: 688.1 on 2 and 174 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm2, lm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: hdi_2018 ~ median_age + pct_internet
+Model 2: hdi_2018 ~ median_age + pctpop65 + pct_internet + pct_labour
+  Res.Df     RSS Df Sum of Sq      F Pr(&gt;F)
+1    174 0.46552                           
+2    172 0.46380  2 0.0017236 0.3196 0.7269</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(H_0: \beta_2=\beta_4=0\)</span></p>
+<p><span class="math inline">\(H_A: \beta_2 \neq0 \text{ and/or }\beta_4 \neq0\)</span></p>
+<p>From the partial F-test we obtain a p-value of 0.7269. This is sufficiently large to fail to reject the null hypothesis. Thus we conclude the partial model is a better model than the full model, and we have not lost any significant information.</p>
+<p>(e) According to the adjusted-<span class="math inline">\(R^2\)</span>, how does the full model in (a) compare with the reduced model in (d)? Is this consistent with your conclusion for the partial F-test?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)<span class="sc">$</span>adj.r.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8855708</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)<span class="sc">$</span>adj.r.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8864657</code></pre>
+</div>
+</div>
+<p>The reduced model gives a better adjusted <span class="math inline">\(\rm R^2\)</span> value than the full model. It is not a large increase and ,using just this information, I would conclude the models fit the data equally well. However, the reduced model is preferable due to parsimony and ease of interpretability. The partial F-test has also provided evidence that the full model does not add any significant information that would warrant using the full model.</p>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>For this exercise, consider the regression model with <span class="math inline">\(\text{hdi_2018}\)</span> as the response, and <span class="math inline">\(\text{median_age}\)</span> and <span class="math inline">\(\text{pct_internet}\)</span> as predictors.</p>
+<p>(a) Make a scatterplot matrix for the three variables. Describe the associations between the variables in the scatterplot matrix.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(<span class="sc">~</span>hdi_2018 <span class="sc">+</span> median_age <span class="sc">+</span> pct_internet, <span class="at">data=</span>hdi2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="HW5_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Visually, there appears to be a linear relationship between each combination of the three variables.</p>
+<p>(b) Make a plot of residuals versus fitted values, and a QQ plot of the standardized residuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>resid1 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(lm2)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">fitted</span>(lm2)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">fit1 =</span> fit1, <span class="at">resid1 =</span> resid1)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>df1, <span class="fu">aes</span>(fit1,resid1 )) <span class="sc">+</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">x=</span><span class="st">"Fitted Values"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ef69b6a629510f2d09dd" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ef69b6a629510f2d09dd">{"x":{"data":[{"x":[0.50369021318017793,0.80821397829398678,0.7165533717567022,0.49998670361788772,0.78228008530018467,0.7791060519669607,0.86865000871739062,0.9175131993233413,0.79687648639717856,0.81664076295151666,0.85873895091986174,0.5723273201805873,0.86848958304123491,0.86436106657943135,0.90608150550180444,0.65122337315707812,0.53028508855884382,0.66926834243312583,0.64458180574691348,0.8470722229600337,0.64563981685798821,0.76916701599613102,0.83719846939357256,0.85195686507848722,0.50950041890685172,0.47130409797272699,0.6943136622674233,0.63194100119591323,0.53965703028718592,0.90601528175037693,0.47599006883689804,0.47411934815786577,0.83065173147284221,0.7705657857044631,0.7395771850759314,0.50794185108707002,0.50248110245071509,0.48631617991146658,0.78698502206224252,0.8728264105974407,0.80975452156294103,0.84511599884933419,0.8834074630552462,0.60953091240800594,0.93441465405664692,0.68623602091785907,0.75351197622335653,0.70225916989648562,0.65517249804483901,0.62738747783459714,0.57791988875509126,0.48307592282681516,0.91039905337777038,0.62069802500618587,0.52694067592699123,0.68465848720019051,0.91573699435139033,0.8857031906337911,0.68428011058951244,0.52440865908074319,0.80653260281147043,0.94377758350957519,0.60482628942830097,0.87597246575736387,0.6855081872168628,0.51611369436136256,0.48464413048671678,0.632347355979892,0.60090577027854697,0.59705116109786738,0.92249204336652302,0.87220273244364555,0.89618941360216242,0.63775152070493946,0.66612260105555565,0.76364004360834858,0.62999441692533353,0.85750186201709755,0.80139239174507393,0.89518892774945436,0.71471125681567649,0.93262011075151507,0.6968263994334315,0.78743832091740895,0.5291325617406879,0.92338931501908894,0.87905135581880045,0.63515328010726391,0.58116045962209562,0.9009705277381207,0.77178359492698745,0.59292264463606392,0.49967517832334324,0.60282406259347288,0.89030428563100084,0.9155666150527616,0.50419108367123866,0.50456883271721065,0.78510466154309033,0.73541073681835423,0.49315610479356065,0.88319013968542992,0.54320944023108797,0.77484540178465533,0.73622313260395889,0.82609820811152612,0.60838865299467593,0.82849809123727225,0.73480602456244604,0.49268384004050736,0.63191302302261243,0.64299431840677201,0.92970039123682213,0.8819993672891473,0.60179402965569895,0.46229093939247001,0.59244975231830466,0.84878189039820429,0.91305356410440042,0.78822242474735982,0.54431502297805623,0.6701463344054519,0.71837683458219359,0.5294540406577054,0.7112057909429621,0.69575937604694293,0.69232013392565606,0.8611867194638545,0.88473036917203085,0.86422799151187046,0.85336433327988015,0.86283047693295056,0.54462654827260071,0.72781531384431619,0.63859283601090377,0.5905227615103178,0.56003534515519926,0.83414692994073059,0.60567630322732635,0.85522541411879249,0.50184809823915311,0.89252414961799831,0.86677960182071134,0.89286459443290267,0.51714372729913649,0.69828175305307105,0.49665193082615505,0.90753654533909089,0.67814968107523388,0.56749894819108837,0.68823918909974624,0.91301594609097969,0.91581254416058466,0.61297979436941274,0.5648634033623452,0.54039387626359614,0.78695735767129482,0.56283194322480423,0.51256159819981362,0.62033924185810063,0.81600807252230767,0.75874638921448123,0.76808039914704962,0.59002251858396382,0.52373772307340749,0.8089797437907571,0.86902744398100962,0.91441408823460568,0.87401624164666425,0.79871922890291003,0.68534807532306008,0.56662996849417624,0.75135802220543346,0.77056515813975701,0.55670989842123342,0.50225413924077889,0.5525907080171969],"y":[-0.0076902131801779771,-0.017213978293986739,0.042446628243297785,0.074013296382112223,0.047719914699815326,-0.019106051966960684,0.069349991282609338,-0.0035131993233412742,-0.042876486397178552,-0.011640762951516632,-0.020738950919861721,0.04167267981941266,-0.055489583041234913,-0.047361066579431448,0.012918494498195645,0.068776626842921837,-0.010285088558843816,-0.052268342433125857,0.058418194253086433,-0.07807222296003373,0.082360183142011822,-0.0081670159961310575,0.0078015306064274552,-0.035956865078487277,-0.075500418906851732,-0.048304097972727007,-0.043313662267423329,-0.050941001195913244,0.023342969712814021,0.015984718249623119,-0.09499006883689802,-0.073119348157865735,0.016348268527157796,-0.012565785704463098,0.021422814924068605,0.030058148912929992,0.10651889754928487,-0.027316179911466561,0.0070149779377575066,-0.035826410597440718,-0.031754521562941007,0.027884001150665829,0.0075925369447537921,-0.093530912408005873,-0.0044146540566469272,-0.19123602091785905,-0.0085119762233565027,0.055740830103514334,0.044827501955160942,0.039612522165402918,0.010080111244908749,-0.049075922826815145,-0.028399053377770392,-0.012698025006185856,-0.056940675926991251,0.039341512799809485,0.0092630056486097522,0.0052968093662088883,0.017719889410487515,-0.058408659080743143,-0.020532602811470436,-0.0047775835095752433,-0.0088262894283010363,-0.0039724657573638458,-0.034508187216862746,-0.050113694361362586,-0.023644130486716746,0.037652644020108039,-0.097905770278546939,0.025948838902132659,0.01650795663347689,-0.0272027324436456,0.041810586397837558,0.0092484792950606118,0.040877398944444289,0.033359956391651402,0.059005583074666426,0.084498137982902455,0.10460760825492611,-0.012188927749454348,0.011288743184323468,-0.017620110751515088,0.026173600566568471,0.029561679082590969,0.049867438259312037,-0.017389315019088879,-0.071051355818800455,0.038846719892736144,0.022839540377904317,-0.046970527738120736,-0.041783594926987438,-0.074922644636063879,-0.034675178323343207,0.10517593740652711,-0.021304285631000886,-0.0065666150527615283,0.016808916328761411,-0.019568832717210632,0.018895338456909685,-0.016410736818354303,-0.066156104793560655,0.0018098603145700388,-0.016209440231087915,0.021154598215344711,0.030776867396041182,-0.11509820811152616,0.12661134700532403,-0.012498091237272304,-0.058806024562445977,-0.046683840040507379,-0.047913023022612487,0.0020056815932279768,0.0042996087631778758,0.039000632710852745,0.049205970344301062,-0.085290939392470011,-0.058449752318304578,-0.089781890398204237,0.040946435895599514,0.045777575252640174,0.015684977021943814,0.019853665594548025,0.076623165417806477,0.01354595934229462,0.012794209057037853,0.063240623953057074,0.019679866074343903,0.010813280536145531,-0.034730369172030824,-0.016227991511870436,-0.037364333279880181,-0.03883047693295056,-0.0086265482726007175,0.017184686155683825,0.089407163989096192,0.11647723848968215,0.048964654844800767,0.022853070059269384,-0.091676303227326297,-0.056225414118792449,-0.063848098239153078,0.042475850382001711,-0.0097796018207113831,0.0091354055670973839,0.03985627270086356,0.006718246946928904,-0.083651930826155074,-0.014536545339090915,0.1018503189247662,-0.059498948191088356,0.03576081090025373,0.023984053909020354,0.030187455839415234,-0.063979794369412701,0.091136596637654846,-0.012393876263596114,-0.02195735767129478,0.063168056775195811,0.00043840180018640655,0.096660758141899283,-0.017008072522307616,-0.01974638921448128,0.038919600852950424,0.11997748141603616,0.0042622769265925663,-0.058979743790757155,-0.0030274439810095977,0.0055859117653943319,0.04598375835333577,0.009280771097090015,0.024651924676939933,0.030370031505823732,-0.025358022205433511,-0.07756515813975709,-0.093709898421233437,0.088745860759221112,0.010409291982803002],"text":["fit1: 0.5036902<br />resid1: -0.0076902132","fit1: 0.8082140<br />resid1: -0.0172139783","fit1: 0.7165534<br />resid1:  0.0424466282","fit1: 0.4999867<br />resid1:  0.0740132964","fit1: 0.7822801<br />resid1:  0.0477199147","fit1: 0.7791061<br />resid1: -0.0191060520","fit1: 0.8686500<br />resid1:  0.0693499913","fit1: 0.9175132<br />resid1: -0.0035131993","fit1: 0.7968765<br />resid1: -0.0428764864","fit1: 0.8166408<br />resid1: -0.0116407630","fit1: 0.8587390<br />resid1: -0.0207389509","fit1: 0.5723273<br />resid1:  0.0416726798","fit1: 0.8684896<br />resid1: -0.0554895830","fit1: 0.8643611<br />resid1: -0.0473610666","fit1: 0.9060815<br />resid1:  0.0129184945","fit1: 0.6512234<br />resid1:  0.0687766268","fit1: 0.5302851<br />resid1: -0.0102850886","fit1: 0.6692683<br />resid1: -0.0522683424","fit1: 0.6445818<br />resid1:  0.0584181943","fit1: 0.8470722<br />resid1: -0.0780722230","fit1: 0.6456398<br />resid1:  0.0823601831","fit1: 0.7691670<br />resid1: -0.0081670160","fit1: 0.8371985<br />resid1:  0.0078015306","fit1: 0.8519569<br />resid1: -0.0359568651","fit1: 0.5095004<br />resid1: -0.0755004189","fit1: 0.4713041<br />resid1: -0.0483040980","fit1: 0.6943137<br />resid1: -0.0433136623","fit1: 0.6319410<br />resid1: -0.0509410012","fit1: 0.5396570<br />resid1:  0.0233429697","fit1: 0.9060153<br />resid1:  0.0159847182","fit1: 0.4759901<br />resid1: -0.0949900688","fit1: 0.4741193<br />resid1: -0.0731193482","fit1: 0.8306517<br />resid1:  0.0163482685","fit1: 0.7705658<br />resid1: -0.0125657857","fit1: 0.7395772<br />resid1:  0.0214228149","fit1: 0.5079419<br />resid1:  0.0300581489","fit1: 0.5024811<br />resid1:  0.1065188975","fit1: 0.4863162<br />resid1: -0.0273161799","fit1: 0.7869850<br />resid1:  0.0070149779","fit1: 0.8728264<br />resid1: -0.0358264106","fit1: 0.8097545<br />resid1: -0.0317545216","fit1: 0.8451160<br />resid1:  0.0278840012","fit1: 0.8834075<br />resid1:  0.0075925369","fit1: 0.6095309<br />resid1: -0.0935309124","fit1: 0.9344147<br />resid1: -0.0044146541","fit1: 0.6862360<br />resid1: -0.1912360209","fit1: 0.7535120<br />resid1: -0.0085119762","fit1: 0.7022592<br />resid1:  0.0557408301","fit1: 0.6551725<br />resid1:  0.0448275020","fit1: 0.6273875<br />resid1:  0.0396125222","fit1: 0.5779199<br />resid1:  0.0100801112","fit1: 0.4830759<br />resid1: -0.0490759228","fit1: 0.9103991<br />resid1: -0.0283990534","fit1: 0.6206980<br />resid1: -0.0126980250","fit1: 0.5269407<br />resid1: -0.0569406759","fit1: 0.6846585<br />resid1:  0.0393415128","fit1: 0.9157370<br />resid1:  0.0092630056","fit1: 0.8857032<br />resid1:  0.0052968094","fit1: 0.6842801<br />resid1:  0.0177198894","fit1: 0.5244087<br />resid1: -0.0584086591","fit1: 0.8065326<br />resid1: -0.0205326028","fit1: 0.9437776<br />resid1: -0.0047775835","fit1: 0.6048263<br />resid1: -0.0088262894","fit1: 0.8759725<br />resid1: -0.0039724658","fit1: 0.6855082<br />resid1: -0.0345081872","fit1: 0.5161137<br />resid1: -0.0501136944","fit1: 0.4846441<br />resid1: -0.0236441305","fit1: 0.6323474<br />resid1:  0.0376526440","fit1: 0.6009058<br />resid1: -0.0979057703","fit1: 0.5970512<br />resid1:  0.0259488389","fit1: 0.9224920<br />resid1:  0.0165079566","fit1: 0.8722027<br />resid1: -0.0272027324","fit1: 0.8961894<br />resid1:  0.0418105864","fit1: 0.6377515<br />resid1:  0.0092484793","fit1: 0.6661226<br />resid1:  0.0408773989","fit1: 0.7636400<br />resid1:  0.0333599564","fit1: 0.6299944<br />resid1:  0.0590055831","fit1: 0.8575019<br />resid1:  0.0844981380","fit1: 0.8013924<br />resid1:  0.1046076083","fit1: 0.8951889<br />resid1: -0.0121889277","fit1: 0.7147113<br />resid1:  0.0112887432","fit1: 0.9326201<br />resid1: -0.0176201108","fit1: 0.6968264<br />resid1:  0.0261736006","fit1: 0.7874383<br />resid1:  0.0295616791","fit1: 0.5291326<br />resid1:  0.0498674383","fit1: 0.9233893<br />resid1: -0.0173893150","fit1: 0.8790514<br />resid1: -0.0710513558","fit1: 0.6351533<br />resid1:  0.0388467199","fit1: 0.5811605<br />resid1:  0.0228395404","fit1: 0.9009705<br />resid1: -0.0469705277","fit1: 0.7717836<br />resid1: -0.0417835949","fit1: 0.5929226<br />resid1: -0.0749226446","fit1: 0.4996752<br />resid1: -0.0346751783","fit1: 0.6028241<br />resid1:  0.1051759374","fit1: 0.8903043<br />resid1: -0.0213042856","fit1: 0.9155666<br />resid1: -0.0065666151","fit1: 0.5041911<br />resid1:  0.0168089163","fit1: 0.5045688<br />resid1: -0.0195688327","fit1: 0.7851047<br />resid1:  0.0188953385","fit1: 0.7354107<br />resid1: -0.0164107368","fit1: 0.4931561<br />resid1: -0.0661561048","fit1: 0.8831901<br />resid1:  0.0018098603","fit1: 0.5432094<br />resid1: -0.0162094402","fit1: 0.7748454<br />resid1:  0.0211545982","fit1: 0.7362231<br />resid1:  0.0307768674","fit1: 0.8260982<br />resid1: -0.1150982081","fit1: 0.6083887<br />resid1:  0.1266113470","fit1: 0.8284981<br />resid1: -0.0124980912","fit1: 0.7348060<br />resid1: -0.0588060246","fit1: 0.4926838<br />resid1: -0.0466838400","fit1: 0.6319130<br />resid1: -0.0479130230","fit1: 0.6429943<br />resid1:  0.0020056816","fit1: 0.9297004<br />resid1:  0.0042996088","fit1: 0.8819994<br />resid1:  0.0390006327","fit1: 0.6017940<br />resid1:  0.0492059703","fit1: 0.4622909<br />resid1: -0.0852909394","fit1: 0.5924498<br />resid1: -0.0584497523","fit1: 0.8487819<br />resid1: -0.0897818904","fit1: 0.9130536<br />resid1:  0.0409464359","fit1: 0.7882224<br />resid1:  0.0457775753","fit1: 0.5443150<br />resid1:  0.0156849770","fit1: 0.6701463<br />resid1:  0.0198536656","fit1: 0.7183768<br />resid1:  0.0766231654","fit1: 0.5294540<br />resid1:  0.0135459593","fit1: 0.7112058<br />resid1:  0.0127942091","fit1: 0.6957594<br />resid1:  0.0632406240","fit1: 0.6923201<br />resid1:  0.0196798661","fit1: 0.8611867<br />resid1:  0.0108132805","fit1: 0.8847304<br />resid1: -0.0347303692","fit1: 0.8642280<br />resid1: -0.0162279915","fit1: 0.8533643<br />resid1: -0.0373643333","fit1: 0.8628305<br />resid1: -0.0388304769","fit1: 0.5446265<br />resid1: -0.0086265483","fit1: 0.7278153<br />resid1:  0.0171846862","fit1: 0.6385928<br />resid1:  0.0894071640","fit1: 0.5905228<br />resid1:  0.1164772385","fit1: 0.5600353<br />resid1:  0.0489646548","fit1: 0.8341469<br />resid1:  0.0228530701","fit1: 0.6056763<br />resid1: -0.0916763032","fit1: 0.8552254<br />resid1: -0.0562254141","fit1: 0.5018481<br />resid1: -0.0638480982","fit1: 0.8925241<br />resid1:  0.0424758504","fit1: 0.8667796<br />resid1: -0.0097796018","fit1: 0.8928646<br />resid1:  0.0091354056","fit1: 0.5171437<br />resid1:  0.0398562727","fit1: 0.6982818<br />resid1:  0.0067182469","fit1: 0.4966519<br />resid1: -0.0836519308","fit1: 0.9075365<br />resid1: -0.0145365453","fit1: 0.6781497<br />resid1:  0.1018503189","fit1: 0.5674989<br />resid1: -0.0594989482","fit1: 0.6882392<br />resid1:  0.0357608109","fit1: 0.9130159<br />resid1:  0.0239840539","fit1: 0.9158125<br />resid1:  0.0301874558","fit1: 0.6129798<br />resid1: -0.0639797944","fit1: 0.5648634<br />resid1:  0.0911365966","fit1: 0.5403939<br />resid1: -0.0123938763","fit1: 0.7869574<br />resid1: -0.0219573577","fit1: 0.5628319<br />resid1:  0.0631680568","fit1: 0.5125616<br />resid1:  0.0004384018","fit1: 0.6203392<br />resid1:  0.0966607581","fit1: 0.8160081<br />resid1: -0.0170080725","fit1: 0.7587464<br />resid1: -0.0197463892","fit1: 0.7680804<br />resid1:  0.0389196009","fit1: 0.5900225<br />resid1:  0.1199774814","fit1: 0.5237377<br />resid1:  0.0042622769","fit1: 0.8089797<br />resid1: -0.0589797438","fit1: 0.8690274<br />resid1: -0.0030274440","fit1: 0.9144141<br />resid1:  0.0055859118","fit1: 0.8740162<br />resid1:  0.0459837584","fit1: 0.7987192<br />resid1:  0.0092807711","fit1: 0.6853481<br />resid1:  0.0246519247","fit1: 0.5666300<br />resid1:  0.0303700315","fit1: 0.7513580<br />resid1: -0.0253580222","fit1: 0.7705652<br />resid1: -0.0775651581","fit1: 0.5567099<br />resid1: -0.0937098984","fit1: 0.5022541<br />resid1:  0.0887458608","fit1: 0.5525907<br />resid1:  0.0104092920"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.228310502283104,"r":7.3059360730593621,"b":40.182648401826491,"l":48.949771689497723},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.43821660718661476,0.9678519157154305],"tickmode":"array","ticktext":["0.5","0.6","0.7","0.8","0.9"],"tickvals":[0.5,0.60000000000000009,0.70000000000000007,0.80000000000000004,0.90000000000000002],"categoryorder":"array","categoryarray":["0.5","0.6","0.7","0.8","0.9"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Fitted Values","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.2071283893140182,0.14250371540148318],"tickmode":"array","ticktext":["-0.2","-0.1","0.0","0.1"],"tickvals":[-0.20000000000000001,-0.10000000000000002,0,0.10000000000000001],"categoryorder":"array","categoryarray":["-0.2","-0.1","0.0","0.1"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Residuals","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"28e44e3739d":{"x":{},"y":{},"type":"scatter"}},"cur_data":"28e44e3739d","visdat":{"28e44e3739d":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rstd <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(lm2)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">rstd =</span> rstd), <span class="fu">aes</span>(<span class="at">sample=</span>rstd)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Theoretical Quanities"</span>,<span class="at">y=</span><span class="st">"Standardized Residuals"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-c4038aaeaf27f8ae9c6d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-c4038aaeaf27f8ae9c6d">{"x":{"data":[{"x":[-2.7674473222790059,-2.3878088977123562,-2.193816730369607,-2.0584388814081338,-1.9527649153452153,-1.8652462697912713,-1.7900471760621939,-1.7237899879084901,-1.6643365219878166,-1.6102438463233038,-1.5604902688884845,-1.5143247162382638,-1.4711781750588797,-1.4306087689606295,-1.3922661829248315,-1.3558677729192208,-1.3211820259538571,-1.2880168062013417,-1.2562108112491146,-1.2256272376779556,-1.1961490019518788,-1.1676750783348302,-1.1401176534903275,-1.1133998878025673,-1.0874541339875026,-1.0622205049057669,-1.037645711235589,-1.0136821099779418,-0.99028691933576873,-0.96742156610170138,-0.94505113948675101,-0.92314393113012294,-0.90167104540206544,-0.88060606743563841,-0.85992477887400232,-0.83960491329434495,-0.81962594481039797,-0.79996890456716852,-0.78061622080113213,-0.76155157890431147,-0.74275979854467489,-0.72422672539098143,-0.70593913539263276,-0.68788464989361875,-0.67005166012917361,-0.65242925987599165,-0.63500718521093125,-0.61777576048627791,-0.60072584975759402,-0.58384881300751046,-0.56713646659920047,-0.55058104746966274,-0.5341751806377244,-0.51791184965681758,-0.50178436968964202,-0.48578636292214655,-0.46991173606887909,-0.45415465975158231,-0.43850954955866628,-0.42297104861549967,-0.40753401151481994,-0.39219348947341931,-0.37694471659595291,-0.36178309713956908,-0.34670419368430455,-0.33170371612406691,-0.31677751140170823,-0.30192155391933229,-0.28713193656173003,-0.27240486227679017,-0.25773663616200199,-0.24312365801083591,-0.22856241527691878,-0.2140494764175957,-0.1995814845817179,-0.18515515160939242,-0.17076725231398893,-0.15641461901897519,-0.14209413632416573,-0.12780273607775178,-0.11353739253205032,-0.099295117662292501,-0.085072956628981983,-0.070867983365400566,-0.056677296272747937,-0.042498014006169378,-0.028327271335572345,-0.014162215065656731,0,0.014162215065656592,0.028327271335572345,0.042498014006169239,0.056677296272747937,0.070867983365400414,0.085072956628981983,0.099295117662292376,0.11353739253205032,0.12780273607775178,0.14209413632416587,0.15641461901897519,0.17076725231398904,0.18515515160939242,0.19958148458171801,0.2140494764175957,0.22856241527691892,0.24312365801083591,0.25773663616200182,0.27240486227679017,0.28713193656172992,0.30192155391933229,0.31677751140170818,0.33170371612406691,0.34670419368430444,0.36178309713956924,0.37694471659595291,0.39219348947341937,0.40753401151481994,0.42297104861549983,0.43850954955866628,0.45415465975158226,0.46991173606887909,0.48578636292214633,0.50178436968964202,0.51791184965681747,0.5341751806377244,0.55058104746966252,0.56713646659920047,0.58384881300751001,0.60072584975759402,0.61777576048627791,0.63500718521093147,0.65242925987599165,0.67005166012917361,0.68788464989361875,0.70593913539263298,0.72422672539098143,0.742759798544675,0.76155157890431147,0.78061622080113213,0.79996890456716852,0.81962594481039763,0.83960491329434495,0.85992477887400232,0.88060606743563841,0.90167104540206544,0.92314393113012294,0.94505113948675101,0.96742156610170138,0.99028691933576873,1.0136821099779418,1.037645711235589,1.0622205049057671,1.0874541339875026,1.113399887802567,1.1401176534903275,1.16767507833483,1.1961490019518788,1.2256272376779553,1.2562108112491146,1.2880168062013417,1.3211820259538571,1.3558677729192208,1.3922661829248315,1.4306087689606295,1.4711781750588797,1.5143247162382638,1.560490268888485,1.6102438463233038,1.664336521987817,1.7237899879084901,1.7900471760621937,1.8652462697912713,1.9527649153452147,2.0584388814081347,2.1938167303696061,2.387808897712357,2.7674473222790024],"y":[-3.7153671003022537,-2.2355583154811356,-1.9014013203233364,-1.8579659025495847,-1.8293121388570648,-1.8232161957846962,-1.7931022599405742,-1.745353817197427,-1.6679390570994865,-1.6342947157327468,-1.5252273549902737,-1.5062643850050248,-1.4720323349686733,-1.4558581659346013,-1.4290413813434428,-1.3952848614194924,-1.2910790262550671,-1.2470057397082688,-1.2421565738135425,-1.1578793731386579,-1.156293368251428,-1.1423432930009636,-1.1417815490451053,-1.1379819808640779,-1.1091360707266578,-1.0970044328829656,-1.0798129746459932,-1.0138200664015076,-0.98854792742333275,-0.97677082550624206,-0.9624443581832326,-0.94545009070982944,-0.93293542506428007,-0.92207466896623813,-0.91735685378918941,-0.91132863474194803,-0.84200973696729497,-0.83567630908015311,-0.81680891686733781,-0.75541665652636603,-0.73059236178968279,-0.70848502311817141,-0.7025113702891076,-0.68164071426643402,-0.67753552464391886,-0.67750085689527229,-0.62440688949728063,-0.55383971417653188,-0.53347939194238503,-0.53138094375524192,-0.49428385275410053,-0.46277714447160012,-0.42905621259176541,-0.41646528365608931,-0.40867339678098791,-0.39999161643465192,-0.38297858953532871,-0.38164914615131557,-0.37077387547590285,-0.34642215513666236,-0.33925683949625485,-0.33418905644444585,-0.33040384558602609,-0.31988297621146855,-0.31850384264916326,-0.3155130132453578,-0.28378277168630128,-0.24774034836656847,-0.24528385632228919,-0.24308660192548898,-0.24140780116480934,-0.24013231111493172,-0.22732227526225676,-0.20030864350171329,-0.19033652536583737,-0.17162077351506028,-0.16789239681685658,-0.16637383150617666,-0.15845455057173541,-0.14999082640741457,-0.12813950454312972,-0.093700585568703573,-0.086181630048372482,-0.077936294450785093,-0.068635318191817021,-0.059492845178580472,0.008552027469645845,0.035289182845835973,0.039101470528000871,0.083159397527925477,0.08391638934568281,0.10328420501163302,0.10893386408357716,0.13038827615763007,0.1363131684826446,0.14810977716809262,0.1536376257640607,0.17866857686198709,0.17972402861433745,0.18018558789505942,0.18080232497094256,0.19596962379745919,0.20262363212363488,0.21059833111186871,0.21886800637299891,0.24951193834119506,0.25186889943411722,0.26471324394763318,0.30595930788646825,0.31153300836297615,0.31802018013199923,0.3224637891687781,0.3281903414247378,0.33390104308296609,0.34650063170252754,0.36968126251589473,0.38331092897875002,0.39142487278546717,0.41160201570047505,0.41554294701602296,0.44415882218044989,0.44947802733929804,0.454486527902278,0.4676210295028011,0.47822259127559957,0.50400699472277133,0.51353695419761691,0.54251715688580004,0.57655295124494876,0.58744033888631797,0.58903700100346068,0.5905256587042651,0.59814672161341631,0.6481094938981129,0.69340962703422659,0.73074898155533086,0.75385758462218588,0.75623766676879367,0.75976497872318205,0.76286153722422789,0.76946627723377914,0.77777145212221199,0.79405443839336265,0.79887118752064168,0.81657248329013776,0.81808779305377743,0.82375610452040893,0.82726136596177935,0.8700093861524637,0.8939397430154038,0.89495095700645677,0.92780147381602029,0.95334750564280901,0.95692833787446707,0.97135841287062341,1.0819799159074295,1.1336253962576701,1.1517050232220374,1.2262550960001604,1.2285944347308473,1.3353958997717041,1.3494572249452477,1.4438305921383248,1.4859959597687931,1.6000493972595131,1.643504592347689,1.7309755306697587,1.7628843191551571,1.773693409919417,1.8780154295205767,1.9937497885003364,2.0409183373410804,2.0563225795238176,2.0807936859764964,2.2635039182733525,2.3417639931607441,2.472674453252123],"text":["theoretical: -2.76744732<br />sample: -3.715367100<br />rstd: -3.715367100","theoretical: -2.38780890<br />sample: -2.235558315<br />rstd: -2.235558315","theoretical: -2.19381673<br />sample: -1.901401320<br />rstd: -1.901401320","theoretical: -2.05843888<br />sample: -1.857965903<br />rstd: -1.857965903","theoretical: -1.95276492<br />sample: -1.829312139<br />rstd: -1.829312139","theoretical: -1.86524627<br />sample: -1.823216196<br />rstd: -1.823216196","theoretical: -1.79004718<br />sample: -1.793102260<br />rstd: -1.793102260","theoretical: -1.72378999<br />sample: -1.745353817<br />rstd: -1.745353817","theoretical: -1.66433652<br />sample: -1.667939057<br />rstd: -1.667939057","theoretical: -1.61024385<br />sample: -1.634294716<br />rstd: -1.634294716","theoretical: -1.56049027<br />sample: -1.525227355<br />rstd: -1.525227355","theoretical: -1.51432472<br />sample: -1.506264385<br />rstd: -1.506264385","theoretical: -1.47117818<br />sample: -1.472032335<br />rstd: -1.472032335","theoretical: -1.43060877<br />sample: -1.455858166<br />rstd: -1.455858166","theoretical: -1.39226618<br />sample: -1.429041381<br />rstd: -1.429041381","theoretical: -1.35586777<br />sample: -1.395284861<br />rstd: -1.395284861","theoretical: -1.32118203<br />sample: -1.291079026<br />rstd: -1.291079026","theoretical: -1.28801681<br />sample: -1.247005740<br />rstd: -1.247005740","theoretical: -1.25621081<br />sample: -1.242156574<br />rstd: -1.242156574","theoretical: -1.22562724<br />sample: -1.157879373<br />rstd: -1.157879373","theoretical: -1.19614900<br />sample: -1.156293368<br />rstd: -1.156293368","theoretical: -1.16767508<br />sample: -1.142343293<br />rstd: -1.142343293","theoretical: -1.14011765<br />sample: -1.141781549<br />rstd: -1.141781549","theoretical: -1.11339989<br />sample: -1.137981981<br />rstd: -1.137981981","theoretical: -1.08745413<br />sample: -1.109136071<br />rstd: -1.109136071","theoretical: -1.06222050<br />sample: -1.097004433<br />rstd: -1.097004433","theoretical: -1.03764571<br />sample: -1.079812975<br />rstd: -1.079812975","theoretical: -1.01368211<br />sample: -1.013820066<br />rstd: -1.013820066","theoretical: -0.99028692<br />sample: -0.988547927<br />rstd: -0.988547927","theoretical: -0.96742157<br />sample: -0.976770826<br />rstd: -0.976770826","theoretical: -0.94505114<br />sample: -0.962444358<br />rstd: -0.962444358","theoretical: -0.92314393<br />sample: -0.945450091<br />rstd: -0.945450091","theoretical: -0.90167105<br />sample: -0.932935425<br />rstd: -0.932935425","theoretical: -0.88060607<br />sample: -0.922074669<br />rstd: -0.922074669","theoretical: -0.85992478<br />sample: -0.917356854<br />rstd: -0.917356854","theoretical: -0.83960491<br />sample: -0.911328635<br />rstd: -0.911328635","theoretical: -0.81962594<br />sample: -0.842009737<br />rstd: -0.842009737","theoretical: -0.79996890<br />sample: -0.835676309<br />rstd: -0.835676309","theoretical: -0.78061622<br />sample: -0.816808917<br />rstd: -0.816808917","theoretical: -0.76155158<br />sample: -0.755416657<br />rstd: -0.755416657","theoretical: -0.74275980<br />sample: -0.730592362<br />rstd: -0.730592362","theoretical: -0.72422673<br />sample: -0.708485023<br />rstd: -0.708485023","theoretical: -0.70593914<br />sample: -0.702511370<br />rstd: -0.702511370","theoretical: -0.68788465<br />sample: -0.681640714<br />rstd: -0.681640714","theoretical: -0.67005166<br />sample: -0.677535525<br />rstd: -0.677535525","theoretical: -0.65242926<br />sample: -0.677500857<br />rstd: -0.677500857","theoretical: -0.63500719<br />sample: -0.624406889<br />rstd: -0.624406889","theoretical: -0.61777576<br />sample: -0.553839714<br />rstd: -0.553839714","theoretical: -0.60072585<br />sample: -0.533479392<br />rstd: -0.533479392","theoretical: -0.58384881<br />sample: -0.531380944<br />rstd: -0.531380944","theoretical: -0.56713647<br />sample: -0.494283853<br />rstd: -0.494283853","theoretical: -0.55058105<br />sample: -0.462777144<br />rstd: -0.462777144","theoretical: -0.53417518<br />sample: -0.429056213<br />rstd: -0.429056213","theoretical: -0.51791185<br />sample: -0.416465284<br />rstd: -0.416465284","theoretical: -0.50178437<br />sample: -0.408673397<br />rstd: -0.408673397","theoretical: -0.48578636<br />sample: -0.399991616<br />rstd: -0.399991616","theoretical: -0.46991174<br />sample: -0.382978590<br />rstd: -0.382978590","theoretical: -0.45415466<br />sample: -0.381649146<br />rstd: -0.381649146","theoretical: -0.43850955<br />sample: -0.370773875<br />rstd: -0.370773875","theoretical: -0.42297105<br />sample: -0.346422155<br />rstd: -0.346422155","theoretical: -0.40753401<br />sample: -0.339256839<br />rstd: -0.339256839","theoretical: -0.39219349<br />sample: -0.334189056<br />rstd: -0.334189056","theoretical: -0.37694472<br />sample: -0.330403846<br />rstd: -0.330403846","theoretical: -0.36178310<br />sample: -0.319882976<br />rstd: -0.319882976","theoretical: -0.34670419<br />sample: -0.318503843<br />rstd: -0.318503843","theoretical: -0.33170372<br />sample: -0.315513013<br />rstd: -0.315513013","theoretical: -0.31677751<br />sample: -0.283782772<br />rstd: -0.283782772","theoretical: -0.30192155<br />sample: -0.247740348<br />rstd: -0.247740348","theoretical: -0.28713194<br />sample: -0.245283856<br />rstd: -0.245283856","theoretical: -0.27240486<br />sample: -0.243086602<br />rstd: -0.243086602","theoretical: -0.25773664<br />sample: -0.241407801<br />rstd: -0.241407801","theoretical: -0.24312366<br />sample: -0.240132311<br />rstd: -0.240132311","theoretical: -0.22856242<br />sample: -0.227322275<br />rstd: -0.227322275","theoretical: -0.21404948<br />sample: -0.200308644<br />rstd: -0.200308644","theoretical: -0.19958148<br />sample: -0.190336525<br />rstd: -0.190336525","theoretical: -0.18515515<br />sample: -0.171620774<br />rstd: -0.171620774","theoretical: -0.17076725<br />sample: -0.167892397<br />rstd: -0.167892397","theoretical: -0.15641462<br />sample: -0.166373832<br />rstd: -0.166373832","theoretical: -0.14209414<br />sample: -0.158454551<br />rstd: -0.158454551","theoretical: -0.12780274<br />sample: -0.149990826<br />rstd: -0.149990826","theoretical: -0.11353739<br />sample: -0.128139505<br />rstd: -0.128139505","theoretical: -0.09929512<br />sample: -0.093700586<br />rstd: -0.093700586","theoretical: -0.08507296<br />sample: -0.086181630<br />rstd: -0.086181630","theoretical: -0.07086798<br />sample: -0.077936294<br />rstd: -0.077936294","theoretical: -0.05667730<br />sample: -0.068635318<br />rstd: -0.068635318","theoretical: -0.04249801<br />sample: -0.059492845<br />rstd: -0.059492845","theoretical: -0.02832727<br />sample:  0.008552027<br />rstd:  0.008552027","theoretical: -0.01416222<br />sample:  0.035289183<br />rstd:  0.035289183","theoretical:  0.00000000<br />sample:  0.039101471<br />rstd:  0.039101471","theoretical:  0.01416222<br />sample:  0.083159398<br />rstd:  0.083159398","theoretical:  0.02832727<br />sample:  0.083916389<br />rstd:  0.083916389","theoretical:  0.04249801<br />sample:  0.103284205<br />rstd:  0.103284205","theoretical:  0.05667730<br />sample:  0.108933864<br />rstd:  0.108933864","theoretical:  0.07086798<br />sample:  0.130388276<br />rstd:  0.130388276","theoretical:  0.08507296<br />sample:  0.136313168<br />rstd:  0.136313168","theoretical:  0.09929512<br />sample:  0.148109777<br />rstd:  0.148109777","theoretical:  0.11353739<br />sample:  0.153637626<br />rstd:  0.153637626","theoretical:  0.12780274<br />sample:  0.178668577<br />rstd:  0.178668577","theoretical:  0.14209414<br />sample:  0.179724029<br />rstd:  0.179724029","theoretical:  0.15641462<br />sample:  0.180185588<br />rstd:  0.180185588","theoretical:  0.17076725<br />sample:  0.180802325<br />rstd:  0.180802325","theoretical:  0.18515515<br />sample:  0.195969624<br />rstd:  0.195969624","theoretical:  0.19958148<br />sample:  0.202623632<br />rstd:  0.202623632","theoretical:  0.21404948<br />sample:  0.210598331<br />rstd:  0.210598331","theoretical:  0.22856242<br />sample:  0.218868006<br />rstd:  0.218868006","theoretical:  0.24312366<br />sample:  0.249511938<br />rstd:  0.249511938","theoretical:  0.25773664<br />sample:  0.251868899<br />rstd:  0.251868899","theoretical:  0.27240486<br />sample:  0.264713244<br />rstd:  0.264713244","theoretical:  0.28713194<br />sample:  0.305959308<br />rstd:  0.305959308","theoretical:  0.30192155<br />sample:  0.311533008<br />rstd:  0.311533008","theoretical:  0.31677751<br />sample:  0.318020180<br />rstd:  0.318020180","theoretical:  0.33170372<br />sample:  0.322463789<br />rstd:  0.322463789","theoretical:  0.34670419<br />sample:  0.328190341<br />rstd:  0.328190341","theoretical:  0.36178310<br />sample:  0.333901043<br />rstd:  0.333901043","theoretical:  0.37694472<br />sample:  0.346500632<br />rstd:  0.346500632","theoretical:  0.39219349<br />sample:  0.369681263<br />rstd:  0.369681263","theoretical:  0.40753401<br />sample:  0.383310929<br />rstd:  0.383310929","theoretical:  0.42297105<br />sample:  0.391424873<br />rstd:  0.391424873","theoretical:  0.43850955<br />sample:  0.411602016<br />rstd:  0.411602016","theoretical:  0.45415466<br />sample:  0.415542947<br />rstd:  0.415542947","theoretical:  0.46991174<br />sample:  0.444158822<br />rstd:  0.444158822","theoretical:  0.48578636<br />sample:  0.449478027<br />rstd:  0.449478027","theoretical:  0.50178437<br />sample:  0.454486528<br />rstd:  0.454486528","theoretical:  0.51791185<br />sample:  0.467621030<br />rstd:  0.467621030","theoretical:  0.53417518<br />sample:  0.478222591<br />rstd:  0.478222591","theoretical:  0.55058105<br />sample:  0.504006995<br />rstd:  0.504006995","theoretical:  0.56713647<br />sample:  0.513536954<br />rstd:  0.513536954","theoretical:  0.58384881<br />sample:  0.542517157<br />rstd:  0.542517157","theoretical:  0.60072585<br />sample:  0.576552951<br />rstd:  0.576552951","theoretical:  0.61777576<br />sample:  0.587440339<br />rstd:  0.587440339","theoretical:  0.63500719<br />sample:  0.589037001<br />rstd:  0.589037001","theoretical:  0.65242926<br />sample:  0.590525659<br />rstd:  0.590525659","theoretical:  0.67005166<br />sample:  0.598146722<br />rstd:  0.598146722","theoretical:  0.68788465<br />sample:  0.648109494<br />rstd:  0.648109494","theoretical:  0.70593914<br />sample:  0.693409627<br />rstd:  0.693409627","theoretical:  0.72422673<br />sample:  0.730748982<br />rstd:  0.730748982","theoretical:  0.74275980<br />sample:  0.753857585<br />rstd:  0.753857585","theoretical:  0.76155158<br />sample:  0.756237667<br />rstd:  0.756237667","theoretical:  0.78061622<br />sample:  0.759764979<br />rstd:  0.759764979","theoretical:  0.79996890<br />sample:  0.762861537<br />rstd:  0.762861537","theoretical:  0.81962594<br />sample:  0.769466277<br />rstd:  0.769466277","theoretical:  0.83960491<br />sample:  0.777771452<br />rstd:  0.777771452","theoretical:  0.85992478<br />sample:  0.794054438<br />rstd:  0.794054438","theoretical:  0.88060607<br />sample:  0.798871188<br />rstd:  0.798871188","theoretical:  0.90167105<br />sample:  0.816572483<br />rstd:  0.816572483","theoretical:  0.92314393<br />sample:  0.818087793<br />rstd:  0.818087793","theoretical:  0.94505114<br />sample:  0.823756105<br />rstd:  0.823756105","theoretical:  0.96742157<br />sample:  0.827261366<br />rstd:  0.827261366","theoretical:  0.99028692<br />sample:  0.870009386<br />rstd:  0.870009386","theoretical:  1.01368211<br />sample:  0.893939743<br />rstd:  0.893939743","theoretical:  1.03764571<br />sample:  0.894950957<br />rstd:  0.894950957","theoretical:  1.06222050<br />sample:  0.927801474<br />rstd:  0.927801474","theoretical:  1.08745413<br />sample:  0.953347506<br />rstd:  0.953347506","theoretical:  1.11339989<br />sample:  0.956928338<br />rstd:  0.956928338","theoretical:  1.14011765<br />sample:  0.971358413<br />rstd:  0.971358413","theoretical:  1.16767508<br />sample:  1.081979916<br />rstd:  1.081979916","theoretical:  1.19614900<br />sample:  1.133625396<br />rstd:  1.133625396","theoretical:  1.22562724<br />sample:  1.151705023<br />rstd:  1.151705023","theoretical:  1.25621081<br />sample:  1.226255096<br />rstd:  1.226255096","theoretical:  1.28801681<br />sample:  1.228594435<br />rstd:  1.228594435","theoretical:  1.32118203<br />sample:  1.335395900<br />rstd:  1.335395900","theoretical:  1.35586777<br />sample:  1.349457225<br />rstd:  1.349457225","theoretical:  1.39226618<br />sample:  1.443830592<br />rstd:  1.443830592","theoretical:  1.43060877<br />sample:  1.485995960<br />rstd:  1.485995960","theoretical:  1.47117818<br />sample:  1.600049397<br />rstd:  1.600049397","theoretical:  1.51432472<br />sample:  1.643504592<br />rstd:  1.643504592","theoretical:  1.56049027<br />sample:  1.730975531<br />rstd:  1.730975531","theoretical:  1.61024385<br />sample:  1.762884319<br />rstd:  1.762884319","theoretical:  1.66433652<br />sample:  1.773693410<br />rstd:  1.773693410","theoretical:  1.72378999<br />sample:  1.878015430<br />rstd:  1.878015430","theoretical:  1.79004718<br />sample:  1.993749789<br />rstd:  1.993749789","theoretical:  1.86524627<br />sample:  2.040918337<br />rstd:  2.040918337","theoretical:  1.95276492<br />sample:  2.056322580<br />rstd:  2.056322580","theoretical:  2.05843888<br />sample:  2.080793686<br />rstd:  2.080793686","theoretical:  2.19381673<br />sample:  2.263503918<br />rstd:  2.263503918","theoretical:  2.38780890<br />sample:  2.341763993<br />rstd:  2.341763993","theoretical:  2.76744732<br />sample:  2.472674453<br />rstd:  2.472674453"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-2.7674473222790059,2.7674473222790024],"y":[-2.656771544242333,2.5773827412118275],"text":["x: -2.767447<br />y: -2.656772","x:  2.767447<br />y:  2.577383"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.228310502283104,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.0441920545069063,3.0441920545069028],"tickmode":"array","ticktext":["-3","-2","-1","0","1","2","3"],"tickvals":[-3,-2,-1,4.4408920985006262e-16,1,2,3],"categoryorder":"array","categoryarray":["-3","-2","-1","0","1","2","3"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Theoretical Quanities","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.0300045923779582,2.8920202332875315],"tickmode":"array","ticktext":["-4","-2","0","2"],"tickvals":[-4,-2,0,2],"categoryorder":"array","categoryarray":["-4","-2","0","2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Standardized Residuals","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"28e429b1739b":{"sample":{},"type":"scatter"},"28e45df21de":{"sample":{}}},"cur_data":"28e429b1739b","visdat":{"28e429b1739b":["function (y) ","x"],"28e45df21de":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>(c) Make a plot with the leverage values <span class="math inline">\((h_i)\)</span> on the <span class="math inline">\(x\)</span>-axis, and standardized residuals <span class="math inline">\((r_i)\)</span> on the <span class="math inline">\(y\)</span>-axis. Identify any points (countries) that have high standardized residuals or leverage.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lev <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(lm2)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">rstd =</span> rstd, <span class="at">lev =</span> lev),<span class="fu">aes</span>(lev,rstd)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">x=</span><span class="st">"Leverage Values"</span>, <span class="at">y=</span><span class="st">"Standardized Residuals"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0af0523fa36c4b6aec9d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0af0523fa36c4b6aec9d">{"x":{"data":[{"x":[0.017447362331354445,0.0082858326244965724,0.0075752944877210534,0.017810065858907872,0.011224572599797577,0.0074963324844429906,0.012850250489318276,0.020693263878432254,0.016055367445142528,0.019861686023338977,0.037436706489653582,0.026531640794316198,0.012961020999145012,0.013903926576201093,0.016706464573062588,0.0085515666670475561,0.014571417429129799,0.0065085056338278742,0.0074198464593617638,0.020662503903354688,0.0096783124447294908,0.0070535117122328172,0.036231067286891967,0.037256141880440047,0.016730684608343781,0.024338425375837854,0.010936789393469187,0.0074601406029289885,0.013996064357493914,0.015965562777067614,0.023011640129776641,0.0214489756178665,0.012260025315874945,0.019043315744264183,0.0065873075006296624,0.021399584937552986,0.020501564013687974,0.020029285038892883,0.010113372621092222,0.027905813156983393,0.033316649586730654,0.012603249906335112,0.017766291332937327,0.022890640821701651,0.019218175233916147,0.0097510310050385671,0.021638778107226378,0.0079879920933851271,0.0076847539692417892,0.0094092417089809196,0.011079007621527595,0.028161384861452639,0.017238798081417792,0.018054618483657085,0.014891556766454758,0.0059250318002934824,0.018920276962057437,0.016964215619137465,0.022487281856488732,0.015326692954125497,0.015094192710685513,0.028281596724898713,0.011389809657632585,0.028932806419509183,0.030309686944478758,0.016134018229066311,0.024311121424294556,0.0076543210653134477,0.0089913194119911177,0.0092337686722434326,0.02043514172840584,0.020461360583157579,0.023704795610772426,0.010224200222540787,0.0094545311748755606,0.0097094251962734548,0.018902533526077202,0.01199100711775572,0.018062709686869197,0.036973433677144237,0.0056595984147067924,0.033026854629101043,0.0290608731761502,0.017373978523886162,0.014892627835743156,0.01798936734064226,0.030768682338628082,0.0074816278457556428,0.011659486593884522,0.020097821581924798,0.021909302262958882,0.010088139357439017,0.021002173002042407,0.022180355588558069,0.021896514169851364,0.018420457260577866,0.019525500108779612,0.017325435367361038,0.023520933747367134,0.0077176364417747877,0.018607658304251727,0.016859981771302893,0.013470796424279853,0.012668392221735313,0.010440672118799029,0.0092283243818947099,0.020014074549276582,0.011961654536234018,0.009490070982104179,0.019174890229422842,0.01414636657731699,0.016563642256912394,0.01876560304818984,0.015097528543500608,0.011708105702618809,0.022641481829231806,0.020492483886892326,0.010948298869048655,0.018055010080048037,0.019838718780413808,0.017689248028073964,0.038403152977194314,0.0062128309265108992,0.021238993429143788,0.017228193095199025,0.0058793258364203873,0.014741167390857471,0.014597740417599743,0.029677241938474229,0.03804279606667052,0.022374134672560633,0.012400639202896064,0.013219589509045617,0.00995229304848071,0.038597000718465301,0.010244112848530999,0.014012544650827628,0.033769742185963306,0.022959575676253473,0.018123141587082954,0.02013218967455075,0.014612286384558696,0.01325136257699378,0.022835293263681816,0.018482990555652445,0.0076992871186980496,0.020736313525978354,0.019248850406915045,0.024579358879112979,0.013038058724727859,0.0058693902022879376,0.016746321871165329,0.018305547946749566,0.0083887177605561671,0.013182206349249822,0.01480959156058489,0.021095721296657259,0.011932964653242223,0.017766036594821316,0.009828217356939702,0.0095593081525325082,0.0063467462246441387,0.010015011933529966,0.018880974369704238,0.018095791907956533,0.027525645128420199,0.032098378895199606,0.017187235914501386,0.013223226536833044,0.0084000775938082445,0.0067697199683058942,0.011398185595610609,0.016246313147479048,0.008849936197774879,0.012577411903515127,0.017522035697940051,0.013560048422060668],"y":[-0.14999082640741457,-0.33418905644444585,0.82375610452040893,1.4438305921383248,0.92780147381602029,-0.37077387547590285,1.3494572249452477,-0.068635318191817021,-0.83567630908015311,-0.22732227526225676,-0.40867339678098791,0.81657248329013776,-1.0798129746459932,-0.92207466896623813,0.25186889943411722,1.3353958997717041,-0.20030864350171329,-1.0138200664015076,1.1336253962576701,-1.5252273549902737,1.6000493972595131,-0.15845455057173541,0.1536376257640607,-0.70848502311817141,-1.4720323349686733,-0.94545009070982944,-0.84200973696729497,-0.98854792742333275,0.454486527902278,0.31153300836297615,-1.8579659025495847,-1.4290413813434428,0.31802018013199923,-0.24528385632228919,0.41554294701602296,0.58744033888631797,2.0807936859764964,-0.53347939194238503,0.1363131684826446,-0.7025113702891076,-0.62440688949728063,0.54251715688580004,0.14810977716809262,-1.8293121388570648,-0.086181630048372482,-3.7153671003022537,-0.16637383150617666,1.0819799159074295,0.8700093861524637,0.76946627723377914,0.19596962379745919,-0.9624443581832326,-0.55383971417653188,-0.24774034836656847,-1.1091360707266578,0.76286153722422789,0.18080232497094256,0.10328420501163302,0.34650063170252754,-1.1379819808640779,-0.39999161643465192,-0.093700585568703573,-0.17162077351506028,-0.077936294450785093,-0.67750085689527229,-0.97677082550624206,-0.46277714447160012,0.73074898155533086,-1.9014013203233364,0.50400699472277133,0.3224637891687781,-0.53138094375524192,0.81808779305377743,0.17972402861433745,0.79405443839336265,0.6481094938981129,1.1517050232220374,1.643504592347689,2.0409183373410804,-0.24013231111493172,0.21886800637299891,-0.34642215513666236,0.51353695419761691,0.57655295124494876,0.97135841287062341,-0.33925683949625485,-1.3952848614194924,0.75385758462218588,0.44415882218044989,-0.91735685378918941,-0.81680891686733781,-1.4558581659346013,-0.67753552464391886,2.0563225795238176,-0.41646528365608931,-0.12813950454312972,0.3281903414247378,-0.38164914615131557,0.36968126251589473,-0.31850384264916326,-1.2910790262550671,0.035289182845835973,-0.3155130132453578,0.41160201570047505,0.59814672161341631,-2.2355583154811356,2.472674453252123,-0.24308660192548898,-1.1423432930009636,-0.91132863474194803,-0.93293542506428007,0.039101470528000871,0.08391638934568281,0.75976497872318205,0.95692833787446707,-1.6679390570994865,-1.1417815490451053,-1.745353817197427,0.79887118752064168,0.8939397430154038,0.30595930788646825,0.39142487278546717,1.4859959597687931,0.26471324394763318,0.24951193834119506,1.2262550960001604,0.38331092897875002,0.21059833111186871,-0.68164071426643402,-0.31988297621146855,-0.73059236178968279,-0.75541665652636603,-0.16789239681685658,0.33390104308296609,1.7628843191551571,2.2635039182733525,0.95334750564280901,0.44947802733929804,-1.7931022599405742,-1.0970044328829656,-1.2470057397082688,0.82726136596177935,-0.19033652536583737,0.17866857686198709,0.77777145212221199,0.13038827615763007,-1.6342947157327468,-0.28378277168630128,1.9937497885003364,-1.1578793731386579,0.69340962703422659,0.4676210295028011,0.58903700100346068,-1.2421565738135425,1.773693409919417,-0.24140780116480934,-0.42905621259176541,1.2285944347308473,0.008552027469645845,1.8780154295205767,-0.33040384558602609,-0.38297858953532871,0.75623766676879367,2.3417639931607441,0.083159397527925477,-1.156293368251428,-0.059492845178580472,0.10893386408357716,0.89495095700645677,0.18018558789505942,0.47822259127559957,0.5905256587042651,-0.49428385275410053,-1.5062643850050248,-1.8232161957846962,1.7309755306697587,0.20262363212363488],"text":["lev: 0.017447362<br />rstd: -0.149990826","lev: 0.008285833<br />rstd: -0.334189056","lev: 0.007575294<br />rstd:  0.823756105","lev: 0.017810066<br />rstd:  1.443830592","lev: 0.011224573<br />rstd:  0.927801474","lev: 0.007496332<br />rstd: -0.370773875","lev: 0.012850250<br />rstd:  1.349457225","lev: 0.020693264<br />rstd: -0.068635318","lev: 0.016055367<br />rstd: -0.835676309","lev: 0.019861686<br />rstd: -0.227322275","lev: 0.037436706<br />rstd: -0.408673397","lev: 0.026531641<br />rstd:  0.816572483","lev: 0.012961021<br />rstd: -1.079812975","lev: 0.013903927<br />rstd: -0.922074669","lev: 0.016706465<br />rstd:  0.251868899","lev: 0.008551567<br />rstd:  1.335395900","lev: 0.014571417<br />rstd: -0.200308644","lev: 0.006508506<br />rstd: -1.013820066","lev: 0.007419846<br />rstd:  1.133625396","lev: 0.020662504<br />rstd: -1.525227355","lev: 0.009678312<br />rstd:  1.600049397","lev: 0.007053512<br />rstd: -0.158454551","lev: 0.036231067<br />rstd:  0.153637626","lev: 0.037256142<br />rstd: -0.708485023","lev: 0.016730685<br />rstd: -1.472032335","lev: 0.024338425<br />rstd: -0.945450091","lev: 0.010936789<br />rstd: -0.842009737","lev: 0.007460141<br />rstd: -0.988547927","lev: 0.013996064<br />rstd:  0.454486528","lev: 0.015965563<br />rstd:  0.311533008","lev: 0.023011640<br />rstd: -1.857965903","lev: 0.021448976<br />rstd: -1.429041381","lev: 0.012260025<br />rstd:  0.318020180","lev: 0.019043316<br />rstd: -0.245283856","lev: 0.006587308<br />rstd:  0.415542947","lev: 0.021399585<br />rstd:  0.587440339","lev: 0.020501564<br />rstd:  2.080793686","lev: 0.020029285<br />rstd: -0.533479392","lev: 0.010113373<br />rstd:  0.136313168","lev: 0.027905813<br />rstd: -0.702511370","lev: 0.033316650<br />rstd: -0.624406889","lev: 0.012603250<br />rstd:  0.542517157","lev: 0.017766291<br />rstd:  0.148109777","lev: 0.022890641<br />rstd: -1.829312139","lev: 0.019218175<br />rstd: -0.086181630","lev: 0.009751031<br />rstd: -3.715367100","lev: 0.021638778<br />rstd: -0.166373832","lev: 0.007987992<br />rstd:  1.081979916","lev: 0.007684754<br />rstd:  0.870009386","lev: 0.009409242<br />rstd:  0.769466277","lev: 0.011079008<br />rstd:  0.195969624","lev: 0.028161385<br />rstd: -0.962444358","lev: 0.017238798<br />rstd: -0.553839714","lev: 0.018054618<br />rstd: -0.247740348","lev: 0.014891557<br />rstd: -1.109136071","lev: 0.005925032<br />rstd:  0.762861537","lev: 0.018920277<br />rstd:  0.180802325","lev: 0.016964216<br />rstd:  0.103284205","lev: 0.022487282<br />rstd:  0.346500632","lev: 0.015326693<br />rstd: -1.137981981","lev: 0.015094193<br />rstd: -0.399991616","lev: 0.028281597<br />rstd: -0.093700586","lev: 0.011389810<br />rstd: -0.171620774","lev: 0.028932806<br />rstd: -0.077936294","lev: 0.030309687<br />rstd: -0.677500857","lev: 0.016134018<br />rstd: -0.976770826","lev: 0.024311121<br />rstd: -0.462777144","lev: 0.007654321<br />rstd:  0.730748982","lev: 0.008991319<br />rstd: -1.901401320","lev: 0.009233769<br />rstd:  0.504006995","lev: 0.020435142<br />rstd:  0.322463789","lev: 0.020461361<br />rstd: -0.531380944","lev: 0.023704796<br />rstd:  0.818087793","lev: 0.010224200<br />rstd:  0.179724029","lev: 0.009454531<br />rstd:  0.794054438","lev: 0.009709425<br />rstd:  0.648109494","lev: 0.018902534<br />rstd:  1.151705023","lev: 0.011991007<br />rstd:  1.643504592","lev: 0.018062710<br />rstd:  2.040918337","lev: 0.036973434<br />rstd: -0.240132311","lev: 0.005659598<br />rstd:  0.218868006","lev: 0.033026855<br />rstd: -0.346422155","lev: 0.029060873<br />rstd:  0.513536954","lev: 0.017373979<br />rstd:  0.576552951","lev: 0.014892628<br />rstd:  0.971358413","lev: 0.017989367<br />rstd: -0.339256839","lev: 0.030768682<br />rstd: -1.395284861","lev: 0.007481628<br />rstd:  0.753857585","lev: 0.011659487<br />rstd:  0.444158822","lev: 0.020097822<br />rstd: -0.917356854","lev: 0.021909302<br />rstd: -0.816808917","lev: 0.010088139<br />rstd: -1.455858166","lev: 0.021002173<br />rstd: -0.677535525","lev: 0.022180356<br />rstd:  2.056322580","lev: 0.021896514<br />rstd: -0.416465284","lev: 0.018420457<br />rstd: -0.128139505","lev: 0.019525500<br />rstd:  0.328190341","lev: 0.017325435<br />rstd: -0.381649146","lev: 0.023520934<br />rstd:  0.369681263","lev: 0.007717636<br />rstd: -0.318503843","lev: 0.018607658<br />rstd: -1.291079026","lev: 0.016859982<br />rstd:  0.035289183","lev: 0.013470796<br />rstd: -0.315513013","lev: 0.012668392<br />rstd:  0.411602016","lev: 0.010440672<br />rstd:  0.598146722","lev: 0.009228324<br />rstd: -2.235558315","lev: 0.020014075<br />rstd:  2.472674453","lev: 0.011961655<br />rstd: -0.243086602","lev: 0.009490071<br />rstd: -1.142343293","lev: 0.019174890<br />rstd: -0.911328635","lev: 0.014146367<br />rstd: -0.932935425","lev: 0.016563642<br />rstd:  0.039101471","lev: 0.018765603<br />rstd:  0.083916389","lev: 0.015097529<br />rstd:  0.759764979","lev: 0.011708106<br />rstd:  0.956928338","lev: 0.022641482<br />rstd: -1.667939057","lev: 0.020492484<br />rstd: -1.141781549","lev: 0.010948299<br />rstd: -1.745353817","lev: 0.018055010<br />rstd:  0.798871188","lev: 0.019838719<br />rstd:  0.893939743","lev: 0.017689248<br />rstd:  0.305959308","lev: 0.038403153<br />rstd:  0.391424873","lev: 0.006212831<br />rstd:  1.485995960","lev: 0.021238993<br />rstd:  0.264713244","lev: 0.017228193<br />rstd:  0.249511938","lev: 0.005879326<br />rstd:  1.226255096","lev: 0.014741167<br />rstd:  0.383310929","lev: 0.014597740<br />rstd:  0.210598331","lev: 0.029677242<br />rstd: -0.681640714","lev: 0.038042796<br />rstd: -0.319882976","lev: 0.022374135<br />rstd: -0.730592362","lev: 0.012400639<br />rstd: -0.755416657","lev: 0.013219590<br />rstd: -0.167892397","lev: 0.009952293<br />rstd:  0.333901043","lev: 0.038597001<br />rstd:  1.762884319","lev: 0.010244113<br />rstd:  2.263503918","lev: 0.014012545<br />rstd:  0.953347506","lev: 0.033769742<br />rstd:  0.449478027","lev: 0.022959576<br />rstd: -1.793102260","lev: 0.018123142<br />rstd: -1.097004433","lev: 0.020132190<br />rstd: -1.247005740","lev: 0.014612286<br />rstd:  0.827261366","lev: 0.013251363<br />rstd: -0.190336525","lev: 0.022835293<br />rstd:  0.178668577","lev: 0.018482991<br />rstd:  0.777771452","lev: 0.007699287<br />rstd:  0.130388276","lev: 0.020736314<br />rstd: -1.634294716","lev: 0.019248850<br />rstd: -0.283782772","lev: 0.024579359<br />rstd:  1.993749789","lev: 0.013038059<br />rstd: -1.157879373","lev: 0.005869390<br />rstd:  0.693409627","lev: 0.016746322<br />rstd:  0.467621030","lev: 0.018305548<br />rstd:  0.589037001","lev: 0.008388718<br />rstd: -1.242156574","lev: 0.013182206<br />rstd:  1.773693410","lev: 0.014809592<br />rstd: -0.241407801","lev: 0.021095721<br />rstd: -0.429056213","lev: 0.011932965<br />rstd:  1.228594435","lev: 0.017766037<br />rstd:  0.008552027","lev: 0.009828217<br />rstd:  1.878015430","lev: 0.009559308<br />rstd: -0.330403846","lev: 0.006346746<br />rstd: -0.382978590","lev: 0.010015012<br />rstd:  0.756237667","lev: 0.018880974<br />rstd:  2.341763993","lev: 0.018095792<br />rstd:  0.083159398","lev: 0.027525645<br />rstd: -1.156293368","lev: 0.032098379<br />rstd: -0.059492845","lev: 0.017187236<br />rstd:  0.108933864","lev: 0.013223227<br />rstd:  0.894950957","lev: 0.008400078<br />rstd:  0.180185588","lev: 0.006769720<br />rstd:  0.478222591","lev: 0.011398186<br />rstd:  0.590525659","lev: 0.016246313<br />rstd: -0.494283853","lev: 0.008849936<br />rstd: -1.506264385","lev: 0.012577412<br />rstd: -1.823216196","lev: 0.017522036<br />rstd:  1.730975531","lev: 0.013560048<br />rstd:  0.202623632"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.228310502283104,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.0040127282995188664,0.040243870833653224],"tickmode":"array","ticktext":["0.01","0.02","0.03","0.04"],"tickvals":[0.01,0.020000000000000004,0.029999999999999999,0.040000000000000001],"categoryorder":"array","categoryarray":["0.01","0.02","0.03","0.04"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Leverage Values","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.024769177979973,2.7820765309298419],"tickmode":"array","ticktext":["-4","-2","0","2"],"tickvals":[-4,-2,0,2],"categoryorder":"array","categoryarray":["-4","-2","0","2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Standardized Residuals","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"28e4643d4bc0":{"x":{},"y":{},"type":"scatter"}},"cur_data":"28e4643d4bc0","visdat":{"28e4643d4bc0":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>For calculating points of high leverage, I shall use the rule of thumb discussed in Chapter 6, namely</p>
+<p><span class="math display">\[
+h_{ii}&gt;2 \times \text{average}(h_{ii})=2\times\frac{(p+1)}{n}
+\]</span></p>
+<p>I shall classify any points with standardized residuals outside the interval <span class="math inline">\([-2,2]\)</span> as outliers, because hdi2018 has 177 observations, making it a relatively small dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(hdi2018)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Subtract to exclude the intercept</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(lm2<span class="sc">$</span>coefficients) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>lev_threshold <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (p <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> n</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>high_lev <span class="ot">&lt;-</span> hdi2018[lev <span class="sc">&gt;=</span> lev_threshold, ]<span class="sc">$</span>country</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> hdi2018[rstd <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">|</span> rstd <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">2</span>, ]<span class="sc">$</span>country</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>all_countries <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(high_lev, outlier))</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>influential_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">country =</span> all_countries)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Mark each country as 'Yes' or 'No' for being a high leverage point</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>influential_df<span class="sc">$</span>High_Leverage <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(influential_df<span class="sc">$</span>country <span class="sc">%in%</span> high_lev, <span class="st">"Yes"</span>, <span class="st">"No"</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Mark each country as 'Yes' or 'No' for being an outlier</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>influential_df<span class="sc">$</span>Outlier <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(influential_df<span class="sc">$</span>country <span class="sc">%in%</span> outlier, <span class="st">"Yes"</span>, <span class="st">"No"</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(influential_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">country</th>
+<th style="text-align: left;">High_Leverage</th>
+<th style="text-align: left;">Outlier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Bahrain</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brunei Darussalam</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bulgaria</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Italy</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Palestine, State of</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Qatar</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Saint Vincent and the Grenadines</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Congo</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Djibouti</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Israel</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Libya</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Moldova (Republic of)</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mongolia</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Samoa</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Turkmenistan</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Based on the rules discussed above, we have 15 countries that are either high leverage or outliers in our model. From the table, we can see that none of these points are both high leverage and outliers. This means that those points of high leverage are consistent with our model, so the fact that they have a large influence does not change the model parameters with respect to the other points that are not high leverage.</p>
+<p>Although the 8 outlier countries do influence the model parameters in a manner not consistent with the rest of the points in our dataset, they are not high leverage, meaning that their anomalous influence is no greater than the rest of the points in the data set that follow a consistent relationship. Even though this data set is not large, the fact that 8 out 177 points are outliers does not provide significant evidence that the model is invalid.</p>
+<p>(d) Based on the scatterplot matrix and model diagnostics, do the assumptions for MLR appear adequately satisfied? Can you think of any ways in which the model might be improved to better fit the data?</p>
+<p>Based on the diagnostics above, the assumptions for MLR do appear to be satisfied. From the scatterplot matrix we can visually see that the relationship between our predictors and response are approximately linear. The plot of residuals vs.&nbsp;fitted values shows no visual pattern, providing evidence that the model residuals are independent. The QQ plot indicates the residuals are approximately normal. And, as discussed above there are no points that are both high leverage and outliers.</p>
+<p>The main concern I have is that in the scatterplot matrix, visually it appears that median_age and pct_internet are linearly related to each other. This would make sense since one would assume that the age of a country’s population would impact how much of the population uses the internet.</p>
+<p>We can investigate the correlation between these two predictors and whether or not it creates significant collinearity issues.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'faraway' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  median_age pct_internet 
+    3.101136     3.101136 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(hdi2018<span class="sc">$</span>median_age, hdi2018<span class="sc">$</span>pct_internet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8231267</code></pre>
+</div>
+</div>
+<p>We can see that median_age and pct_internet are highly correlated but the variance inflation factor is less than 5, meaning that this correlation is not significant enough to discredit the model’s validity. However it may be worthwhile to compare a simple linear regression model using one of the predictors and see if it produces a better F-statistic. However, the F-statistic of the current model is already quite low so I don’t believe it would result in any meaningful increase in predictive power.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

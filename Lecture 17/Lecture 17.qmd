@@ -1,0 +1,48 @@
+---
+title: "Lecture 17"
+---
+
+## Lecture 17
+
+```{r}
+head(seatpos)
+```
+
+```{r}
+lm1 <- lm(hipcenter ~ ., data=seatpos)
+summary(lm1)
+```
+
+```{r}
+lm2 <- lm(hipcenter ~ Age + Weight + Ht, data=seatpos)
+summary(lm2)
+```
+
+Removing some correlated predictors fixes many of the issues caused by multidisciplinary. The predictor $\rm Ht$ is now highly significant in the model. Further simplification is clearly possible.
+
+The $R^2$ of the reduced model with just 3 predictors (Age, Weight, and $\rm Ht$) is close to the $R^2$ of the full model with all the strongly correlated predictors. In fact, the adjusted $R^2$ for the reduced model is slightly higher than the full model.
+
+```{r}
+summary(lm1)$r.squared
+```
+
+```{r}
+summary(lm2)$r.squared
+```
+
+```{r}
+summary(lm1)$adj.r.squared
+```
+
+```{r}
+summary(lm2)$adj.r.squared
+```
+
+```{r}
+library(haven)
+```
+
+```{r}
+surv <- read_sav("ATP W85.sav")
+head(surv)
+```

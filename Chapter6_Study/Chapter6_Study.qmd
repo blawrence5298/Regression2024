@@ -1,0 +1,69 @@
+---
+title: "Chapter6_Study"
+---
+
+## Chapter 6 Exercises
+
+Chapter 5-2 of the award-winning book on baseball (Keri, 2006) makes extensive use of multiple regression. For example, since the 30 "Major League Baseball teams play eighty-one home games during the regular season and receive the largest share of their income from the ticket sales associated with these games" the author develops a least squares regression model to predict Y, yearly income (in 2005 US dollars) from ticket sales for each team from home games each year. Ticket sales data for each team for each of the years from 1997 to 2004 were used to develop the model. Thus there are $30 \times8=240$ rows of data. Twelve potential predictor variables are identified as follows: Six predictor variables measure team quality, namely:
+
+$$
+\begin{align} 
+x_1 &= \text{Number of games won in current season} \\
+x_2 &= \text{Number of games won in previous season} \\
+x_3 &= \text{Dummy variable for playoff appearance in current season} \\
+x_4 &= \text{Dummy variable for playoff appearance in previous seasons} \\
+x_5 &= \text{Number of winning seasons in the past 10 years} \\
+x_6 &= \text{Number of playoff appearances in the past 10 years}
+\end{align}
+$$
+
+Three predictors measure stadium of quality, namely:
+
+$$
+\begin{align} 
+x_7 &= \text{Seating capacity} \\
+x_8 &= \text{Stadium quality rating} \\
+x_9 &= \text{Honeymoon effect} 
+\end{align}
+$$
+
+Two predictors measure market quality, namely:
+
+$$
+\begin{align} 
+x_{10} &= \text{Market size} \\
+x_{11} &= \text{Per-capita income}
+\end{align}
+$$
+
+Finally, $x_{12}=\text{Year}$ is included to allow for inflation. The author found that "*seven of these (predictor) variables had a statistically significant impact on attendance revenue*" (i.e., had a t-statistic significant at least at the 10% level). Describe in detail two major concerns that potentially threaten the validity of the model.
+
+-   The first concern is the length of time that this data covers. It has not been confirmed whether or not a model of this sort's validity is consistent of the period of years the data was collected. It is possible conclusions from this model could vary from year to year (baseball season to season).
+
+-   The second is that several of the predictors, for example games won during the season and games won in the previous season, may be linearly dependent on each other, thus introducing unnecessary complexity in the model.
+
+The analyst was so impressed with your answers to Exercise 5 in Section 3.4 that your advice has been sought regarding the next stage in the data analysis, namely an analysis of the effects of different aspects of a car on its suggested retail price. Data are available for all 234 cars on the following variables:
+
+$Y=$ Suggested Retail Price; $x_1=$ Engine size; $x_2=$ Cylinders; $x_3=$ Horse power; $x_4=$ Highway mpg; $x_5=$ Weight; $x_6=$ Wheel Base; and $x_7=$ Hybrid, a dummy variable which is 1 for so-called hybrid cars. The first model considered for these data was
+
+$$
+Y=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\beta_4x_4+\beta_5x_5+\beta_6x_6+\beta_7x_7+e
+$$
+
+Output from the model and associated plots appear on the following pages.
+
+\(a\) Decide whether the model is valid. Give reasons to support your answer.
+
+\(b\) The plot of residuals against fitted values produces a curved pattern. Describe what, if anything, can be learned about the model from this plot.
+
+\(c\) Identify any bad leverage pointss for the model.
+
+The multivariate version of the Box-Cox method was used to transform the predictors, while a log transformation was used for the response variable to improve interpretability. This resulted in the following model
+
+$$
+\rm log(Y)=\beta_0+\beta_1x_1^{0.25}+\beta_2\rm log(x_2)+\beta_3\rm log(x_3)+\beta_4\rm log(\frac{1}{x_4})
+$$
+
+```{r}
+1 + 1
+```
