@@ -1,0 +1,12 @@
+name: test
+title: test
+username: blawrence5298
+account: blawrence5298
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11715218
+bundleId: 8474445
+url: https://blawrence5298.shinyapps.io/test/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

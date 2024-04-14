@@ -1,0 +1,100 @@
+---
+title: "HW6"
+author: Ben Lawrence
+output: html_document
+---
+
+## Homework 6
+
+The following exercises will use a data set that contains results for US counties from the 2012 and 2016 US presidential elections.
+
+```{r}
+suppressMessages(library(ggplot2))
+suppressMessages(library(plotly))
+```
+
+```{r}
+county_votes16 <- read.csv("county_votes16.csv")
+#head(county_votes16)
+```
+
+-   trump_win: indicator variable (1=Trump won, 0=Trump lost)
+
+-   obama_pctvotes: percent of votes cast for Obama in 2012
+
+-   pct_pop65: percent over 65 years
+
+-   pct_black: percent black
+
+-   pct_white: percent white
+
+-   pct_hispanic: percent hispanic
+
+-   pct_asian: percent asian
+
+-   highschool: percent high school graduate or higher
+
+-   bachelors: percent with Bachelor's degree or higher
+
+-   income: per capita income in the past 12 months (in thousands of dollars)
+
+**Exercise 1**
+
+\(a\) Fit a simple logistic regression model with trump_win as the binary response variable, and obama_pctvotes as the predictor. Use summary() to print the results, and write down the equation for the estimated logistic regression model. Use this logistic regression model to answer the remaining questions.
+
+```{r}
+
+glm1 <- glm(trump_win ~ obama_pctvotes, data=county_votes16, family=binomial)
+summary(glm1)
+```
+
+Equation:
+
+$$
+\rm log \left(\frac{\hat p(x)}{1-\hat p(x)}\right)=\hat \beta_0+\hat \beta_1x=20.1297-0.3715x
+$$
+
+\(b\) Make a scatter plot of the data (i.e., plot the observed zeros and ones on the y-axis and obama_pctvotes on the x-axis) and superimpose the fitted logistic curve for the estimated probability of Trump winning. Use ggplot2 to make the plot.
+
+```{r}
+
+p1 <- ggplot(county_votes16, aes(obama_pctvotes, trump_win)) +
+  geom_point() +
+  geom_smooth(method="glm", method.args = list(family="binomial"), se=F)+
+  labs(title="Trump Winning vs. Percentage of Obama Votes", 
+       x="Percentage of Obama Votes by County", 
+       y="Trump Won? (Yes/No)")
+ggplotly(p1)
+```
+
+\(c\) Use the logistic regression model to estimate the probability of Trump winning in a county with obama_pctvotes = 40, 50, and 60.
+
+```{r}
+new_data <- data.frame(obama_pctvotes = c(40, 41, 50, 60))
+predict(glm1, newdata=new_data, type="response")
+```
+
+\(d\) Provide an interpretation of the estimated coefficient $\hat \beta_1$ for obama_pctvotes
+
+For every 1% increase in votes for Obama in a county the log odds or logit will decrease by 0.3715. More intuitively if a county had 40% votes for Obama in 2012 the model predicts the odds of Trump winning are 99.5%. If a county had 41% support for Obama then the odds of Trump winning are predicted to be 99.3%. This is not a linear relationship, and the odds of Trump winning will decrease drastically once more than Obama had 54% or more support in a county.
+
+Exercise 2
+
+\(a\) Fit a multiple logistic regression model with trump_win as the response , and the following 8 demographic variables as predictors: pct_pop65, pct_black, pct_white, pct_hispanic, pct_asian, highschool, bachelors, and income. Use summary() to print the results.
+
+```{r}
+glm2 <- glm(trump_win ~ pct_pop65 + pct_black + pct_white + pct_hispanic + pct_asian + highschool + bachelors + income, data=county_votes16)
+summary(glm2)
+```
+
+\(b\) Remove any predictors that are not significant from the model fit in (a)
+
+```{r}
+#Removed pct_pop65 and highschool
+glm3 <- glm(trump_win ~ pct_black + pct_white + pct_hispanic + pct_asian + bachelors + income, data=county_votes16)
+summary(glm3)
+```
+
+\(c\) Provide an interpretation of the signs of the estimated coefficients
+
+As the percentage of voters who are black, hispanic, asian, or who have a bachelor's degree increases, the log odds of Trump winning will decrease. On the other hand, as the percentage of voters who are white increases and as the per capita income of voters increases, the log odds of Trump winning will increase.

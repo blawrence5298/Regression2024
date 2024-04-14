@@ -1,0 +1,262 @@
+---
+title: "Midterm2"
+---
+
+## Midterm 2 Practice
+
+```{r}
+library(ggplot2)
+library(plotly)
+```
+
+Homework 3:
+
+```{r}
+library(ISLR)
+head(Auto)
+```
+
+1a) Make a scatter plot with mpg on the y-axis, and horsepower on the x-axis
+
+```{r}
+p1 <- ggplot(Auto, aes(horsepower, mpg)) +
+  geom_point() +
+  labs(title="title")
+
+ggplotly(p1)
+```
+
+1b) Use the lm() function to estimate a second degree polynomial model.
+
+```{r}
+lm1 <- lm(mpg ~ poly(horsepower, 2), data = Auto)
+summary(lm1)
+```
+
+1c) Use the model to make a prediction and 95% prediction interval for the mpg of a vehicle that has horsepower = 150.
+
+```{r}
+predict(lm1, newdata = data.frame(horsepower=150), interval = "prediction")
+```
+
+1d) Add the fitted second degree polynomial regression curve to the scatter plot of mpg versus horsepower
+
+```{r}
+p2 <- ggplot(Auto, aes(horsepower, mpg)) +
+  geom_point() +
+  stat_smooth(method="lm", formula = y ~ poly(x, 2)) +
+  labs(title="title")
+
+ggplotly(p2)
+```
+
+1e) Make a plot of the residuals versus fitted values, and a QQ plot of the standardized residuals. Comment on whether or not there are any violations of the assumptions for regression modeling.
+
+```{r}
+p3 <- ggplot(lm1, aes(fitted(lm1), resid(lm1))) +
+  geom_point() +
+  geom_hline(yintercept=0)
+
+p4 <- ggplot(data.frame(Residuals = resid(lm1)), aes(sample = Residuals)) + 
+  geom_qq() +
+  geom_qq_line(col="red") +
+  ggtitle("QQ Plot of Model Residuals")
+
+ggplotly(p3)
+ggplotly(p4)
+```
+
+The variance appears to not be constant. In addition, the tails of the distribution, according to the QQ plot appear to not follow the normal distribution.
+
+```{r}
+head(Carseats)
+```
+
+2a) Fit a multiple linear regression model to predict Sales using Price, Urban, and US.
+
+```{r}
+lm2 <- lm(Sales ~ Price + factor(Urban) + factor(US), data = Carseats)
+summary(lm2)
+```
+
+2b) Provide an interpretation of each coefficient in the model. Note some of the variables are qualitative.
+
+Intercept: the expected sales when the price is zero, we are not in an Urban area and not in the US is 13, 043 units sold at each location (makes no sense)
+
+Price: holding Urban and US constant, for every one dollar increase in price, we expect Sales to decrease by 54.46 units sold at each location.
+
+Urban: holding Price and US constant, we expect the Sales to decrease by 21.92 units sold at each location if the store is in an urban area.
+
+US: holding Price and Urban constant, we expect the Sales to increase by 1,200.57 units sold at each location if the store is located in the U.S.
+
+2c) Write our equation for the fitted model
+
+$$
+\widehat{Sales}=\hat \beta_0+\hat \beta_1Price +\hat \beta_2Urban +\hat \beta_3US
+$$
+
+2d) For which of the predictors can you reject the null hypothesis $H_0:\beta_j=0$?
+
+The only predictor that looks insignificant is Urban. With a p-value of 0.936, we fail to reject that $\beta_2=0$.
+
+2e) On the basis of your response to the previous question, fit a smaller model that only uses the predictors for which there is evidence of association with the outcome.
+
+```{r}
+lm3 <- lm(Sales ~ Price + factor(US), data = Carseats)
+summary(lm3)
+```
+
+All predictors are now significant
+
+2f) How well do the models in (a) and (e) fit the data?
+
+Visually,
+
+```{r}
+par(mfrow=c(2,2))
+plot(resid(lm2) ~ fitted(lm2))
+abline(h=0, col="red")
+
+qqnorm(rstandard(lm2))
+qqline(rstandard(lm2))
+
+#versus
+
+plot(resid(lm3) ~ fitted(lm3))
+abline(h=0, col="red")
+
+qqnorm(rstandard(lm3))
+qqline(rstandard(lm3))
+```
+
+In terms of fit, both models appear good. The residuals appear to have no discernible pattern and the residuals appear to be normal
+
+2g) Using the model from (e), obtain 95% confidence intervals for the coefficients.
+
+```{r}
+confint(lm3)
+```
+
+Homework 4:
+
+1a) Show that $HH^\prime=HH=H$. That is, $HH^\prime$ is idempotent
+
+Note that
+
+$$
+(H^\prime)^\prime=(X(X^\prime X)^{-1}X^\prime)^\prime =X(X^\prime X)^{-1}X^\prime=H
+$$
+
+because $(AB)^\prime=B^\prime A^\prime$ and $(ABC)^\prime=((AB)C)^\prime=C^\prime(AB)^\prime=C^\prime B^\prime A^\prime$ and $(A^{-1})^\prime=(A^\prime)^{-1}$
+
+Thus, $H^\prime=H$. In addition,
+
+$$
+HH=X(X^\prime X)^{-1}X^\prime X(X^\prime X)^{-1}X^\prime = X(X^\prime X)^{-1}IX^\prime=X(X^\prime X)^{-1}X^\prime=H
+$$
+
+1b) Show that $E(\hat Y)=X\beta$
+
+$$
+E(\hat Y)=E(X\hat \beta)=XE(\hat \beta)=X\beta
+$$
+
+1c) Show that $Var(\hat Y)=\sigma^2H$
+
+$$
+\begin{aligned}
+Var(\hat Y) &= Var(X\hat \beta) \\
+&=Var(X(X^\prime X)^{-1}X^\prime Y) \\
+&=X(X^\prime X)^{-1}X^\prime Var(Y)X(X^ \prime X)^{-1}X^\prime \\
+&=\sigma^2HH \\
+&=\sigma^2H
+\end{aligned}
+$$
+
+2\) Derive the $2\times2$ covariance matrix for least squares estimates, $\hat \beta=(\hat \beta_0,\hat \beta_1)^\prime$, for simple linear regression:
+
+$$
+Var(\hat \beta)= \begin{pmatrix} Var(\hat \beta_0) && Cov(\hat \beta_0, \hat \beta_1) \\ Cov(\hat \beta_1,\hat \beta_0) && Var(\hat \beta_1) \end{pmatrix}
+$$
+
+$$
+X= \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}
+$$
+
+So that
+
+$$
+X^\prime X= \begin{pmatrix} 1 && \cdots &&1\\ X_1 && \cdots && X_n \end{pmatrix} \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}= \begin{pmatrix} n && \sum_{i=1}^nX_i\\ \sum_{i=1}^nX_i && \sum_{i=1}^n X_i^2\end{pmatrix}
+$$
+
+giving the inverse
+
+$$
+(X^\prime X)^{-1}=\frac{1}{n\sum_{i=1}^nX_i^2-(\sum_{i=1}^2X_i)^2}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix} =\frac{1}{nSXX}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix}
+$$
+
+Finally,
+
+$$
+Var(\hat \beta)= \begin{pmatrix} \frac{\sigma^2\sum_{i=1}^nX_i^2}{nSXX} && -\frac{\sigma^2 \bar X}{SXX} \\ -\frac{\sigma^2 \bar X}{SXX} && \frac{\sigma^2}{SXX} \end{pmatrix}
+$$
+
+The variance of $\hat \beta_0$ is the 1,1 entry in the above variance covariance matrix whereas the variance of $\hat \beta_1$ is the 2,2 entry. Note that
+
+$$
+\sum_{i=1}^nX_i^2=SXX+n \bar X^2
+$$
+
+so that
+
+$$
+Var(\hat \beta_0)=\frac{\sigma^2 \sum_{i=1}^nX_i^2}{nSXX}=\frac{\sigma^2(SXX + n\bar X^2)}{nSXX}=\sigma^2(\frac{1}{n}+\frac{\bar X^2}{SXX})
+$$
+
+```{r}
+pacman::p_load(MASS, tidyverse)
+data(Boston)
+#head(Boston)
+```
+
+```{r}
+lmB <- lm(medv ~ dis + rm + tax + chas, data=Boston)
+summary(lmB)
+```
+
+3a) In R, compute the vector of least squares estimates $\hat \beta=(X^\prime X)^{-1}X^\prime Y$. Then verify that the results are the same as the parameter estimates provided by the lm() function.
+
+```{r}
+#Create a matrix of predictors using the dis, rm, tax, and chas columns of the Boston dataset, including a column of 1s to account for beta_0
+X <- as.matrix(cbind(1, Boston[, c('dis', 'rm', 'tax', 'chas')]))
+
+#Create a matrix of responses
+Y <- as.matrix(Boston['medv'])
+
+#Get the transpose of the predictors matrix
+X_t <- t(X)
+
+#Apply the least-squares estimates formula
+Beta <- solve(X_t %*% X) %*% X_t %*% Y
+Beta
+```
+
+3b) In R, compute the variance-covariance matrix $Var(\hat \beta)=\sigma^2(X^\prime X)^{-1}$ $\left( \text{plug in }\hat \sigma^2=\frac{RSS}{n-p-1} \text{ as an estimate for } \sigma^2 \right)$. Then verify that the square root of the diagonal entries of this matrix are the same as the standard errors provided by the lm() function
+
+```{r}
+#First we obtain the factors necessary to calculate the variance of predicted values
+RSS <- sum((residuals(lmB))^2)
+n <- nrow(Boston)
+
+#Calculate sigma squared manually
+sigma_squared <- RSS / (n - 4 - 1)
+
+#Now we apply the given formula to obtain the covariance matrix
+Cov <- sigma_squared * solve(X_t %*% X)
+
+#From the matrix we isolate the diagonal entries and square root them to obtain the standard errors
+Err <- sqrt(diag(Cov))
+Err
+```
+
+Homework 6 (Practice Problems)
