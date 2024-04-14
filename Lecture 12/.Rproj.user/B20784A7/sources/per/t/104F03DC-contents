@@ -1,0 +1,45 @@
+---
+title: "Lecture 12"
+---
+
+## Lecture 12
+
+He goes for a bit on matrix algebra. I know most of it but I'll put down some useful formulas
+
+$$
+\frac{\delta f(\theta)}{\delta \theta}=
+\begin{bmatrix} 
+\frac{\delta f(\theta)}{\delta \theta_1} \\
+\frac{\delta f(\theta)}{\delta \theta_2} \\
+\vdots \\
+\frac{\delta f(\theta)}{\delta \theta_n}
+\end{bmatrix}
+$$
+
+So basically the derivative is component by component.
+
+Let $c^\prime=[c_1, c_2, \cdots,c_n]$ and $f(\theta)=c^\prime\theta$, then it follows that
+
+$$
+\frac{\delta f(\theta)}{\delta \theta}=c
+$$
+
+I.e. the derivative drops the theta and and you're left with a constant vector
+
+Let $A$ be an $n\times n$ symmetric matrix and $f(\theta) =\theta^\prime A\theta$, then it follows that
+
+$$
+\frac{\delta f(\theta)}{\delta\theta}=2A\theta
+$$
+
+Prove the first rule for vector differentiation
+
+$$
+c^ \prime \theta= [c_1 \theta, c_2 \theta,\cdots,c_n \theta] \\
+\frac{\delta f(\theta)}{\delta \theta}=[\frac{\delta c_1\theta)}{\delta \theta}, \frac{\delta c_2\theta)}{\delta \theta},\cdots,\frac{\delta c_n\theta)}{\delta \theta}] \\
+\frac{\delta f(\theta)}{\delta \theta}=[c_1,c_2,\cdots,c_n]=c^\prime
+$$
+
+```{r}
+1 + 1
+```

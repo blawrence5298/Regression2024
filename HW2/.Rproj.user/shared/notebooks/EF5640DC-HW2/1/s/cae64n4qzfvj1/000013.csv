@@ -1,0 +1,6 @@
+"0",""
+"0","s_resid = rstandard(model_1)"
+"0",""
+"0","fitted = fitted(model_1)"
+"0",""
+"0","plot(fitted,s_resid, ylab=""Standardized Residuals"", xlab=""Fitted Values"")"

@@ -1,0 +1,82 @@
+---
+title: "Interactive Web App"
+output: 
+  html_document:
+    self_contained: true
+---
+
+## Interactive Visualizations Tests
+
+In this document I plan to test out some interactive r libraries as a substitute for power bi visualizations
+
+```{r}
+library(shiny)
+library(plotly)
+```
+
+```{r}
+library(plotly)
+
+# Sample data
+set.seed(123)
+df <- data.frame(
+  x = rnorm(100),
+  y = rnorm(100)
+)
+
+
+# Create scatterplot with hover text limited to 2 decimal places
+p <- plot_ly(df, x = ~x, y = ~y, type = 'scatter', mode = 'markers',
+             marker = list(size = 10),
+             hoverinfo = 'text',
+             text = ~paste('X:', sprintf("%.2f", x), 'Y:', sprintf("%.2f", y))) # Using sprintf to format text
+
+
+# Show plot
+p
+
+```
+
+```{r}
+# Initial y-intercept for the horizontal line
+initial_intercept <- 5
+
+# Example data for scatter plot
+x_vals <- c(1, 2, 3, 4)
+y_vals <- c(10, 11, 12, 13)
+
+# Create a scatter plot
+fig <- plot_ly() %>%
+  add_trace(x = x_vals, y = y_vals, type = 'scatter', mode = 'markers') %>%
+  add_trace(x = c(-1, 20), y = c(initial_intercept, initial_intercept), 
+            type = 'scatter', mode = 'lines', name = 'Adjustable Line')
+
+# Define steps for the slider
+steps <- list()
+for (i in seq(-1, 20, by = 1)) {
+  step <- list(
+    method = "restyle",
+    args = list("y", list(c(i, i)), 1),
+    label = as.character(i)
+  )
+  steps[[length(steps) + 1]] <- step
+}
+
+# Add slider to the plot
+fig <- fig %>%
+  layout(
+    sliders = list(
+      list(
+        active = initial_intercept,
+        currentvalue = list(prefix = "Intercept: "),
+        steps = steps
+      )
+    ),
+    xaxis = list(range = c(-1, 20), autorange = FALSE),
+    yaxis = list(range = c(-1, 20), autorange = FALSE)
+  )
+
+# Show plot
+fig
+
+```

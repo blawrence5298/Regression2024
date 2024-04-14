@@ -1,0 +1,2 @@
+"0","basic <- lm(head_l ~ skull_w, data=Data)"
+"0","plot(Data$skull_w, rstandard(basic))"

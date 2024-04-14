@@ -1,0 +1,5 @@
+"0",""
+"0","UN11$log_fertility = log(UN11$fertility)"
+"0","UN11$log_ppgdp = log(UN11$ppgdp)  "
+"0",""
+"0","plot(UN11$log_ppgdp, UN11$log_fertility, main=""Fertility vs. GDP Per Capita"", xlab=""Log(GDP Per Capita)"", ylab=""Log(Total Fertility Rate)"")"

@@ -1,0 +1,176 @@
+---
+title: "Homework 5"
+author: Ben Lawrence
+output: html_document
+---
+
+# Homework 5
+
+The Human Development Index (HDI) is a an index developed by the United Nations to assess the development of a country. The HDI is calculated by combining three indicators: life expectancy at birth, average education, and gross national income per capita. The following are definitions for variables found in the data set.
+
+-   $\text{hdi_2018:}$ HDI for the year 2018
+
+-   $\text{median_age:}$ Median age (years) in 2015
+
+-   $\text{pctpop65:}$ Percent of population 65 and older in 2018
+
+-   $\text{pct_internet:}$ Percent of population that uses the internet in 2017-2018
+
+-   $\text{pct_labour:}$ Percent of country's working-age population that engages actively in the labour market, either by working or looking for work in 2018
+
+```{r}
+hdi2018 <- read.csv("hdi2018.csv")
+head(hdi2018)
+```
+
+## Exercise 1
+
+\(a\) Fit a multiple linear regression model with $\text{hdi_2018}$ as the response, and the other four variables as predictors
+
+```{r}
+lm1 <- lm(hdi_2018 ~ median_age + pctpop65 + pct_internet + pct_labour, data=hdi2018)
+summary(lm1)
+```
+
+\(b\) Using the model fit in (a), is there evidence of a relationship between $\text{hdi_2018}$ and at least one of the predictor variables? Write the null and alternative hypothesis, report the F-test statistic and $p$-value, and state your conclusion.
+
+$\rm H_0:\beta_1=\beta_2=\beta_3=\beta_4=0$
+
+$\rm H_A: \text{at least one }\beta_j \neq0$
+
+The F-test statistic is 341.5, leading to a p-value of near 0, $2.2\times10^{-16}$. So yes, according to the F-test, there is evidence of a relationship between $\text{hdi_2018}$ and at least one of the predictor variables.
+
+\(c\) Using the model fit in (a), which predictor variables are statistically significant according to the individual t-tests?
+
+According to the t-values $\beta_1$ and $\beta_3$ are significant. One may use a p-value of 0.05 to determine this, but $\beta_2$ and $\beta_4$ fall outside any reasonable significance range, so according to the t-tests they would not be significant predictors.
+
+\(d\) Fit a reduced model with $\text{median_age}$ and $\text{pct_internet}$ as predictors. Use the $\text{anova()}$ function to conduct a partial F-test that compares this reduced model with the full model specified in (a). Make sure to write the null and alternative hypotheses, report the $p$-value, and state your conclusion.
+
+```{r}
+lm2 <- lm(hdi_2018 ~ median_age + pct_internet, data = hdi2018)
+summary(lm2)
+```
+
+```{r}
+anova(lm2, lm1)
+```
+
+$H_0: \beta_2=\beta_4=0$
+
+$H_A: \beta_2 \neq0 \text{ and/or }\beta_4 \neq0$
+
+From the partial F-test we obtain a p-value of 0.7269. This is sufficiently large to fail to reject the null hypothesis. Thus we conclude the partial model is a better model than the full model, and we have not lost any significant information.
+
+\(e\) According to the adjusted-$R^2$, how does the full model in (a) compare with the reduced model in (d)? Is this consistent with your conclusion for the partial F-test?
+
+```{r}
+summary(lm1)$adj.r.squared
+summary(lm2)$adj.r.squared
+```
+
+The reduced model gives a better adjusted $\rm R^2$ value than the full model. It is not a large increase and ,using just this information, I would conclude the models fit the data equally well. However, the reduced model is preferable due to parsimony and ease of interpretability. The partial F-test has also provided evidence that the full model does not add any significant information that would warrant using the full model.
+
+## Exercise 2
+
+For this exercise, consider the regression model with $\text{hdi_2018}$ as the response, and $\text{median_age}$ and $\text{pct_internet}$ as predictors.
+
+\(a\) Make a scatterplot matrix for the three variables. Describe the associations between the variables in the scatterplot matrix.
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(knitr)
+```
+
+```{r}
+pairs(~hdi_2018 + median_age + pct_internet, data=hdi2018)
+```
+
+Visually, there appears to be a linear relationship between each combination of the three variables.
+
+\(b\) Make a plot of residuals versus fitted values, and a QQ plot of the standardized residuals.
+
+```{r}
+resid1 <- residuals(lm2)
+fit1 <- fitted(lm2)
+df1 <- data.frame(fit1 = fit1, resid1 = resid1)
+
+p1 <- ggplot(data=df1, aes(fit1,resid1 )) +
+  geom_point() +
+  labs( x="Fitted Values", y="Residuals")
+
+ggplotly(p1)
+```
+
+```{r}
+rstd <- rstandard(lm2)
+
+p2 <- ggplot(data.frame(rstd = rstd), aes(sample=rstd)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(x="Theoretical Quanities",y="Standardized Residuals")
+
+ggplotly(p2)
+```
+
+\(c\) Make a plot with the leverage values $(h_i)$ on the $x$-axis, and standardized residuals $(r_i)$ on the $y$-axis. Identify any points (countries) that have high standardized residuals or leverage.
+
+```{r}
+lev <- hatvalues(lm2)
+
+p3 <- ggplot(data.frame(rstd = rstd, lev = lev),aes(lev,rstd)) +
+  geom_point() +
+  labs( x="Leverage Values", y="Standardized Residuals")
+
+ggplotly(p3)
+```
+
+For calculating points of high leverage, I shall use the rule of thumb discussed in Chapter 6, namely
+
+$$
+h_{ii}>2 \times \text{average}(h_{ii})=2\times\frac{(p+1)}{n}
+$$
+
+I shall classify any points with standardized residuals outside the interval $[-2,2]$ as outliers, because hdi2018 has 177 observations, making it a relatively small dataset.
+
+```{r}
+n <- nrow(hdi2018)
+#Subtract to exclude the intercept
+p <- length(lm2$coefficients) - 1
+lev_threshold <- 2 * (p + 1) / n
+
+high_lev <- hdi2018[lev >= lev_threshold, ]$country
+outlier <- hdi2018[rstd > 2 | rstd < -2, ]$country
+
+all_countries <- unique(c(high_lev, outlier))
+influential_df <- data.frame(country = all_countries)
+
+# Mark each country as 'Yes' or 'No' for being a high leverage point
+influential_df$High_Leverage <- ifelse(influential_df$country %in% high_lev, "Yes", "No")
+
+# Mark each country as 'Yes' or 'No' for being an outlier
+influential_df$Outlier <- ifelse(influential_df$country %in% outlier, "Yes", "No")
+
+kable(influential_df)
+
+```
+
+Based on the rules discussed above, we have 15 countries that are either high leverage or outliers in our model. From the table, we can see that none of these points are both high leverage and outliers. This means that those points of high leverage are consistent with our model, so the fact that they have a large influence does not change the model parameters with respect to the other points that are not high leverage.
+
+Although the 8 outlier countries do influence the model parameters in a manner not consistent with the rest of the points in our dataset, they are not high leverage, meaning that their anomalous influence is no greater than the rest of the points in the data set that follow a consistent relationship. Even though this data set is not large, the fact that 8 out 177 points are outliers does not provide significant evidence that the model is invalid.
+
+\(d\) Based on the scatterplot matrix and model diagnostics, do the assumptions for MLR appear adequately satisfied? Can you think of any ways in which the model might be improved to better fit the data?
+
+Based on the diagnostics above, the assumptions for MLR do appear to be satisfied. From the scatterplot matrix we can visually see that the relationship between our predictors and response are approximately linear. The plot of residuals vs. fitted values shows no visual pattern, providing evidence that the model residuals are independent. The QQ plot indicates the residuals are approximately normal. And, as discussed above there are no points that are both high leverage and outliers.
+
+The main concern I have is that in the scatterplot matrix, visually it appears that median_age and pct_internet are linearly related to each other. This would make sense since one would assume that the age of a country's population would impact how much of the population uses the internet.
+
+We can investigate the correlation between these two predictors and whether or not it creates significant collinearity issues.
+
+```{r}
+library(faraway)
+vif(lm2)
+cor(hdi2018$median_age, hdi2018$pct_internet)
+```
+
+We can see that median_age and pct_internet are highly correlated but the variance inflation factor is less than 5, meaning that this correlation is not significant enough to discredit the model's validity. However it may be worthwhile to compare a simple linear regression model using one of the predictors and see if it produces a better F-statistic. However, the F-statistic of the current model is already quite low so I don't believe it would result in any meaningful increase in predictive power.

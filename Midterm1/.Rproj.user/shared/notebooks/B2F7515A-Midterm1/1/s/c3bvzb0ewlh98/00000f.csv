@@ -1,0 +1,1 @@
+"0","    model2 <- lm(head_l ~ skull_w + I(skull_w^2)+I(skull_w^3), data=Data)"

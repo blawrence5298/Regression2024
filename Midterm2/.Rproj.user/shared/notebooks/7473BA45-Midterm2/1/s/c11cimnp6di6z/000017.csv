@@ -1,0 +1,5 @@
+"0","p1 <- ggplot(Auto, aes(horsepower, mpg)) +"
+"0","  geom_point() +"
+"0","  labs(title=""title"")"
+"0",""
+"0","ggplotly(p1)"

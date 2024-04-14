@@ -1,0 +1,131 @@
+---
+title: "Homework 3"
+author: Ben Lawrence
+output:
+  html_document:
+    self_contained: true
+---
+
+# Homework 3
+
+## **Exercise 1**
+
+For this question use the Auto data set from the ISLR package. To access this data set first install the package, etc.
+
+```{r}
+#Load library to check install
+library(ggplot2)
+library(plotly)
+library(ISLR)
+
+#Check data
+head(Auto)
+```
+
+**(a) Make a scatter plot with mpg on the y-axis, and horsepower on the x-axis**
+
+```{r}
+p1 <- ggplot(data=Auto, aes(horsepower, mpg)) +
+  geom_point() +
+  labs(title="MPG vs. Horsepower", x="Miles Per Gallon", y="Horsepower")
+
+ggplotly(p1)
+
+```
+
+**(b) Use the lm() function to estimate a second degree (quadratic) polynomial regression model. That is, fit the model** $Y=\beta_0+\beta_1x+\beta_2x^2+e$**, where** $Y=\text{mpg}$ **and** $x=\text{horsepower}$**. Use the summary() function to print the results.**
+
+```{r}
+model1 = lm(mpg ~ poly(horsepower,2), data = Auto)
+summary(model1)
+```
+
+**(c) Use the fitted regression model to make a prediction and 95% prediction interval for the mpg of a vehicle that has horsepower = 150.**
+
+The prediction interval is given by the following output
+
+```{r}
+predict(model1, newdata = data.frame(horsepower = 150), interval = "prediction")
+```
+
+We predict that a vehicle with horsepower of 150 shall have a mpg of about 14.7 miles per gallon.
+
+**(d) Add the fitted second degree polynomial regression curve to the scatter plot of mpg versus horsepower. You may use either base-R or ggplot2 approach.**
+
+```{r}
+p2 <- ggplot(data=Auto, aes(horsepower, mpg)) +
+  geom_point() +
+  stat_smooth(method = 'lm',formula = y ~ poly(x,2))
+  labs(title="MPG vs. Horsepower", x="Miles Per Gallon", y="Horsepower")
+
+ggplotly(p2)
+```
+
+**(e) Make a plot of the residuals versus fitted values, and a QQ plot of the standardized residuals. Comment on whether or not there are any violations of the assumptions for regression modeling.**
+
+```{r}
+p3_data = data.frame(x = fitted(model1), y = rstandard(model1))
+p3 <- ggplot(data = p3_data,aes(x, y)) +
+  geom_point() +
+  labs(x = "Fitted Values", y = "Standardized Residuals for Model 1", title="Residuals vs. Fitted Values") +
+  geom_hline(yintercept = 0, color = "red")
+
+ggplotly(p3)
+
+qqnorm(rstandard(model1))
+qqline(rstandard(model1), col="red")
+```
+
+The plot of standardized residuals visually seems to fan out as the values increase, indicating the overall variance of the residuals is increasing, and non constant, contrary to the common assumptions of linear regression.
+
+The QQ plot further calls the assumptions into question as the plot of the residuals gradually diverges from the expected $y=x$ line, especially around points which are considered outliers. This by itself is not grounds to question the normality of population errors, but if we look closely we can see that many of the points closer to 0 are also diverging from the line, albeit not as drastically. Thus we fail to confirm the necessary assumption that population errors are normal.
+
+## **Exercise 2**
+
+For this question use the Carseats data set.
+
+```{r}
+head(Carseats)
+```
+
+**(a) Fit a multiple linear regression model to predict Sales using Price, Urban, and US.**
+
+```{r}
+model2 = lm(Sales ~ Price + Urban + US, data = Carseats)
+summary(model2)
+```
+
+**(b) Provide an interpretation of each coefficient in the model. Note that some of the variables are qualitative.**
+
+```{r}
+contrasts(Carseats$US)
+```
+
+**(c) Write our equation for the fitted model**
+
+$$
+\hat y=13.04-0.05x_1-0.02x_2+1.2x_3
+$$
+
+**(d) For which of the predictors can you reject the null hypothesis:** $\beta_j=0$
+
+We may reject the null hypothesis for $x_0$ (the intercept), $x_1$, and $x_3$, since their associated p-values imply getting a more extreme statistic by chance is extremely low. I.e. $p < 0.05$. On the other hand the p-value for $x_2=0.936$ which implies there is a very high chance of getting a statistic more extreme. In this case we fail to reject the null hypothesis for $x_2$.
+
+**(e) On the basis of the your response to the previous question, fit a smaller model that only uses the predictors for which there is evidence of association with the outcome.**
+
+```{r}
+model3 = lm(Sales ~ Price + US, data = Carseats)
+summary(model3)
+```
+
+**(f) How well do the models in (a) and (e) fit the data?**
+
+From the two $R^2$ values of the models in (a) and (e) explain the variance of the response almost equally (adjusted $R^2$ values of 0.2335 and 0.2354 respectively).
+
+**(g) Using the model from (e), obtain a 95% confidence intervals for the coefficients**
+
+```{r}
+confint(model3, )
+```
+
+We can see here the confidence interval for US is quite large. This, along with its larger p-value in comparison to the other coefficients, adds further uncertainty as to its accuracy for a measure of the population value of $\beta_2$.

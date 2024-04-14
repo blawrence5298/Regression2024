@@ -1,0 +1,2 @@
+"0","Data = read.csv(""midterm1data.csv"")"
+"0","head(Data)"

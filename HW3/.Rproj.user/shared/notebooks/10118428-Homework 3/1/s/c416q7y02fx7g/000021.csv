@@ -1,0 +1,5 @@
+"0","p1 <- ggplot(data=Auto, aes(horsepower, mpg)) +"
+"0","  geom_point() +"
+"0","  labs(title=""MPG vs. Horsepower"", x=""Miles Per Gallon"", y=""Horsepower"")"
+"0",""
+"0","ggplotly(p1)"

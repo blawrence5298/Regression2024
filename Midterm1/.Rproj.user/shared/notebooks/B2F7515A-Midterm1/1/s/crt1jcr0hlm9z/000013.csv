@@ -1,0 +1,3 @@
+"0","outliers <- which(rstandard(model1) < -2 | rstandard(model1) > 2)"
+"0","out_list <- data.frame(Data[outliers, ]$skull_w,Data[outliers, ]$head_l)"
+"0","out_list"

@@ -1,0 +1,4 @@
+"0","Cars = read.csv(""used_cars.csv"")"
+"0","Cars$clean_price <- as.integer(gsub(""[\\$,]"", """", Cars$price))"
+"0",""
+"0","head(Cars)"

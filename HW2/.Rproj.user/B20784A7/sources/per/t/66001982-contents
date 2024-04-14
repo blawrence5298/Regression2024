@@ -1,0 +1,297 @@
+---
+title: "HW2"
+author: Ben Lawrence
+output: html_document
+  self_contained:true
+---
+
+## HW2
+
+### Exercise 1
+
+#### (a) What are the assumptions for the simple linear regression model? Describe at least two diagnostics that are commonly used to check these assumptions.
+
+1.  $Y$ is related to $x$ by the linear regression model $Y_i=\beta_0+\beta_1x_i+e_i$ and $E(Y| X=x_i)=\beta_0+\beta_1x_i$
+2.  The residuals $e_1,e_2,\dots,e_n$ are independent of each other.
+3.  The residuals have a common variance of $\sigma^2$.
+4.  The residuals are normally distributed with mean $0$ and variance $\sigma^2$. I.e., $e |X\sim N(0,\sigma^2)$
+
+One diagnostic is to simply observe a scatter plot of $(x_i,y_i)$ . If the points do not appear subjectively linear, then it is likely inappropriate to use simple linear regression to model the data. There may be too much variance unexplained by the model. This can also be checked by observing the $R^2$ value and determining if it is close enough to $1$ .
+
+Another diagnostic is to examine the assumption of constant variance. If there are high leverage points in the data, it may be that the residuals do not have a constant variance. To further investigate whether these points call into question the appropriateness of a linear model, we may standardize the residuals based on the standard error of the sample and plot the standardized residuals vs. their fitted values. If there is a pattern in the residuals (such as a funnel), this suggests our assumption of constant variance may not be valid.
+
+#### (b) What does it mean for a point to be an outlier? For simple linear regression, what rule is commonly used to classify points as outliers?
+
+A point is an outlier if it does not follow the pattern set by the majority of the data. A rule of thumb is if a point has a standardized residual that is outside the interval $[-2,2]$ , then the point is an outlier. For large data sets the interval may be expanded to $[-4,4]$. There is no objective reason for these exact intervals, they are simply common rules meant to identify potential outliers and motivate further tests of assumed constant variance in the model.
+
+#### (c) What does it mean for a point to have high leverage? For simple linear regression, what rule is commonly used to classify points of high leverage?
+
+If a point has high leverage, it's x value is far from $\bar x$, that is, far from the mean or cluster of x values for the majority of the data. A popular rule is to classify a point $x_i$ as a point of high leverage if
+
+$$
+h_i>2\times average(h_i)=2\times \frac{2}{n}=\frac{4}{n}
+$$
+
+#### (d) For simple linear regression what are the formulas for the error $\epsilon_i$, residual, $\hat e_i$, and standardized residual, $r_i$? What is $Var(\epsilon_i)$ and $Var(\hat e_i)$ ? Describe two reasons why it is useful to look at a plot of the standardized residuals versus the fitted values.
+
+Error:
+
+$$
+\epsilon_i=y_i-\beta_0-\beta_1x_i
+$$
+
+Residual:
+
+$$
+\hat e_i=\hat y_i-\hat\beta_0-\hat\beta_1x_i
+$$
+
+Standardized Residual:
+
+$r_i=\frac{\hat e_i}{\hat\sigma\sqrt{1-h_i}}$, where $\hat\sigma=\sqrt{\frac{1}{n-2}\sum_{j=1}^n\hat e_j^2}$
+
+The respective variances are as follows:
+
+$$
+Var(\epsilon_i)=\sigma^2
+$$
+
+$$
+Var(\hat e_i)=\sigma^2[1-h_i]
+$$ The first reason it is useful to look at a plot of standardized residuals is because it allows you observe how close the respective variances of the residuals are based on a single reference. If we were to look at a plot of nonstandardized residuals they would include high leverage points (if they exist). These points heavily skew the trendline and may minimize the nonstandardized residual. When we take the leverage into account through standardizing we can better visualize the size of the variances of high leverage points.
+
+The second reason is similar to why it is useful to use a standard normal distribution instead of a raw normal distribution. By dividing the residuals by the estimate of the population variance we may see how many standard deviations each residual's variance is from its predicted value. This gives us an easy metric to use when evaluating the residual variances.
+
+### Exercise 2: Mark the following as either True or False. Provide a brief explanation if you marked the answer as False.
+
+```{r}
+Cars = read.csv("used_cars.csv")
+Cars$clean_price <- as.integer(gsub("[\\$,]", "", Cars$price))
+
+head(Cars)
+```
+
+\(a\) A plot of the residuals versus fitted values is especially useful for checking the assumptions linearity and constant variance.
+
+### True
+
+\(b\) The log transformations is most commonly used to stablilize the variance for count data.
+
+### True
+
+\(c\) When considering transformations for a simple linear regression model, it is always necessary to transform both the predictor and response variable.
+
+### False
+
+Take, as a counter example, a model where we select the response variable to be the sales price of a car and the predictor variable to be the car's model year. (Data obtained from Kaggle: [**LINK**](https://www.kaggle.com/datasets/taeefnajib/used-car-price-prediction-dataset))
+
+```{r}
+Cars = read.csv("used_cars_updated.csv")
+
+head(Cars)
+
+Year = Cars$model_year
+Price = Cars$price_int
+```
+
+If we plot the Model Year vs. the Sales Price we observe the following
+
+```{r}
+
+lm1 = lm(Price ~ Year, data=Cars)
+
+plot(Year, Price, main="Sales Price of Car vs. Model Year", xlab="Year",ylab="USD")
+abline(lm1,col="red")
+```
+
+The relationship between the Sales Price and Model Year is visually nonlinear and if we look at a summary of the linear model
+
+```{r}
+summary(lm1)
+```
+
+we observe that the $R^2$ value is near $0$, implying almost non of the sample variance is explained by the model. This is a case where transforming one or both of the variables could help stabilize error variance. If we transform the Sales Price variable we find that
+
+```{r}
+log_Price = log(Price)
+
+lm2 = lm(log_Price ~ Year, data=Cars)
+summary(lm2)
+```
+
+The $R^2$ value has increased. And visually we can observe
+
+```{r}
+plot(Year,log_Price, main="Sales Price vs. Model Year", ylab="log(USD)",xlab="Year")
+abline(lm2,col="red")
+```
+
+that the relationship appears "more linear" than before. It is instructive to note that we have not transformed the Model Year variable. This is because these values are not random variables. The variance of the error terms in our SLR model do not depend on the predictor variable. By transforming only the response variable with a logarithm we have decreased the effect of large price jumps. If we did the same thing with the model year, which already has a uniform spacing, we would not significantly improve the model. Indeed we observe that
+
+```{r}
+log_Year = log(Year)
+
+lm3 = lm(log_Price ~ log_Year,data=Cars)
+summary(lm3)
+
+```
+
+the $R^2$ value of the model has not significantly changed. If we plot the transformed variables we can see that
+
+```{r}
+plot(log_Year,log_Price, main="Sales Price vs. Model Year", ylab="log(USD)",xlab="log(Year)")
+abline(lm3,col="red")
+```
+
+visually the two models are almost identical. So it is not necessary to transform both variables. If anything, it is preferable to only transform the response variable for ease of interpretation.
+
+\(d\) When fitting a simple linear regression model, the most important piece of information is the $R^2$ (coefficient of determination). An $R^2$ close to 1 always indicates that a straight line is a good fit to the data.
+
+### False
+
+Consider the counterexample of Anscombe's four datasets.
+
+```{r}
+anscombe = read.table("anscombe.txt",header=TRUE)
+attach(anscombe)
+
+#Figure 3.1 on page 46
+par(mfrow=c(2,2))
+plot(x1,y1,xlim=c(4,20),ylim=c(3,14),main="Data Set 1")
+abline(lsfit(x1,y1))
+plot(x2,y2,xlim=c(4,20),ylim=c(3,14),main="Data Set 2")
+abline(lsfit(x2,y2))
+plot(x3,y3,xlim=c(4,20),ylim=c(3,14),main="Data Set 3")
+abline(lsfit(x3,y3))
+plot(x4,y4,xlim=c(4,20),ylim=c(3,14),main="Data Set 4")
+abline(lsfit(x4,y4))
+
+#Regression output on page 47
+m1 = lm(y1~x1)
+summary(m1)
+m2 = lm(y2~x2)
+summary(m2)
+m3 = lm(y3~x3)
+summary(m3)
+m4 = lm(y4~x4)
+summary(m4)
+```
+
+We can observe that each of these models have similar $R^2$ values, but only set 1 and 3 visually appear to have a linear fit. If we were to plot the residuals for these datasets (see p. 48) we would observe that only dataset 1 has a random distribution that we would expect from our assumption that $e_i \sim N(0,\sigma^2)$.
+
+\(e\) Transformations are useful for linearizing the relationship between the explanatory $(X)$ and response $(Y)$ variables, and for overcoming problems due to nonconstant variance.
+
+### True
+
+### Exercise 3: This exercise uses a data set on national statistics obtained from the United Nations, and collected between 2009-2011. The data set contains several variables, including ppgdp, the gross national product per person in US dollars, and fertility, the total fertility rate (number of children per woman).
+
+```{r}
+UN11 = read.csv("UN11.csv")
+head(UN11)
+```
+
+#### (a) Make a scatterplot with fertility on the y-axis and ppgdp on the x-axis. Explain why we should consider log transformations for this data.
+
+```{r}
+fertility = UN11$fertility
+ppgdp = UN11$ppgdp
+
+plot(ppgdp,fertility,main="Fertility vs. GDP Per Capita",xlab="GDP Per Capita",ylab="Total Fertility Rate")
+```
+
+We can see visually that predictor and response do not have a linear relationship. The trend visually appears logarithmic so it reasonable to consider a log transformation to investigate if a linear relationship may be found.
+
+#### (b) Make a scatterplot of log(fertility) versus log(ppgdp) and add the least squares regression line. Does the association appear to be reasonably linear?
+
+```{r}
+
+UN11$log_fertility = log(UN11$fertility)
+UN11$log_ppgdp = log(UN11$ppgdp)  
+
+plot(UN11$log_ppgdp, UN11$log_fertility, main="Fertility vs. GDP Per Capita", xlab="Log(GDP Per Capita)", ylab="Log(Total Fertility Rate)")
+
+
+model_1 = lm(log_fertility ~ log_ppgdp, data=UN11)
+abline(model_1, col="red")
+```
+
+From a visual perspective, this relationship does appear reasonably linear.
+
+#### (c) Use the lm() function to fit a simple linear regression model with log(fertility) as the response variable, and log(ppgdp) as the explanatory variable. Use the summary() function to print the results.
+
+```{r}
+summary(model_1)
+```
+
+#### (d) Write down the equation for the least squares line.
+
+$$
+\hat y=2.66551-0.20715x
+$$
+
+#### (e) Interpret the slope of the regression model.
+
+Since we are dealing with the log base $e$ transformations of fertility and ppgdp the slope cannot be related as a constant rate of change between the original variables. The most we can say is for every 1 unit increase in log(ppgdp) there will be a 0.20715 unit decrease in log(fertility). This interpretation is not particularly useful nor intuitive so it is probably best to speak of interpretations of the model with a set value of ppgdp where we may predict corresponding fertility using the model. For example if there was a country with a gpd per capita of \$1000, then the model predicts a fertility rate of approximately 3.437 children per woman (this will be explored in the following parts).
+
+#### (f) For a locality not in the data with ppgdp = 1000, obtain a point prediction and a 95% prediction interval for log(fertility). If the interval (a,b) is a 95% prediction interval for log(fertility), then a 95% prediction interval for fertility is given by (exp(a),exp(b)). Use this results to get a 95% prediction interval for fertility.
+
+```{r}
+
+predict_1000 = predict(model_1, data.frame(log_ppgdp = log(1000)), interval = "prediction")
+
+predict_1000
+```
+
+From the prediction of log(fertility) we can run a calculation with the inverse function of $log_e$ to return to our previous variables.
+
+```{r}
+exp(predict_1000)
+```
+
+This result indicates that our model predicts a ppgdp=10000 should have a fertility rate of $\approx 3.437$ with a 95% prediction interval of $\approx (1.87,6.32)$.
+
+#### (g) Make a plot of the standardized residuals versus fitted values, and a $QQ$ plot of the standardized residuals. Comment on whether or not the assumptions for simple linear regression appear to be satisfied.
+
+```{r}
+
+s_resid = rstandard(model_1)
+
+fitted = fitted(model_1)
+
+plot(fitted,s_resid, ylab="Standardized Residuals", xlab="Fitted Values")
+
+qqnorm(s_resid)
+```
+
+Visually, we can observe the plot of standardized residuals vs. fitted values shows no clear pattern, and appear evenly distributed. This suggests the variance of the errors are constant.
+
+From the QQ plot, we observe a linear relationship between theoretical quantiles and observed values of our standardized residuals. This suggest the errors are normal, giving additional evidence to our model's validity. The two plots provide evidence that our assumptions for linear regression are satisfied.
+
+#### (h) Which countries are flagged as outliers? That is, which countries have standardized residuals outside the interval from -2 to 2. In your view, does it seem necessary to remove any of these points, and then refit the model.
+
+```{r}
+outliers = which(s_resid < -2 | s_resid > 2)
+countries = data.frame(Country = UN11[outliers, ]$country, standardized_residual = s_resid[outliers] )
+
+countries
+```
+
+Countries that are outside the interval are listed above. I do not believe it is necessary to remove any of these points. None of the countries have standardized residuals far outside of the interval. Visually, the scatter plot shows that many other countries are contributing to the the variance not explained by our model (the low $R^2$ value). Deleting these outliers would likely not significantly increase the variance explained by our model and would also delete information likley reflective of the population trend in the relationship between ppgdp and a country's fertility rate.
+
+## Bonus
+
+Consider the model $Y_i=\mu+\epsilon_i$, where $\mu$ is a parameter representing the population mean and $\epsilon \sim N(0,\sigma^2)$ independently for $i=1,\cdots,n$. The prediction for the response variable is given by $\hat y=\bar y$, where $\bar y=\frac{1}{n}\sum_{i=1}^ny_i$ is the sample mean. Derive a $1-\alpha$ prediction interval for a single new value of the response variable. Is the prediction interval wider or narrower than a $1-\alpha$ confidence interval for the population mean $\mu$? Assume that a population variance $\sigma^2$ is unknown and needs to be estimated.
+
+The confidence interval for $\mu$ is given by
+
+$$
+\bar y\pm t(\alpha/2,n-1)s\sqrt{\frac{1}{n}}
+$$
+
+and the prediction interval for $y_{new}$ is given by
+
+$$
+\bar y \pm t(\alpha/2,n-1)s\sqrt{1+\frac{1}{n}}
+$$
+
+So, in this case, the prediction interval would be larger since $1+\frac{1}{n}>\frac{1}{n}$.

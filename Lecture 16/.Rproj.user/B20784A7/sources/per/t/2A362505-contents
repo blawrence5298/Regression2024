@@ -1,0 +1,52 @@
+---
+title: "Lecture 16"
+---
+
+## Lecture 16
+
+```{r}
+library(ISLR)
+head(Wage)
+```
+
+```{r}
+lm1 <- lm(logwage ~ education, data=Wage)
+summary(lm1)
+```
+
+Using the summary output we can write the fitted regression model as
+
+$$
+\widehat {\text{log(Wage)}}=4.398+0.123\text{HS_Grad}+0.238\text{Some_College} \\
++0.374\text{College_Grad}+0.560\text{Advanced_Degree} \\
+ = \begin{cases} 
+4.398 & \text{if } < \text{HS_Grad (baseline)} \\
+4.398+0.123=4.521 & \text{if } \text{HS_Grrad = 1} \\
+4.398+0.238=4.636 & \text{if } \text{Some_College}=1 \\
+4.398+0.374=4.772 & \text{if } \text{College_Grad}=1 \\
+4.398+0.560=4.958 & \text{if } \text{Advanced_Degree}=1
+\end{cases}
+$$
+
+We can also include interaction effects between the categorical predictor $\text{education}$ and a quantitative variable such as $\text{age}$ (age of the worker). The model can be written out as:
+
+$$
+\text{log(Wage)}=\beta_0+\beta_1\text{age}+\beta_2\text{HS_Grad}+\beta_3\text{Some_College} \\
++\beta_4\text{College_Grad}+\beta_5\text{Advanced_Degree} \\
++\beta_6\text{HS_Grad} \cdot \text{age} + \beta_7\text{Some_College}\cdot\text{age} \\
++\beta_8\text{College_Grad} \cdot\text{age}+\beta_9\text{Advanced_Degree} \cdot \text{age} +\epsilon\\
+= \begin{cases} 
+\beta_0+\beta_1\text{age}+\epsilon & \text{if < HS_Grad (baseline)} \\
+\beta_0+\beta_2+(\beta_1+\beta_6)\text{age} + \epsilon & \text{if HS_Grad}=1 \\
+\beta_0+\beta_3+(\beta_1+\beta_7)\text{age} + \epsilon & \text{if Some_College}=1 \\
+\beta_0+\beta_4 + (\beta_1+\beta_8)\text{age}+\epsilon & \text{if College_Grad}=1 \\
+\beta_0+\beta_5+(\beta_1+\beta_9)\text{age} +\epsilon & \text{if Advanced_Degree}=1 
+\end{cases} 
+$$
+
+The regression model gives us separate regression lines, which have different slopes and intercepts, for each level of the categorical predictor $\text{education}$
+
+```{r}
+lm3 <- lm(logwage ~ age + education + age:education, data=Wage)
+summary(lm3)
+```

@@ -1,0 +1,17 @@
+---
+title: "Chapter 8 Exercises"
+---
+
+# Chapter 8 Exercises
+
+Chapter 6 of Bradbury (2007), a book on baseball, uses regression analysis to compare the success of the 30 Major League Baseball teams. For example, the author considers the relationship between $x_i$, market size (i.e., the population in millionss off the city associated with each team) and $Y_i$, the number of times team $i$ made the post-season playoffs in the $m_i=10$ seasons between 1995 and 2004.
+
+The author found that "it is hard to find much correlation between market size and ... success in making the playoffs The relationship ... is quite weak." The data is plotted in Figure 8.16 and it can be found on the book web site in the file playoffs.txt. The output below provides the analysis implied by the author's comments.
+
+\(a\) Describe in detail two major concerns that potentially threaten the validity of the analysis implied by the author's comments.
+
+\(b\) Using an analysis which is appropriate for the data, show that there is very strong evidence of a relationship between $Y$ and $x$.
+
+```{r}
+1 + 1
+```

@@ -1,0 +1,1 @@
+{"frames":[{"func":"data.frame(Country = UN11[outliers, ]$country, standardized_residual = s_resid[outliers, \n    ])","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in s_resid[outliers, ] : incorrect number of dimensions\n"}

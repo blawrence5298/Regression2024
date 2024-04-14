@@ -1,0 +1,31 @@
+---
+title: "Lecture 21"
+---
+
+## Logistic Regression Diagnostics
+
+```{r}
+county_votes16 <- readRDS("county_votes16.rds")
+head(county_votes16)
+dim(county_votes16)
+```
+
+```{r}
+set.seed(999) # set seed for reproducibility
+n <- nrow(county_votes16); n
+floor(0.7*n)
+
+# randomly sample 70% of rows for training set
+train <- sample(1:n, 2178) 
+
+# fit model using training data
+glm_train <- glm(trump_win ~ obama_pctvotes, data=county_votes16,
+                 subset = train, family = binomial)
+summary(glm_train)
+```
+
+```{r}
+rsconnect::setAccountInfo(name='blawrence5298',
+			  token='371915753C616B1D602D0F35EA422B4C',
+			  secret='wPW5j7WOKZme3eKtum1rsOWvb7Re81WGAqlxqXxX')
+```

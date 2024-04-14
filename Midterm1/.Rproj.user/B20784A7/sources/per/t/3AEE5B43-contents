@@ -1,0 +1,138 @@
+---
+title: "Midterm1"
+author: Ben Lawrence
+output:
+  html_document:
+    self_contained:true
+---
+
+## Midterm 1
+
+```{r}
+library(ggplot2)
+library(ggExtra)
+```
+
+```{r}
+Data = read.csv("midterm1data.csv")
+head(Data)
+```
+
+1.  Predicting head_1 with skull_w
+
+    ```{r}
+    plot <- ggplot(data=Data, aes(skull_w, head_l)) +
+    geom_point()
+    ggExtra::ggMarginal(plot, type='histogram')
+    ```
+
+    \(a\) The relationship appears subjectively linear, although the skull_w values are right-skewed. It is possible a higher order polynomial model could correct for this.
+
+    ```{r}
+    model1 <- lm(head_l ~ skull_w + I(skull_w^2), data=Data)
+    summary(model1)
+    ```
+
+    \(b\) We can see the p-value for the second degree term is not much larger than the p-value for the first degree, suggesting a higher order polynomial model may be appropriate. We can investigate this further with additional degrees until we reach an unreasonable p-value.
+
+    ```{r}
+    model2 <- lm(head_l ~ skull_w + I(skull_w^2)+I(skull_w^3), data=Data)
+    summary(model2)
+    ```
+
+As we can see the p-values for a degree three polynomial are too high to be useful. We will plot the standardized residuals of the second degree polynomial vs. fitted values to assess the constancy of the error variance. We will repeat this with a basic linear model to assess which is better.
+
+```{r}
+basic <- lm(head_l ~ skull_w, data=Data)
+plot(Data$skull_w, rstandard(basic))
+plot(Data$skull_w, rstandard(model1))
+```
+
+We can see the basic linear model has residuals that are clustered in the upper left of the plot, suggesting the variance of the model's errors is nonconstant. We see a slight improvement with the residual plot of the quadratic model, as the points are more spread out and random. In the next part we assess the normality of the residuals of both models.
+
+```{r}
+qqnorm(rstandard(basic))
+curve(1*x, add=T)
+
+qqnorm(rstandard(model1))
+curve(1*x, add=T)
+```
+
+\(c\) These plots indicate the residuals of both models are more or less normally distributed. One could make the argument the quadratic appears slightly more aligned with a line of slope 1, especially in the case of high leverage points, indicating the quadratic model would be preferable.
+
+\(d\) If we decide on the quadratic model, the population model to be estimated is given by
+
+$$
+y_i=\beta_0+\beta_1 x_i+\beta_2x_i^2
+$$
+
+```{r}
+outliers <- which(rstandard(model1) < -2 | rstandard(model1) > 2)
+out_list <- data.frame(Data[outliers, ]$skull_w,Data[outliers, ]$head_l)
+out_list
+```
+
+```{r}
+high_leverage <- which(hatvalues(model1) > 4/104)
+leverage_list <- data.frame(Data[high_leverage, ]$skull_w,Data[high_leverage, ]$head_l)
+leverage_list
+```
+
+\(e\) The lists above constitute the points that are outliers and high leverage according to the rules of thumb discussed in lecture. Points that are outliers having standardized residuals outside the interval $(-2,2)$ and points with high leverage having leverage greater than $\frac{4}{n}$, in this case $\frac{4}{104}$.
+
+For this model there are more high leverage points than outliers. There are 2 points which are both high leverage and outliers. It may be prudent to attempt additional transformations with a square root function to see if such a model would produce less high leverage points. Another avenue of investigation would be to evaluate the basic linear model for high leverage points and outliers to see if there is any improvement from the quadratic.
+
+2.  Inference
+
+    ```{r}
+    summary(model1)
+    ```
+
+\(a\) The $R^2$ value indicates that 62.35% of the variance in our data is explained by the quadratic model.
+
+\(b\) The estimated regression equation is given by
+
+$$
+\hat y=-191.1381+8.989x_i-0.06995x_i^2
+$$
+
+\(c\) The estimated intercept is the predicted head length of a possum's whose skull width is 0mm. Since it is impossible for a possum to have such a skull width, it is not meaningful nor useful in application.
+
+\(d\) We may use the regression equation to calculate the predicted value
+
+$$
+\hat y(55)=-191.1381 +8.989(55)-0.06995(55)^2
+$$
+
+```{r}
+-191.1381 + (8.989 * 55) - (0.06995 * 55^2)
+```
+
+We verify our result using the predict function
+
+```{r}
+predict(model1, newdata=data.frame(skull_w = 55))
+```
+
+Accounting for rounding error, our estimates seem to agree.
+
+```{r}
+predict(model1, newdata=data.frame(skull_w = 55), interval="predict",level=0.97)
+```
+
+\(e\) The interval we calculated above with R indicates that there is a 97% percent likelihood the actual head length of a Australian possum with a skull width of 55mm will be larger than 86.18mm and smaller than 95.99mm.
+
+## Midterm Corrections
+
+Problem 1:
+
+\(a\)
+
+```{r}
+pacman::p_load(tidyverse, ggplot2)
+possum <- read.csv("midterm1data.csv")
+```
+
+```{r}
+
+```

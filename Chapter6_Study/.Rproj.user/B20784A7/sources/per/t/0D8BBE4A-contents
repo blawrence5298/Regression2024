@@ -1,0 +1,43 @@
+---
+title: "Chapter6_Study"
+---
+
+## Chapter 6 Exercises
+
+Chapter 5-2 of the award-winning book on baseball (Keri, 2006) makes extensive use of multiple regression. For example, since the 30 "Major League Baseball teams play eighty-one home games during the regular season and receive the largest share of their income from the ticket sales associated with these games" the author develops a least squares regression model to predict Y, yearly income (in 2005 US dollars) from ticket sales for each team from home games each year. Ticket sales data for each team for each of the years from 1997 to 2004 were used to develop the model. Thus there are $30 \times8=240$ rows of data. Twelve potential predictor variables are identified as follows: Six predictor variables measure team quality, namely:
+
+$$
+\begin{align} 
+x_1 &= \text{Number of games won in current season} \\
+x_2 &= \text{Number of games won in previous season} \\
+x_3 &= \text{Dummy variable for playoff appearance in current season} \\
+x_4 &= \text{Dummy variable for playoff appearance in previous seasons} \\
+x_5 &= \text{Number of winning seasons in the past 10 years} \\
+x_6 &= \text{Number of playoff appearances in the past 10 years}
+\end{align}
+$$
+
+Three predictors measure stadium of quality, namely:
+
+$$
+\begin{align} 
+x_7 &= \text{Seating capacity} \\
+x_8 &= \text{Stadium quality rating} \\
+x_9 &= \text{Honeymoon effect} 
+\end{align}
+$$
+
+Two predictors measure market quality, namely:
+
+$$
+\begin{align} 
+x_{10} &= \text{Market size} \\
+x_{11} &= \text{Per-capita income}
+\end{align}
+$$
+
+Finally, $x_{12}=\text{Year}$ is included to allow for inflation. The author found that "*seven of these (predictor) variables had a statistically significant impact on attendance revenue*" (i.e., had a t-statistic significant at least at the 10% level). Describe in detail two major concerns that potentially threaten the validity of the model.
+
+```{r}
+1 + 1
+```

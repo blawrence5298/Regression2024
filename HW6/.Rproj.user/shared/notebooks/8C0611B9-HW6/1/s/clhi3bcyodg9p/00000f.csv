@@ -1,0 +1,2 @@
+"0","county_votes16 <- read.csv(""county_votes16.csv"")"
+"0","head(county_votes16)"

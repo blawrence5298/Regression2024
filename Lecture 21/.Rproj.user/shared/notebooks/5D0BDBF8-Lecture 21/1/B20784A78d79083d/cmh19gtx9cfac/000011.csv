@@ -1,0 +1,2 @@
+"0","county_votes16 <- readRDS(""county_votes16.rds"")"
+"0","head(county_votes16)"

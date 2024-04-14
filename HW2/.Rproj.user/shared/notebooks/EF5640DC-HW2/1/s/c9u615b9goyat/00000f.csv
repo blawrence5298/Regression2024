@@ -1,0 +1,6 @@
+"0","anscombe = read.table(""anscombe.txt"",header=TRUE)"
+"0","attach(anscombe)"
+"0",""
+"0","#Figure 3.1 on page 46"
+"0","par(mfrow=c(2,2))"
+"0","plot(x1,y1,xlim=c(4,20),ylim=c(3,14),main=""Data Set 1"")"
