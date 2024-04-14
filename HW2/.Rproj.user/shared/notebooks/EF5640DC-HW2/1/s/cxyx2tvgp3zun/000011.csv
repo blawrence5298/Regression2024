@@ -1,4 +1,0 @@
-"0",""
-"0","# Adding the regression line"
-"0","abline(lm1, col=""red"")"
-"0",""

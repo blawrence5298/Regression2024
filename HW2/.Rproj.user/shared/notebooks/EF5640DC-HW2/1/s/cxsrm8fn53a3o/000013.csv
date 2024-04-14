@@ -1,4 +1,0 @@
-"0","fertility = UN11$fertility"
-"0","ppgdp = UN11$ppgdp"
-"0",""
-"0","plot(ppgdp,fertility,main=""Fertility vs. GDP Per Capita"",xlab=""GDP Per Capita"",ylab=""Total Fertility Rate"")"

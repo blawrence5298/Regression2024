@@ -1,4 +1,0 @@
-"0","library(ggplot2)"
-"0","ggplot(data=profsalary, aes(Experience, Salary)) + "
-"0","  geom_point() + "
-"0","  stat_smooth(method='lm',formula = y ~ poly(x, 2))"

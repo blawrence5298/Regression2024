@@ -1,4 +1,0 @@
-"0",""
-"0","#versus"
-"0",""
-"0","plot(resid(lm3) ~ fitted(lm3))"

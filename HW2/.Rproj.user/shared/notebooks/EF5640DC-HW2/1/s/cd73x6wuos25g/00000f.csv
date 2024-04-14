@@ -1,1 +1,0 @@
-"0","plot(log_Year,log_Price, main=""Sales Price vs. Model Year"", ylab=""log(USD)"",xlab=""log(Year)"")"

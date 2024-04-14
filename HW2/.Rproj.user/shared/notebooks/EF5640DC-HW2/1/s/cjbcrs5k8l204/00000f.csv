@@ -1,4 +1,0 @@
-"0",""
-"0","lm1 = lm(Price ~ Year, data=Cars)"
-"0",""
-"0","plot(Year, Price, main=""Sales Price of Car vs. Model Year"", xlab=""Year"",ylab=""USD"")"

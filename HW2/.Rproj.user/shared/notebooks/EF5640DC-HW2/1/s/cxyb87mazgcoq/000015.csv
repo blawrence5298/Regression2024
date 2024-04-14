@@ -1,4 +1,0 @@
-"0",""
-"0",""
-"0","model_1 = lm(log_fertility ~ log_ppgdp, data=UN11)"
-"0","abline(model_1, col=""red"")"

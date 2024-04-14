@@ -1,4 +1,0 @@
-"0","outliers = which(s_resid < -2 | s_resid > 2)"
-"0","countries = data.frame(Country = UN11[outliers, ]$country, standardized_residual = s_resid[outliers] )"
-"0",""
-"0","countries"

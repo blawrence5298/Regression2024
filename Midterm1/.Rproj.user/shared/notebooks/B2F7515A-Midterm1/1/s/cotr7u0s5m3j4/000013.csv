@@ -1,3 +1,0 @@
-"0","    plot <- ggplot(data=Data, aes(skull_w, head_l)) +"
-"0","    geom_point()"
-"0","    ggExtra::ggMarginal(plot, type='histogram')"

@@ -1,7 +1,0 @@
-"0","#Load library to check install"
-"0","library(ggplot2)"
-"0","library(plotly)"
-"0","library(ISLR)"
-"0",""
-"0","#Check data"
-"0","head(Auto)"

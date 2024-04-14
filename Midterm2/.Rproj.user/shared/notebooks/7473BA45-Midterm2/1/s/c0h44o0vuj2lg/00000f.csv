@@ -1,6 +1,0 @@
-"0","p2 <- ggplot(Auto, aes(horsepower, mpg)) +"
-"0","  geom_point() +"
-"0","  stat_smooth(method=""lm"", formula = y ~ poly(x, 2)) +"
-"0","  labs(title=""title"")"
-"0",""
-"0","ggplotly(p2)"
