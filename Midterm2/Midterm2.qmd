@@ -4,7 +4,7 @@ author: Ben Lawrence
 output: html_document
 ---
 
-## Midterm 2 Practice
+## Midterm 2 
 
 ```{r}
 library(ggplot2)
@@ -388,3 +388,84 @@ where $p_i=\frac{e^{\beta_0+\beta_1x_i}}{1+e^{\beta_0+\beta_1x_i}}$ for $i=1,2,\
 $$
 l(\beta_0,\beta_1)=\rm log(L(\beta_0,\beta_1))=\sum_{i=1}^n
 [y_ilog(p_i)+(1-y_i)log(1-p_i)]$$
+
+Lecture 17: Box-Cox Transformations:
+
+For a strictly positive response variable $Y$, the Box-Cox family of transformations is given by
+
+$$
+h(Y,\lambda)= 
+\begin{cases} 
+\frac{Y^\lambda-1}{\lambda} & ,\text{if }\lambda \neq0 \\
+\rm log(Y) & , \text{if } \lambda=0
+\end{cases}
+$$
+
+Transformations, previously discussed such as the square root $(\lambda=\frac{1}{2})$ and the logarithm $(\lambda=0)$ are members of the Box-Cox family. The parameter $\lambda$ is estimated by maximizing the log-likelihood function:
+
+$$
+l(\lambda)=-\frac{n}{2} \rm log(RSS(\lambda)/n)+(\lambda-1)\sum_{i=1}^nlog(y_i)
+$$
+
+where $RSS(\lambda)$ is the residuals sum of squares when $h(y_i,\lambda)$ is the response. More specifically,
+
+$$
+\rm RSS(\lambda)=\sum_{i=1}^n
+[h(y_i,\lambda)-\hat \beta_0-\hat \beta_1x_{i1}-\cdots-\hat \beta_px_{ip}]^2$$
+
+where $\hat \beta_0,\dots,\hat \beta_p$ are the least squares estimates of the parameters for transformed regression model $h(Y_i,\lambda)=\beta_0+\beta_1x_{i1}+\cdots+\beta_px_{ip}+\epsilon$
+
+Example
+
+```{r}
+defects <- read.csv("defects.csv")
+pairs(Defective ~ Temperature + Density + Rate, data=defects)
+```
+
+The scatterplot matrix and residual versus fitted plot show nonlinearity ("cuvyness") in the data that is not accounted for by the linear regression model.
+
+```{r}
+lm1 <- lm(Defective ~ Temperature + Density + Rate, data=defects)
+par(mfrow=c(1,2), mar=c(4.5, 4.5, 2, 2))
+plot(lm1, 1:2)
+```
+
+```{r}
+par(mfrow=c(1,3), mar=c(4.5, 4.5, 2, 2))
+plot(defects$Temperature, rstandard(lm1),
+     xlab="Temperature", ylab="Standardized Residuals")
+plot(defects$Density, rstandard(lm1),
+     xlab="Density", ylab="Standardized Residuals")
+plot(defects$Rate, rstandard(lm1),
+     xlab="Rate", ylab="Standardized Residuals")
+
+```
+
+```{r}
+#Using the Box-cox procedure, the estimated value of the parameter is lambda = 0.45
+#The 95% confidence interval for lambda is between 0.33 and 0.58
+#For interpretibility, we will round and use 0.5 as our applied lambda cause its in the confint and square roots are more intiutive
+
+
+library(MASS)
+library(car)
+
+boxcox(lm1, lambda=seq(0.2, 0.75, by = 0.05))
+summary(powerTransform(lm1))
+```
+
+Thus the regression model with the transformed response is
+
+$$
+\sqrt{Y}=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon
+$$
+
+```{r}
+lm2 <- lm(sqrt(Defective) ~ Temperature + Density +Rate, data=defects)
+summary(lm2)
+```
+
+```{r}
+par(mfrow=c(1,2), mar=c(4.5,4.5, 2,2))
+plot(lm2, 1:2)
+```
