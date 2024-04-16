@@ -1,5 +1,7 @@
 ---
 title: "Midterm2"
+author: Ben Lawrence
+output: html_document
 ---
 
 ## Midterm 2 Practice
