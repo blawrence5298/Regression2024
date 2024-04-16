@@ -3,7 +3,7 @@
     "path": "C:/Users/blawr/source/repos/Regression2024/Final_Project/Final_Project_Paper.qmd",
     "project_path": "Final_Project_Paper.qmd",
     "type": "quarto_markdown",
-    "hash": "242638042",
+    "hash": "2443665162",
     "contents": "",
     "dirty": false,
     "created": 1712923241159.0,
@@ -15,18 +15,19 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "13,3",
+        "cursorPosition": "232,12",
         "scrollLine": "0",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "2:7507"
+        "rmdVisualModeLocation": "9199:4908.5",
+        "last_setup_crc32": "f7b45f0c96a282c8"
     },
     "folds": "",
-    "lastKnownWriteTime": 1713044377,
+    "lastKnownWriteTime": 1713184856,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1713044377267,
+    "last_content_update": 1713184858048,
     "read_only": false,
     "read_only_alternatives": []
 }

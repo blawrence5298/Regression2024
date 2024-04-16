@@ -114,7 +114,7 @@ Visually,
 
 ```{r}
 par(mfrow=c(2,2))
-plot(resid(lm2) ~ fitted(lm2))
+plot(residuals(lm2) ~ fitted(lm2))
 abline(h=0, col="red")
 
 qqnorm(rstandard(lm2))
@@ -155,13 +155,13 @@ $$
 HH=X(X^\prime X)^{-1}X^\prime X(X^\prime X)^{-1}X^\prime = X(X^\prime X)^{-1}IX^\prime=X(X^\prime X)^{-1}X^\prime=H
 $$
 
-2b) Show that $E(\hat Y)=X\beta$
+1b) Show that $E(\hat Y)=X\beta$
 
 $$
 E(\hat Y)=E(X\hat \beta)=XE(\hat \beta)=X\beta
 $$
 
-2c) Show that $Var(\hat Y)=\sigma^2H$
+1c) Show that $Var(\hat Y)=\sigma^2H$
 
 $$
 \begin{aligned}
@@ -173,4 +173,216 @@ Var(\hat Y) &= Var(X\hat \beta) \\
 \end{aligned}
 $$
 
-2
+2\) Derive the $2\times2$ covariance matrix for least squares estimates, $\hat \beta=(\hat \beta_0,\hat \beta_1)^\prime$, for simple linear regression:
+
+$$
+Var(\hat \beta)= \begin{pmatrix} Var(\hat \beta_0) && Cov(\hat \beta_0, \hat \beta_1) \\ Cov(\hat \beta_1,\hat \beta_0) && Var(\hat \beta_1) \end{pmatrix}
+$$
+
+$$
+X= \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}
+$$
+
+So that
+
+$$
+X^\prime X= \begin{pmatrix} 1 && \cdots &&1\\ X_1 && \cdots && X_n \end{pmatrix} \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}= \begin{pmatrix} n && \sum_{i=1}^nX_i\\ \sum_{i=1}^nX_i && \sum_{i=1}^n X_i^2\end{pmatrix}
+$$
+
+giving the inverse
+
+$$
+(X^\prime X)^{-1}=\frac{1}{n\sum_{i=1}^nX_i^2-(\sum_{i=1}^2X_i)^2}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix} =\frac{1}{nSXX}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix}
+$$
+
+Finally,
+
+$$
+Var(\hat \beta)= \begin{pmatrix} \frac{\sigma^2\sum_{i=1}^nX_i^2}{nSXX} && -\frac{\sigma^2 \bar X}{SXX} \\ -\frac{\sigma^2 \bar X}{SXX} && \frac{\sigma^2}{SXX} \end{pmatrix}
+$$
+
+The variance of $\hat \beta_0$ is the 1,1 entry in the above variance covariance matrix whereas the variance of $\hat \beta_1$ is the 2,2 entry. Note that
+
+$$
+\sum_{i=1}^nX_i^2=SXX+n \bar X^2
+$$
+
+so that
+
+$$
+Var(\hat \beta_0)=\frac{\sigma^2 \sum_{i=1}^nX_i^2}{nSXX}=\frac{\sigma^2(SXX + n\bar X^2)}{nSXX}=\sigma^2(\frac{1}{n}+\frac{\bar X^2}{SXX})
+$$
+
+```{r}
+pacman::p_load(MASS, tidyverse)
+data(Boston)
+#head(Boston)
+```
+
+```{r}
+lmB <- lm(medv ~ dis + rm + tax + chas, data=Boston)
+summary(lmB)
+```
+
+3a) In R, compute the vector of least squares estimates $\hat \beta=(X^\prime X)^{-1}X^\prime Y$. Then verify that the results are the same as the parameter estimates provided by the lm() function.
+
+```{r}
+#Create a matrix of predictors using the dis, rm, tax, and chas columns of the Boston dataset, including a column of 1s to account for beta_0
+X <- as.matrix(cbind(1, Boston[, c('dis', 'rm', 'tax', 'chas')]))
+
+#Create a matrix of responses
+Y <- as.matrix(Boston['medv'])
+
+#Get the transpose of the predictors matrix
+X_t <- t(X)
+
+#Apply the least-squares estimates formula
+Beta <- solve(X_t %*% X) %*% X_t %*% Y
+Beta
+```
+
+3b) In R, compute the variance-covariance matrix $Var(\hat \beta)=\sigma^2(X^\prime X)^{-1}$ $\left( \text{plug in }\hat \sigma^2=\frac{RSS}{n-p-1} \text{ as an estimate for } \sigma^2 \right)$. Then verify that the square root of the diagonal entries of this matrix are the same as the standard errors provided by the lm() function
+
+```{r}
+#First we obtain the factors necessary to calculate the variance of predicted values
+RSS <- sum((residuals(lmB))^2)
+n <- nrow(Boston)
+
+#Calculate sigma squared manually
+sigma_squared <- RSS / (n - 4 - 1)
+
+#Now we apply the given formula to obtain the covariance matrix
+Cov <- sigma_squared * solve(X_t %*% X)
+
+#From the matrix we isolate the diagonal entries and square root them to obtain the standard errors
+Err <- sqrt(diag(Cov))
+Err
+```
+
+Homework 5
+
+1a) Fit a multiple linear regression model with hdi_2018 as the response, and the other four variables as predictors
+
+```{r}
+pacman::p_load(tidyverse)
+hdi <- read.csv("hdi2018.csv")
+lm1 <- lm(hdi_2018 ~ median_age + pctpop65 + pct_internet + pct_labour, data=hdi)
+summary(lm1)
+```
+
+1b) Using the model fit in (a), is there evidence of a relationship between hdi_2018 and at least one of the predictor variables? Write the null and alternative hypotheses, report the F-test statistic and p-value, and state your conclusion.
+
+$$
+H_0:\beta_0=\beta_1=\beta_2=\beta_3=\beta_4=0 \text{ versus }H_1: \text{at least one is not zero}
+$$
+
+Here the F-statistic is 341.5 yielding a p-value of approximately zero. Therefore we reject $H_0$ and claim that at least one of the predictors is related to hdi_2018.
+
+1c) Using the model fit in (a), which predictor variables are statistically significant according to the individual t–tests?
+
+According to the individual t-tests, median_age and pct_internet are significant in the presence of the other predictors have p-values smaller than $\alpha=0.05$ .
+
+d\) Fit a reduced model with median_age and pct_internet as predictors. Use the anova() function to conduct a partial F-test that compares this reduced model with the full model specified in (a). Make sure to write the null and alternative hypotheses, report the p-values, and state your conclusion.
+
+```{r}
+lm2 <- lm(hdi_2018 ~ median_age + pct_internet, data=hdi)
+anova(lm2, lm1)
+```
+
+$H_0:\beta_2=\beta_4=0$ versus $H_1:$ at least one is not zero.
+
+Here the F-statistic is 0.3196 yielding a p-value of 0.7269. Therefore we fail to reject $H_0$ and claim that both predictors can be dropped.
+
+e\) According to the $\text{adjusted-}R^2$, how does the full model in (a) compare with the reduced model in (d)? Is this consistent with your conclusion for the partial F-test?
+
+```{r}
+summary(lm1)$adj.r.squared
+```
+
+```{r}
+summary(lm2)$adj.r.squared
+```
+
+We see that the adjusted $R^2$ is slightly larger for the reduced model which is consistent with the partial F-test, indicating we can remove the two variables
+
+2a) Make a scatterplot matrix for the three variables. Describe the associations between the variables in the scatterplot matrix.
+
+```{r}
+pairs(hdi_2018 ~ median_age + pct_internet, data=hdi)
+```
+
+It appears that all three variables have a relatively strong positive linear relationship.
+
+1b) Make a plot of the residualss versus fitted values, and a QQ plot of the standardized residuals.
+
+```{r}
+plot(lm2, 1)
+```
+
+```{r}
+qqnorm(rstandard(lm2))
+qqline(rstandard(lm2))
+```
+
+Make a plot with the leverage values $(h_i)$ on the x-axis, and standardized residuals $(r_i)$ on the y-axis. Identify any points (countries) that have high standardized residuals or leverage.
+
+```{r}
+p <- 2
+n <- nrow(hdi)
+plot(hatvalues(lm2), rstandard(lm2),
+xlab="Leverage",
+ylab="Standardized Residuals")
+abline(v = 2*(p+1)/n, lty=2)
+abline(h = -3, lty=2)
+```
+
+```{r}
+hdi[which(hatvalues(lm2) > 0.035 | rstandard(lm2) < -3), ]
+```
+
+d\) Based on the scatterplot matrix and model diagnostics, do the assumptions for MLR appear adequately satisfied? Can you think of any ways in which the model might be improved to better fit the data?
+
+With the exception of the obvious outlier on the QQ-plot, normality looks okay. The variance looks questionable and there appears to be some polynomial pattern in the residual trend. We can try to fix this by using transformations and/or polynomial functions of the predictors.
+
+Homework 6 (Practice Problems)
+
+Suppose we collect data for a group of students in a statistics class with variables $X_1= \text{hours studied}$ , $X_2=\text{undergrad GPA}$ and $Y=\text{receive an A}$. We fit a logistic regression model and produce estimated coefficients, $\hat \beta_0=-6$, $\hat\beta_1=0.05$, and $\hat \beta_2=1$.
+
+1a) Estimate the probability that a student who studies for 40 hours and has an undergrad GPA of 3.5 gets an A in the class.
+
+Logit:
+
+$$
+\rm log\left(\frac{p(x)}{1-p(x)}\right)=\beta_0+\beta_1x+\cdots+\beta_px_p
+$$
+
+So $\hat \beta_0+\hat \beta_1x_1+\hat \beta_2x_2=-6+(0.05)(40)+(1)(3.5)=-0.5$ and then
+
+$$
+p(x)=\frac{e^{-0.5}}{1+e^{-0.5}} \approx0.378 
+$$
+
+1b) How many hours would a student with a 3.5 GPA need to study to have a 50% chance of getting an A in the class?
+
+First we calculate $\rm log \left(\frac{0.5}{1-0.5}\right)=log(1)=0$. So $0=-6+(0.05)x_1+1(3.5)$. Solving this for $x_1$ we obtain
+
+$$
+\begin{align} 
+9.5&=0.05x_1 \\
+\implies x_1&=190
+\end{align}
+$$
+
+The parameters $\beta_0$ and $\beta_1$ for the simple logistic regression model can be estimated using the method of maximum likelihood. There are actually no closed form solutions for the parameter estimates, so iterative techniques are used to perform the optimization (e.e, gradient descent). Then end of lectture 17 discusses how the likelihood function for logistic regression can be expressed as
+
+$$
+L(\beta_0,\beta_1)=\prod_{i=1}^{n}p_i^{y_i}(1-p_i)^{1-y_i}
+$$
+
+where $p_i=\frac{e^{\beta_0+\beta_1x_i}}{1+e^{\beta_0+\beta_1x_i}}$ for $i=1,2,\dots,n$.
+
+2a) Show that the log-likelihood function can be expressed as
+
+$$
+l(\beta_0,\beta_1)=\rm log(L(\beta_0,\beta_1))=\sum_{i=1}^n
+[y_ilog(p_i)+(1-y_i)log(1-p_i)]$$

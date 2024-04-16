@@ -5,7 +5,9 @@ format: pdf
 editor: visual
 ---
 
-## 
+```{r setup }
+suppressMessages(source("setup.R"))
+```
 
 ::: {align="center"}
 ## Introduction
@@ -13,9 +15,9 @@ editor: visual
 
 In this paper we investigate the question of which student attributes affect student academic performance. The adage "Skip class you won't pass?" presents us with what might appear to be an obvious relationship. If a student does not show up to learn their class material, they will inevitably struggle when it comes time to evaluate their learning. Many state and national governments have adopted policies to ensure that students "stay in school", and parents who allow their children to be absent for enough days are punished. Clearly there is a general belief that keeping absences low will generally benefit the academic performance of students and in general benefit society.
 
-Some educational researchers believe that there is a strong effect that failing a class has on subsequent student performance. If a student fails one class, they may fall into a pattern where they are psychologically influenced to perceive themselves as incapable of performing at a high level. This attitude may then increase the likelihood of students failing in further grading periods or other classes. For example research by Rola Ajjawi et. al studied student attitudes and performance after failing college units and found their figures "indicate a significant contribution of academic failure to drop out".
+Some educational researchers believe that there is a strong effect that failing a class has on subsequent student performance. If a student fails one class, they may fall into a pattern where they are psychologically influenced to perceive their previous effort as wasted. In the pressure to catch up in the following grading period, students may lose the persistence and self-efficacy needed to succeed. In this way, failure can compound and become a predictor of student performance. Research by Rola Ajjawi et. al studied student attitudes and performance after failing college units and found their figures "indicate a significant contribution of academic failure to drop out".
 
-There appears to be general consensus that prior academic grades are one of the best predictors of future academic success of students (Alyahyan, Düştegör, 2020). However, many challenge the validity of using prior performance to predict future performance, because doing so can create predictions that heavily contradict observed outcomes and may be dependent o
+There appears to be general consensus that prior academic grades are one of the best predictors of future academic grades of students (Alyahyan, Düştegör, 2020). However, some challenge the validity of using prior performance to predict future performance, because when data from prior academic contexts is used in can result in inaccurate predictions. For example, if a student performed poorly in high school math, that grade would likely not be a useful predictor of their success in a college level Literature class. The difference in subject and grade level takes the student's performance out of its appropriate context. A better predictor would be the student's grade in a prerequisite English or other Literature class. When proper context is considered prior grades are a strong predictor of future grades, but some also question whether grades are an accurate measure of student success. We will discuss this further in the conclusion. In the following section we shall discuss the dataset we used and conduct regression analyses to examine the predictors discussed above.
 
 ::: {align="center"}
 ## Data Description
@@ -46,8 +48,8 @@ port_perf[fcols] <- lapply(port_perf[fcols], factor)  # Corrected this line
 math_perf$absences <- log(math_perf$absences + 1)
 port_perf$absences <- log(port_perf$absences + 1)
 
-head(math_perf)
-head(port_perf)
+#head(math_perf)
+#head(port_perf)
 ```
 
 **Figure 1** below shows a scatter plot of *G3* vs. *G2* and *G3* vs. *G1* for both the Math and Portuguese classes. As we can see the relationship between them is roughly linear for all plots, meaning that *G2* and *G1* are both likely strong predictors in a linear regression model. This is consistent with other models presented in the article.
@@ -68,6 +70,7 @@ The article suggests that absences is also an important predictor. In **Figure 2
 **Figure 2**
 
 ```{r}
+
 p5 <- gg_basic(math_perf,absences,G3)
 p6 <- gg_basic(port_perf,absences,G3)
 p7 <- gg_basic(math_perf,failures,G3)
@@ -92,36 +95,39 @@ Overall, although the prior trimester grade does not seem appropriate as the sol
 
 ```{r}
 lm1 <- lm(G3 ~ G2, data = math_perf)
-summary(lm1)
+summary(lm1)$coefficients
 lm_diag(lm1)
 
 lm2 <- lm(G3 ~ G2, data = port_perf)
-summary(lm2)
+summary(lm2)$coefficients
 lm_diag(lm2)
 
-lm3 <- lm(G3 ~ G1, data = math_perf)
-summary(lm3)
-lm_diag(lm3)
+#lm3 <- lm(G3 ~ G1, data = math_perf)
+#summary(lm3)$coefficients
+#lm_diag(lm3)
 
-lm4 <- lm(G3 ~ G1, data = port_perf)
-summary(lm4)
-lm_diag(lm4)
+#lm4 <- lm(G3 ~ G1, data = port_perf)
+#summary(lm4)$coefficients
+#lm_diag(lm4)
 ```
 
 We may observe the results of SLR models of the remaining predictors that we have discussed. We can see that the $R^2$ value is extremely low for these predictors. Even if this model was valid, its predictive power would be quite low, so we will omit the diagnostics for the sake of brevity.
 
 ```{r}
 lm5 <- lm(G3 ~ absences, data=math_perf)
-summary(lm5)
+summary(lm5)$coefficients
 lm6 <- lm(G3 ~ absences, data=port_perf)
-summary(lm6)
+summary(lm6)$coefficients
 ```
 
 ```{r}
 lm7 <- lm(G3 ~ failures, data=math_perf)
-summary(lm7)
+summary(lm7)$coefficients
 lm8 <- lm(G3 ~ failures, data=port_perf)
-summary(lm8)
+summary(lm8)$coefficients
+
+lm_diag(lm7)
+lm_diag(lm8)
 ```
 
 Clearly SLR is not an appropriate technique for creating a valid or useful model and we must expand to a MLR model that will incorporate multiple predictors. We shall begin with a full model.
@@ -205,11 +211,26 @@ cor_matrix(lm13)
 The models below are likely the "best" we will obtain. The problem with a pattern in the residuals is still present, however in the majority of fitted values there is not a visually obvious pattern. There is a set of outliers that have clearly linear residuals. This may indicate there are a subset of students (who generally get graded lower) which our models may not adequately address. That being said, the Leverage plots indicate few outliers that are also high leverage, providing evidence our models are sound for the average student. The QQ plot further supports this idea, given that the lower outliers fall short of the normal line.
 
 ```{r}
+
 lm15 <- lm(G3 ~ activities + failures + absences + G2, data = math_perf)
+summary(lm15)$coefficients
 lm_diag(lm15)
 
 lm16 <- lm(G3 ~ reason + Dalc + failures + absences + G2, data = port_perf)
+summary(lm16)$coefficients
 lm_diag(lm16)
+```
+
+```{r}
+head(math_perf)
+math_perf$Pass <- math_perf$G3 >= 14
+math_perf$Pass <- as.numeric(math_perf$Pass)
+
+log1 <- glm(Pass ~ G2, data=math_perf, family="binomial")
+
+p1 <- ggplot(math_perf, aes(G2, Pass)) + geom_point() + geom_smooth(method="glm", method.args = list(family = "binomial"), se=F)
+
+ggplotly(p1)
 ```
 
 ::: {align="center"}
@@ -220,11 +241,13 @@ Our models largely agree with the models in the original article. For both class
 
 Our results and the results of the article suggest several interesting questions of which interventions may be effective in increasing student performance. Since number of class failures and number of student absences are significant across models and class subjects, these would be useful starting points for interventions. Strategies which reduce student absenteeism and allow students additional opportunities (extra credit, etc.) to avoid class failure could improve student performance.
 
-However it should be noted that when considered individually as SLR models, these predictors offered very little predictive power according to their $R^2$ values. This could be a result of the how the data was formatted in the two datasets. Failures, in particular was partitioned into 4 discrete values, making it a poor candidate to have a continuous linear relationship with *G3.* The classification and Random Forest models in the article may be better ways to assess the importance of these two predictors than SLR or MLR. All models agree however, when present, *G2* is the most significant predictor of *G3*.
+However it should be noted that when considered individually as SLR models, these predictors offered very little predictive power according to their $R^2$ values. This could be a result of the how the data was formatted in the two datasets. Failures, in particular was partitioned into 4 discrete values, making it a poor candidate to have a continuous linear relationship with *G3.* The classification and Random Forest models in the article may be better ways to assess the importance of these two predictors than SLR or MLR. All models agree however, when present, *G2* is the most significant predictor of *G3* (Cortez, Silva, 2008).
 
-This suggests that prior student performance is extremely indicative of future performance. This is not particularly useful information when designing academic interventions because interventions that improve grades should perform the same across time in the same class. It also may suggest that academic performance is a skill that is independent of other sociological factors attributed to students. Student performance may not be as closely tied to factors that we reasonably suspect influence academic ability (such as support outside of class). Professors who experience a spike in office hour attendance near the end of the semester likely have suspected as much.
+This suggests that prior student grades are strong predictors of future grades. This is not particularly useful information when designing academic interventions because interventions that improve grades should perform the same across time in the same class. It also may suggest that academic performance is a skill that is independent of other sociological factors attributed to students. Student performance may not be as closely tied to factors that we reasonably suspect influence academic ability (such as support outside of class). Professors who experience a spike in office hour attendance near the end of the semester likely have suspected as much.
 
-However, it is also possible prior student performance is dependent on sociological factors not present in the datasets. Given the amount of factors that could influence performance requires additional research. It should also be noted that the datasets are from a particular education level from a particular country. Conclusions derived from this data should bear in mind that there is great variation between teachers, grade levels, schools, and nations in how student performance is evaluated. This presents a problem in generalizing conclusions from this dataset outside of a Portuguese secondary education context.
+There has been debate in the educational community on whether grades are an accurate measure of educational achievement. Studies have shown that secondary student grades do not always correlate with other measures of achievement like standardized test scores (Pollio, Hochbein, 2015). Teachers have reported giving grade credit for nonacademic factors such as participation, behavior, and attitude. Moreover, teachers often differentiate assignments between students based on academic aptitude. Students who are high performing receive assignments tailored to the lesson content, while low performing students may receive assignments tailored to cover material in the previous grade level to remediate perceived deficiencies. Both groups would receive the same amount of grade credit for completing the assignment, yet the low performing group had not achieved mastery of the lesson content. For any concerned parties, it should follow that interventions designed to improve student grades may not improve actual content mastery.
+
+Care should be taken to examine the complex array of sociological factors and nuances involved in promoting the academic success of students. The datasets used in this paper are from a particular education level from a particular country. Conclusions derived from this data should bear in mind that there is great variation between teachers, grade levels, schools, and nations in how student performance is evaluated. This presents a problem in generalizing conclusions from this dataset outside of a Portuguese secondary education context and without an expert sociological analysis of our results.
 
 In conclusion we present some additional questions for further research.
 
@@ -248,12 +271,8 @@ library(ggplot2)
 library(plotly)
 library(grid)
 library(gridExtra)
-```
-
-```{r}
 
 #Custom functions to avoid redundant coding
-
 #Creates basic scatter plots
 gg_basic <- function(data, x, y) {
   plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
@@ -313,3 +332,7 @@ cor_matrix_from_lm <- function(lm_model) {
 Ajjawi, R., Dracup, M., Zacharias, N., Bennett, S., & Boud, D. (2020). Persisting students’ explanations of and emotional responses to academic failure. *Higher Education Research & Development*, *39*(2), 185–199. https://doi.org/10.1080/07294360.2019.1664999
 
 Alyahyan, E., Düştegör, D. Predicting academic success in higher education: literature review and best practices. *Int J Educ Technol High Educ* **17**, 3 (2020). https://doi.org/10.1186/s41239-020-0177-7
+
+Cortez, P., & Silva, A.M. (2008). Using data mining to predict secondary school student performance.
+
+Pollio, M., & Hochbein, C. (2015). The Association between Standards-Based Grading and Standardized Test Scores as an Element of a High School Reform Model. Teachers College Record, 117(11), 1-28. <https://doi.org/10.1177/016146811511701106>
