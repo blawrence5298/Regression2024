@@ -4,468 +4,165 @@ author: Ben Lawrence
 output: html_document
 ---
 
-## Midterm 2 
+## Midterm 2
 
 ```{r}
-library(ggplot2)
-library(plotly)
-```
-
-Homework 3:
-
-```{r}
-library(ISLR)
-head(Auto)
-```
-
-1a) Make a scatter plot with mpg on the y-axis, and horsepower on the x-axis
-
-```{r}
-p1 <- ggplot(Auto, aes(horsepower, mpg)) +
-  geom_point() +
-  labs(title="title")
-
-ggplotly(p1)
-```
-
-1b) Use the lm() function to estimate a second degree polynomial model.
-
-```{r}
-lm1 <- lm(mpg ~ poly(horsepower, 2), data = Auto)
-summary(lm1)
-```
-
-1c) Use the model to make a prediction and 95% prediction interval for the mpg of a vehicle that has horsepower = 150.
-
-```{r}
-predict(lm1, newdata = data.frame(horsepower=150), interval = "prediction")
-```
-
-1d) Add the fitted second degree polynomial regression curve to the scatter plot of mpg versus horsepower
-
-```{r}
-p2 <- ggplot(Auto, aes(horsepower, mpg)) +
-  geom_point() +
-  stat_smooth(method="lm", formula = y ~ poly(x, 2)) +
-  labs(title="title")
-
-ggplotly(p2)
-```
-
-1e) Make a plot of the residuals versus fitted values, and a QQ plot of the standardized residuals. Comment on whether or not there are any violations of the assumptions for regression modeling.
-
-```{r}
-p3 <- ggplot(lm1, aes(fitted(lm1), resid(lm1))) +
-  geom_point() +
-  geom_hline(yintercept=0)
-
-p4 <- ggplot(data.frame(Residuals = resid(lm1)), aes(sample = Residuals)) + 
-  geom_qq() +
-  geom_qq_line(col="red") +
-  ggtitle("QQ Plot of Model Residuals")
-
-ggplotly(p3)
-ggplotly(p4)
-```
-
-The variance appears to not be constant. In addition, the tails of the distribution, according to the QQ plot appear to not follow the normal distribution.
-
-```{r}
-head(Carseats)
-```
-
-2a) Fit a multiple linear regression model to predict Sales using Price, Urban, and US.
-
-```{r}
-lm2 <- lm(Sales ~ Price + factor(Urban) + factor(US), data = Carseats)
-summary(lm2)
-```
-
-2b) Provide an interpretation of each coefficient in the model. Note some of the variables are qualitative.
-
-Intercept: the expected sales when the price is zero, we are not in an Urban area and not in the US is 13, 043 units sold at each location (makes no sense)
-
-Price: holding Urban and US constant, for every one dollar increase in price, we expect Sales to decrease by 54.46 units sold at each location.
-
-Urban: holding Price and US constant, we expect the Sales to decrease by 21.92 units sold at each location if the store is in an urban area.
-
-US: holding Price and Urban constant, we expect the Sales to increase by 1,200.57 units sold at each location if the store is located in the U.S.
-
-2c) Write our equation for the fitted model
-
-$$
-\widehat{Sales}=\hat \beta_0+\hat \beta_1Price +\hat \beta_2Urban +\hat \beta_3US
-$$
-
-2d) For which of the predictors can you reject the null hypothesis $H_0:\beta_j=0$?
-
-The only predictor that looks insignificant is Urban. With a p-value of 0.936, we fail to reject that $\beta_2=0$.
-
-2e) On the basis of your response to the previous question, fit a smaller model that only uses the predictors for which there is evidence of association with the outcome.
-
-```{r}
-lm3 <- lm(Sales ~ Price + factor(US), data = Carseats)
-summary(lm3)
-```
-
-All predictors are now significant
-
-2f) How well do the models in (a) and (e) fit the data?
-
-Visually,
-
-```{r}
-par(mfrow=c(2,2))
-plot(residuals(lm2) ~ fitted(lm2))
-abline(h=0, col="red")
-
-qqnorm(rstandard(lm2))
-qqline(rstandard(lm2))
-
-#versus
-
-plot(resid(lm3) ~ fitted(lm3))
-abline(h=0, col="red")
-
-qqnorm(rstandard(lm3))
-qqline(rstandard(lm3))
-```
-
-In terms of fit, both models appear good. The residuals appear to have no discernible pattern and the residuals appear to be normal
-
-2g) Using the model from (e), obtain 95% confidence intervals for the coefficients.
-
-```{r}
-confint(lm3)
-```
-
-Homework 4:
-
-1a) Show that $HH^\prime=HH=H$. That is, $HH^\prime$ is idempotent
-
-Note that
-
-$$
-(H^\prime)^\prime=(X(X^\prime X)^{-1}X^\prime)^\prime =X(X^\prime X)^{-1}X^\prime=H
-$$
-
-because $(AB)^\prime=B^\prime A^\prime$ and $(ABC)^\prime=((AB)C)^\prime=C^\prime(AB)^\prime=C^\prime B^\prime A^\prime$ and $(A^{-1})^\prime=(A^\prime)^{-1}$
-
-Thus, $H^\prime=H$. In addition,
-
-$$
-HH=X(X^\prime X)^{-1}X^\prime X(X^\prime X)^{-1}X^\prime = X(X^\prime X)^{-1}IX^\prime=X(X^\prime X)^{-1}X^\prime=H
-$$
-
-1b) Show that $E(\hat Y)=X\beta$
-
-$$
-E(\hat Y)=E(X\hat \beta)=XE(\hat \beta)=X\beta
-$$
-
-1c) Show that $Var(\hat Y)=\sigma^2H$
-
-$$
-\begin{aligned}
-Var(\hat Y) &= Var(X\hat \beta) \\
-&=Var(X(X^\prime X)^{-1}X^\prime Y) \\
-&=X(X^\prime X)^{-1}X^\prime Var(Y)X(X^ \prime X)^{-1}X^\prime \\
-&=\sigma^2HH \\
-&=\sigma^2H
-\end{aligned}
-$$
-
-2\) Derive the $2\times2$ covariance matrix for least squares estimates, $\hat \beta=(\hat \beta_0,\hat \beta_1)^\prime$, for simple linear regression:
-
-$$
-Var(\hat \beta)= \begin{pmatrix} Var(\hat \beta_0) && Cov(\hat \beta_0, \hat \beta_1) \\ Cov(\hat \beta_1,\hat \beta_0) && Var(\hat \beta_1) \end{pmatrix}
-$$
-
-$$
-X= \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}
-$$
-
-So that
-
-$$
-X^\prime X= \begin{pmatrix} 1 && \cdots &&1\\ X_1 && \cdots && X_n \end{pmatrix} \begin{pmatrix} 1 && X_1\\ \vdots && \vdots\\ 1 && X_n \end{pmatrix}= \begin{pmatrix} n && \sum_{i=1}^nX_i\\ \sum_{i=1}^nX_i && \sum_{i=1}^n X_i^2\end{pmatrix}
-$$
-
-giving the inverse
-
-$$
-(X^\prime X)^{-1}=\frac{1}{n\sum_{i=1}^nX_i^2-(\sum_{i=1}^2X_i)^2}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix} =\frac{1}{nSXX}\begin{pmatrix} \sum_{i=1}^nX_i^2 && -\sum_{i=1}^nX_i\\ -\sum_{i=1}^nX_i && n \end{pmatrix}
-$$
-
-Finally,
-
-$$
-Var(\hat \beta)= \begin{pmatrix} \frac{\sigma^2\sum_{i=1}^nX_i^2}{nSXX} && -\frac{\sigma^2 \bar X}{SXX} \\ -\frac{\sigma^2 \bar X}{SXX} && \frac{\sigma^2}{SXX} \end{pmatrix}
-$$
-
-The variance of $\hat \beta_0$ is the 1,1 entry in the above variance covariance matrix whereas the variance of $\hat \beta_1$ is the 2,2 entry. Note that
-
-$$
-\sum_{i=1}^nX_i^2=SXX+n \bar X^2
-$$
-
-so that
-
-$$
-Var(\hat \beta_0)=\frac{\sigma^2 \sum_{i=1}^nX_i^2}{nSXX}=\frac{\sigma^2(SXX + n\bar X^2)}{nSXX}=\sigma^2(\frac{1}{n}+\frac{\bar X^2}{SXX})
-$$
-
-```{r}
-pacman::p_load(MASS, tidyverse)
-data(Boston)
-#head(Boston)
+suppressMessages(library(ggplot2))
+suppressMessages(library(plotly))
+library(MASS)
+library(car)
+library(gridExtra)
+library(pROC)
 ```
 
 ```{r}
-lmB <- lm(medv ~ dis + rm + tax + chas, data=Boston)
-summary(lmB)
+#Functions to quickly make diagnostics
+
+#Creates basic scatter plots
+gg_basic <- function(data, x, y) {
+  plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
+          geom_point()
+  return(plot)
+}
+
+#Creates a 2x2 grid of basic diagnostic plots of a lm object
+lm_diag <- function(lm_model) {
+  p1 <- gg_basic(lm_model$model, fitted(lm_model), residuals(lm_model)) + 
+    labs(x="Fitted Values", y="Residuals")
+  p2 <- gg_basic(lm_model$model, fitted(lm_model), rstandard(lm_model)) +
+    labs(x="Fitted Values", y="Standardized Residuals")
+  p3 <- gg_basic(lm_model$model, fitted(lm_model), hatvalues(lm_model)) +
+    labs(x="Fitted Values", y="Leverage")
+  
+  # Create QQ plot of standardized residuals
+  p4 <- ggplot(lm_model$model, aes(sample = rstandard(lm_model))) +
+        stat_qq() +
+        stat_qq_line(colour="red") + 
+        labs(x ="Theoretical Quantiles", y="Sample Quantiles") +
+        ggtitle("QQ Plot of Standardized Residuals")
+
+  # Arrange all plots into a grid
+  return(grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2))
+}
 ```
 
-3a) In R, compute the vector of least squares estimates $\hat \beta=(X^\prime X)^{-1}X^\prime Y$. Then verify that the results are the same as the parameter estimates provided by the lm() function.
+1a) Create a variable age by adding 1.5 to rings and use age as the response varaible and all other variables (not including rings for predictors (additively), create a scatterplot matrix of the data and comment on the relationship among the varaibles
 
 ```{r}
-#Create a matrix of predictors using the dis, rm, tax, and chas columns of the Boston dataset, including a column of 1s to account for beta_0
-X <- as.matrix(cbind(1, Boston[, c('dis', 'rm', 'tax', 'chas')]))
+snails <- read.csv("seasnails.csv")
 
-#Create a matrix of responses
-Y <- as.matrix(Boston['medv'])
-
-#Get the transpose of the predictors matrix
-X_t <- t(X)
-
-#Apply the least-squares estimates formula
-Beta <- solve(X_t %*% X) %*% X_t %*% Y
-Beta
-```
-
-3b) In R, compute the variance-covariance matrix $Var(\hat \beta)=\sigma^2(X^\prime X)^{-1}$ $\left( \text{plug in }\hat \sigma^2=\frac{RSS}{n-p-1} \text{ as an estimate for } \sigma^2 \right)$. Then verify that the square root of the diagonal entries of this matrix are the same as the standard errors provided by the lm() function
-
-```{r}
-#First we obtain the factors necessary to calculate the variance of predicted values
-RSS <- sum((residuals(lmB))^2)
-n <- nrow(Boston)
-
-#Calculate sigma squared manually
-sigma_squared <- RSS / (n - 4 - 1)
-
-#Now we apply the given formula to obtain the covariance matrix
-Cov <- sigma_squared * solve(X_t %*% X)
-
-#From the matrix we isolate the diagonal entries and square root them to obtain the standard errors
-Err <- sqrt(diag(Cov))
-Err
-```
-
-Homework 5
-
-1a) Fit a multiple linear regression model with hdi_2018 as the response, and the other four variables as predictors
-
-```{r}
-pacman::p_load(tidyverse)
-hdi <- read.csv("hdi2018.csv")
-lm1 <- lm(hdi_2018 ~ median_age + pctpop65 + pct_internet + pct_labour, data=hdi)
-summary(lm1)
-```
-
-1b) Using the model fit in (a), is there evidence of a relationship between hdi_2018 and at least one of the predictor variables? Write the null and alternative hypotheses, report the F-test statistic and p-value, and state your conclusion.
-
-$$
-H_0:\beta_0=\beta_1=\beta_2=\beta_3=\beta_4=0 \text{ versus }H_1: \text{at least one is not zero}
-$$
-
-Here the F-statistic is 341.5 yielding a p-value of approximately zero. Therefore we reject $H_0$ and claim that at least one of the predictors is related to hdi_2018.
-
-1c) Using the model fit in (a), which predictor variables are statistically significant according to the individual t–tests?
-
-According to the individual t-tests, median_age and pct_internet are significant in the presence of the other predictors have p-values smaller than $\alpha=0.05$ .
-
-d\) Fit a reduced model with median_age and pct_internet as predictors. Use the anova() function to conduct a partial F-test that compares this reduced model with the full model specified in (a). Make sure to write the null and alternative hypotheses, report the p-values, and state your conclusion.
-
-```{r}
-lm2 <- lm(hdi_2018 ~ median_age + pct_internet, data=hdi)
-anova(lm2, lm1)
-```
-
-$H_0:\beta_2=\beta_4=0$ versus $H_1:$ at least one is not zero.
-
-Here the F-statistic is 0.3196 yielding a p-value of 0.7269. Therefore we fail to reject $H_0$ and claim that both predictors can be dropped.
-
-e\) According to the $\text{adjusted-}R^2$, how does the full model in (a) compare with the reduced model in (d)? Is this consistent with your conclusion for the partial F-test?
-
-```{r}
-summary(lm1)$adj.r.squared
+#Create new variable age
+snails$age <- snails$Rings + 1.5
+head(snails)
 ```
 
 ```{r}
-summary(lm2)$adj.r.squared
+pairs(age ~ factor(Sex) + Length + Diameter + Height + Whole_weight 
+      + Shucked_weight + Viscera_weight + Shell_weight, data=snails)
 ```
 
-We see that the adjusted $R^2$ is slightly larger for the reduced model which is consistent with the partial F-test, indicating we can remove the two variables
+None of the predictors appear to have a linear relationship with the response. The argument could be made that Length and Diameter have a roughly linear relationship, but the apparent fanning out of points leads me to believe these variables will need transformations as well to produce a valid MLR model.
 
-2a) Make a scatterplot matrix for the three variables. Describe the associations between the variables in the scatterplot matrix.
+1b)
 
 ```{r}
-pairs(hdi_2018 ~ median_age + pct_internet, data=hdi)
+#full model
+lm_full <- lm(age ~ factor(Sex) + Length + Diameter + Height + Whole_weight 
+      + Shucked_weight + Viscera_weight + Shell_weight, data=snails)
+summary(lm_full)
+
+boxcox(lm_full, lambda=seq(-0.36, -0.2, by = 0.05))
+summary(powerTransform(lm_full))
 ```
 
-It appears that all three variables have a relatively strong positive linear relationship.
-
-1b) Make a plot of the residualss versus fitted values, and a QQ plot of the standardized residuals.
+The Box-Cox analysis indicates we are 95% confident t hat the value of $\lambda$ lies between $-0.36$ and $-0.2$. For the sake of intuition I will take lambda to be -0.3 and so the transformation will be $Y^{-0.3}=age^{-0.3}=\frac{1}{age^{0.3}}$
 
 ```{r}
-plot(lm2, 1)
+lm_transformed <- lm((age)^(-0.3) ~ factor(Sex) + Length + Diameter + Height + Whole_weight + Shucked_weight + Viscera_weight + Shell_weight, data=snails)
+
+summary(lm_transformed)
 ```
+
+1c) I will use the step() function which uses Backwards Stepwise Selection to compare models according to their number of predictors and find the model with the lowest AIC criteria.
 
 ```{r}
-qqnorm(rstandard(lm2))
-qqline(rstandard(lm2))
+lm_trimmed <- step(lm_transformed)
+summary(lm_trimmed)
 ```
 
-Make a plot with the leverage values $(h_i)$ on the x-axis, and standardized residuals $(r_i)$ on the y-axis. Identify any points (countries) that have high standardized residuals or leverage.
+1d)
 
 ```{r}
-p <- 2
-n <- nrow(hdi)
-plot(hatvalues(lm2), rstandard(lm2),
-xlab="Leverage",
-ylab="Standardized Residuals")
-abline(v = 2*(p+1)/n, lty=2)
-abline(h = -3, lty=2)
+#Plots of Residuals, Leverage, and QQ
+lm_diag(lm_trimmed)
 ```
+
+The residual plots seem to be skewed left, and exhibit a nonlinear pattern, calling into question the assumption of constant variance. Leverage seems fine, there are no high leverage points. Normality could be better, especially in the left side, but it does not obviously seem like a problem.
+
+1e)
 
 ```{r}
-hdi[which(hatvalues(lm2) > 0.035 | rstandard(lm2) < -3), ]
+new <- data.frame(Sex = "M", Length = 0.5, Diameter = 0.41, Height = 0.15, Whole_weight = 0.8, Shucked_weight = 0.4, Viscera_weight = 0.2, Shell_weight = 0.25)
+
+predict(lm_trimmed, newdata = new, interval = "prediction")
 ```
 
-d\) Based on the scatterplot matrix and model diagnostics, do the assumptions for MLR appear adequately satisfied? Can you think of any ways in which the model might be improved to better fit the data?
+The estimated age is then 0.49 years, or about 6 months.
 
-With the exception of the obvious outlier on the QQ-plot, normality looks okay. The variance looks questionable and there appears to be some polynomial pattern in the residual trend. We can try to fix this by using transformations and/or polynomial functions of the predictors.
+2a)
 
-Homework 6 (Practice Problems)
+```{r}
+newss <- snails %>% filter(Sex != "I") %>% mutate(Sex = as.factor(Sex))
+head(newss)
 
-Suppose we collect data for a group of students in a statistics class with variables $X_1= \text{hours studied}$ , $X_2=\text{undergrad GPA}$ and $Y=\text{receive an A}$. We fit a logistic regression model and produce estimated coefficients, $\hat \beta_0=-6$, $\hat\beta_1=0.05$, and $\hat \beta_2=1$.
+glm_full <- glm(Sex ~ . -age, data=newss, family=binomial)
+summary(glm_full)
+```
 
-1a) Estimate the probability that a student who studies for 40 hours and has an undergrad GPA of 3.5 gets an A in the class.
+Age is, by definition, linearly related to Rings, so including both as predictors would lead to problems with multicollinearity in the model.
 
-Logit:
+2b)
+
+```{r}
+glm_trimmed <- step(glm_full)
+summary(glm_trimmed)
+```
 
 $$
 \rm log\left(\frac{p(x)}{1-p(x)}\right)=\beta_0+\beta_1x+\cdots+\beta_px_p
 $$
 
-So $\hat \beta_0+\hat \beta_1x_1+\hat \beta_2x_2=-6+(0.05)(40)+(1)(3.5)=-0.5$ and then
-
-$$
-p(x)=\frac{e^{-0.5}}{1+e^{-0.5}} \approx0.378 
-$$
-
-1b) How many hours would a student with a 3.5 GPA need to study to have a 50% chance of getting an A in the class?
-
-First we calculate $\rm log \left(\frac{0.5}{1-0.5}\right)=log(1)=0$. So $0=-6+(0.05)x_1+1(3.5)$. Solving this for $x_1$ we obtain
-
-$$
-\begin{align} 
-9.5&=0.05x_1 \\
-\implies x_1&=190
-\end{align}
-$$
-
-The parameters $\beta_0$ and $\beta_1$ for the simple logistic regression model can be estimated using the method of maximum likelihood. There are actually no closed form solutions for the parameter estimates, so iterative techniques are used to perform the optimization (e.e, gradient descent). Then end of lectture 17 discusses how the likelihood function for logistic regression can be expressed as
-
-$$
-L(\beta_0,\beta_1)=\prod_{i=1}^{n}p_i^{y_i}(1-p_i)^{1-y_i}
-$$
-
-where $p_i=\frac{e^{\beta_0+\beta_1x_i}}{1+e^{\beta_0+\beta_1x_i}}$ for $i=1,2,\dots,n$.
-
-2a) Show that the log-likelihood function can be expressed as
-
-$$
-l(\beta_0,\beta_1)=\rm log(L(\beta_0,\beta_1))=\sum_{i=1}^n
-[y_ilog(p_i)+(1-y_i)log(1-p_i)]$$
-
-Lecture 17: Box-Cox Transformations:
-
-For a strictly positive response variable $Y$, the Box-Cox family of transformations is given by
-
-$$
-h(Y,\lambda)= 
-\begin{cases} 
-\frac{Y^\lambda-1}{\lambda} & ,\text{if }\lambda \neq0 \\
-\rm log(Y) & , \text{if } \lambda=0
-\end{cases}
-$$
-
-Transformations, previously discussed such as the square root $(\lambda=\frac{1}{2})$ and the logarithm $(\lambda=0)$ are members of the Box-Cox family. The parameter $\lambda$ is estimated by maximizing the log-likelihood function:
-
-$$
-l(\lambda)=-\frac{n}{2} \rm log(RSS(\lambda)/n)+(\lambda-1)\sum_{i=1}^nlog(y_i)
-$$
-
-where $RSS(\lambda)$ is the residuals sum of squares when $h(y_i,\lambda)$ is the response. More specifically,
-
-$$
-\rm RSS(\lambda)=\sum_{i=1}^n
-[h(y_i,\lambda)-\hat \beta_0-\hat \beta_1x_{i1}-\cdots-\hat \beta_px_{ip}]^2$$
-
-where $\hat \beta_0,\dots,\hat \beta_p$ are the least squares estimates of the parameters for transformed regression model $h(Y_i,\lambda)=\beta_0+\beta_1x_{i1}+\cdots+\beta_px_{ip}+\epsilon$
-
-Example
-
 ```{r}
-defects <- read.csv("defects.csv")
-pairs(Defective ~ Temperature + Density + Rate, data=defects)
+ggplot(newss, aes(Shucked_weight, Sex)) + geom_point() + geom_smooth(method="glm", method.args = list(family = "binomial"), se=F)
 ```
 
-The scatterplot matrix and residual versus fitted plot show nonlinearity ("cuvyness") in the data that is not accounted for by the linear regression model.
+For the predictor Shucked_weight, the sign tells me that as the shucked_weight increases the log odds of a snail being male will increase (assuming the order in the graph above matches 0 to 1). Conversely, the other predictors since they have negative signs I predict an increase in their values will lead to an increase in the log odds of a snail being female.
+
+2c)
 
 ```{r}
-lm1 <- lm(Defective ~ Temperature + Density + Rate, data=defects)
-par(mfrow=c(1,2), mar=c(4.5, 4.5, 2, 2))
-plot(lm1, 1:2)
+log_new <- data.frame(Length = 0.5, Diameter = 0.41, Height = 0.15, Whole_weight = 0.8, Shucked_weight = 0.4, Viscera_weight = 0.2, Shell_weight = 0.25, Rings = 9)
+
+predict(glm_trimmed, newdata = log_new, interval = "prediction")
+```
+
+The estimated probability of a snail being male is approximately 33.1%.
+
+2d)
+
+```{r}
+help(roc_obj)
 ```
 
 ```{r}
-par(mfrow=c(1,3), mar=c(4.5, 4.5, 2, 2))
-plot(defects$Temperature, rstandard(lm1),
-     xlab="Temperature", ylab="Standardized Residuals")
-plot(defects$Density, rstandard(lm1),
-     xlab="Density", ylab="Standardized Residuals")
-plot(defects$Rate, rstandard(lm1),
-     xlab="Rate", ylab="Standardized Residuals")
+probs <- predict(glm_trimmed, newdata = newss, type = "response")
+roc_obj <- roc(newss$Sex, probs)
+plot(1 - roc_obj$specificities, roc_obj$sensitivities, type="l",
+     xlab="1 - Specificity", ylab = "Sensitivity")
 
+abline(0,1,lty=2)
+
+auc(roc_obj)
 ```
 
-```{r}
-#Using the Box-cox procedure, the estimated value of the parameter is lambda = 0.45
-#The 95% confidence interval for lambda is between 0.33 and 0.58
-#For interpretibility, we will round and use 0.5 as our applied lambda cause its in the confint and square roots are more intiutive
-
-
-library(MASS)
-library(car)
-
-boxcox(lm1, lambda=seq(0.2, 0.75, by = 0.05))
-summary(powerTransform(lm1))
-```
-
-Thus the regression model with the transformed response is
-
-$$
-\sqrt{Y}=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon
-$$
-
-```{r}
-lm2 <- lm(sqrt(Defective) ~ Temperature + Density +Rate, data=defects)
-summary(lm2)
-```
-
-```{r}
-par(mfrow=c(1,2), mar=c(4.5,4.5, 2,2))
-plot(lm2, 1:2)
-```
+The ROC curve is not skewed much to the upper left, meaning our model is not much better at classifying than simply guessing. This is further supported by the AUC which is very close to 0.5 (0.5816). So our model is slightly better than just guessing, but not by much.
