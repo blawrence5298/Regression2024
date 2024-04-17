@@ -9,10 +9,10 @@ output: html_document
 ```{r}
 suppressMessages(library(ggplot2))
 suppressMessages(library(plotly))
-library(MASS)
-library(car)
-library(gridExtra)
-library(pROC)
+suppressMessages(library(MASS))
+suppressMessages(library(car))
+suppressMessages(library(gridExtra))
+suppressMessages(library(pROC))
 ```
 
 ```{r}
@@ -46,7 +46,7 @@ lm_diag <- function(lm_model) {
 }
 ```
 
-1a) Create a variable age by adding 1.5 to rings and use age as the response varaible and all other variables (not including rings for predictors (additively), create a scatterplot matrix of the data and comment on the relationship among the varaibles
+1a)
 
 ```{r}
 snails <- read.csv("seasnails.csv")
