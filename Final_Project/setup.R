@@ -3,6 +3,10 @@ library(ggplot2)
 library(plotly)
 library(grid)
 library(gridExtra)
+library(MASS)
+library(pROC)
+library(car)
+library(caret)
 
 #Custom functions to avoid redundant coding
 #Creates basic scatter plots
@@ -59,3 +63,48 @@ cor_matrix <- function(lm_model) {
   cor_matrix <- cor(pred_data, use = "complete.obs")  # using complete cases
   return(cor_matrix)
 }
+
+
+glm_diag <- function(model, seed = 123) {
+  
+  # Retrieve the data used in the model
+  data <- model.frame(model)
+  outcome_var <- all.vars(formula(model))[1]  # Extracting the outcome variable from the formula
+
+  # Ensure that the outcome_var is correctly used as a variable name in data
+  if (!outcome_var %in% names(data)) {
+    stop("Outcome variable not found in the model's data frame.")
+  }
+  
+  # Set seed for reproducibility of the data split
+  set.seed(seed)
+
+  # Create data partitions
+  split <- createDataPartition(y = data[[outcome_var]], p = 0.7, list = FALSE)
+  training_set <- data[split, ]
+  test_set <- data[-split, ]
+
+  # Summarize the model (printing for immediate check, but can be stored or returned if needed)
+  print(summary(model))
+
+  # Predict and Evaluate on Test Set
+  predicted_probs_test <- predict(model, newdata=test_set, type = "response")
+  predicted_classes_test <- ifelse(predicted_probs_test > 0.5, 1, 0)
+
+  # Confusion Matrix
+  actual_classes_test <- factor(test_set[[outcome_var]], levels = c(0, 1))
+  predicted_classes_test <- factor(predicted_classes_test, levels = c(0, 1))
+  conf_mat_test <- confusionMatrix(predicted_classes_test, actual_classes_test)
+  print(conf_mat_test)
+
+  # ROC and AUC
+  roc_curve_test <- roc(response = actual_classes_test, predictor = predicted_probs_test)
+  plot(roc_curve_test, main="ROC Curve for Test Data", col="#1c61b6")
+  roc_auc_test <- auc(roc_curve_test)
+  print(paste("AUC for Test Data:", roc_auc_test))
+}
+
+
+
+
+
