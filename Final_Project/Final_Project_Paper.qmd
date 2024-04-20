@@ -45,8 +45,10 @@ math_perf[fcols] <- lapply(math_perf[fcols], factor)
 port_perf[fcols] <- lapply(port_perf[fcols], factor)  # Corrected this line
 
 # Transform absences - Log transformation to handle skewness
-math_perf$absences <- log(math_perf$absences + 1)
-port_perf$absences <- log(port_perf$absences + 1)
+math_perf$absence_pow <- math_perf$absences^(0.3)
+port_perf$absence_pow <- port_perf$absences^(0.3)
+
+
 
 #head(math_perf)
 #head(port_perf)
@@ -98,6 +100,8 @@ lm1 <- lm(G3 ~ G2, data = math_perf)
 summary(lm1)$coefficients
 lm_diag(lm1)
 
+summary(powerTransform(lm1))
+
 lm2 <- lm(G3 ~ G2, data = port_perf)
 summary(lm2)$coefficients
 lm_diag(lm2)
@@ -116,8 +120,24 @@ We may observe the results of SLR models of the remaining predictors that we hav
 ```{r}
 lm5 <- lm(G3 ~ absences, data=math_perf)
 summary(lm5)$coefficients
+lm_diag(lm5)
+
 lm6 <- lm(G3 ~ absences, data=port_perf)
 summary(lm6)$coefficients
+lm_diag(lm6)
+```
+
+```{r}
+
+lm6$model$G3 <- lm6$model$G3 + 1
+```
+
+```{r}
+lm5$model$G3 <- lm5$model$G3 + 1
+```
+
+```{r}
+summary(powerTransform(lm6))
 ```
 
 ```{r}
@@ -211,13 +231,34 @@ cor_matrix(lm13)
 The models below are likely the "best" we will obtain. The problem with a pattern in the residuals is still present, however in the majority of fitted values there is not a visually obvious pattern. There is a set of outliers that have clearly linear residuals. This may indicate there are a subset of students (who generally get graded lower) which our models may not adequately address. That being said, the Leverage plots indicate few outliers that are also high leverage, providing evidence our models are sound for the average student. The QQ plot further supports this idea, given that the lower outliers fall short of the normal line.
 
 ```{r}
+pairs(G3 ~ G2 + failures + absences + activities, data = math_perf)
+```
 
-lm15 <- lm(G3 ~ activities + failures + absences + G2, data = math_perf)
-summary(lm15)$coefficients
-lm_diag(lm15)
+```{r}
 
-lm16 <- lm(G3 ~ reason + Dalc + failures + absences + G2, data = port_perf)
-summary(lm16)$coefficients
+# Define the model using the new variable
+lm15 <- lm(G3 ~ activities + failures + absence_pow + G2, data = math_perf)
+summary(lm15)#$coefficients
+lm_diag(lm15)  # Assuming lm_diag is a function you've defined for diagnostics
+
+
+lm16 <- lm(G3 ~ reason + Dalc + failures + absences_pow + G2, data = port_perf)
+summary(lm16)#$coefficients
+lm_diag(lm16)
+```
+
+```{r}
+math_perf$avg_grade <- (math_perf$G1 + math_perf$G2 + math_perf$G3) / 3
+port_perf$avg_grade <- (port_perf$G1 + port_perf$G2 + port_perf$G3) / 3
+
+# Define the model using the new variable
+lm15 <- lm(avg_grade ~ failures + absences^(0.3) + G2, data = math_perf)
+summary(lm15)#$coefficients
+lm_diag(lm15)  # Assuming lm_diag is a function you've defined for diagnostics
+
+
+lm16 <- lm(avg_grade ~ failures + absences^(0.3) + G2, data = port_perf)
+summary(lm16)#$coefficients
 lm_diag(lm16)
 ```
 
@@ -226,11 +267,23 @@ head(math_perf)
 math_perf$Pass <- math_perf$G3 >= 14
 math_perf$Pass <- as.numeric(math_perf$Pass)
 
-log1 <- glm(Pass ~ G2, data=math_perf, family="binomial")
+log1 <- glm(Pass ~ . , data=math_perf, family="binomial")
 
 p1 <- ggplot(math_perf, aes(G2, Pass)) + geom_point() + geom_smooth(method="glm", method.args = list(family = "binomial"), se=F)
 
 ggplotly(p1)
+```
+
+```{r}
+probs <- predict(log1, newdata = math_perf, type = "response")
+roc_obj <- roc(math_perf$G3, probs)
+```
+
+```{r}
+plot(1 - roc_obj$specificities, roc_obj$sensitivities, type="l",
+     xlab="1 - Specificity", ylab = "Sensitivity")
+
+abline(0,1,lty=2)
 ```
 
 ::: {align="center"}

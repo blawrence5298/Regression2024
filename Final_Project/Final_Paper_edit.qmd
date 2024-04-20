@@ -1,0 +1,78 @@
+## Functions
+
+```{r}
+suppressMessages(source("setup.R"))
+```
+
+## Model Edits
+
+```{r}
+math_perf <- read.csv("student-mat.csv", sep=";")
+port_perf <- read.csv("student-por.csv", sep=";")
+
+math_perf <- read.csv("student-mat.csv", sep=";")
+port_perf <- read.csv("student-por.csv", sep=";")
+
+# Factor these data columns
+fcols <- c('school', 'sex', 'age', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu', 'Mjob', 'Fjob', 'traveltime', 'studytime', 'reason', 'guardian', 'schoolsup', 'famsup', 'paid', 'failures', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout', 'Dalc', 'Walc', 'health')
+
+# Factorize columns in both dataframes
+math_perf[fcols] <- lapply(math_perf[fcols], factor)
+port_perf[fcols] <- lapply(port_perf[fcols], factor)
+```
+
+```{r}
+math_perf$absences_trans <- math_perf$absences^(0.3)
+math_perf$G_avg <- (math_perf$G2 + math_perf$G3) / 2
+
+port_perf$absences_trans <- port_perf$absences^(0.3)
+port_perf$G_avg <- (port_perf$G2 + port_perf$G3) / 2
+```
+
+```{r}
+head(math_perf)
+head(port_perf)
+```
+
+```{r}
+lm1 <- lm(G_avg ~ G1 + absences_trans + failures, data=math_perf)
+summary(lm1)
+lm_diag(lm1)
+
+```
+
+```{r}
+lm_full <- lm(G_avg ~ . -G2 -G3-absences, data=math_perf)
+summary(lm_full)
+lm_diag(lm_full)
+
+```
+
+```{r}
+lm2 <- step(lm_full)
+summary(lm2)
+lm_diag(lm2)
+```
+
+## Two Part Model
+
+```{r}
+math_perf$log_outcome <- ifelse(math_perf$G3 == 0,0,1)
+head(math_perf)
+```
+
+```{r}
+# Model fitting
+log_full <- glm(log_outcome ~ . -G3-G_avg-absences, data=math_perf, family="binomial")
+glm_diag(log_full)
+```
+
+```{r}
+log_trimmed <- step(log_full)
+glm_diag(log_trimmed)
+```
+
+```{r}
+log1 <- glm(log_outcome ~ G2  + failures, data=math_perf, family="binomial")
+glm_diag(log1, 8907)
+```
