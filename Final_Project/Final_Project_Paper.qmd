@@ -73,7 +73,7 @@ The article suggests that absences is also an important predictor. In **Figure 2
 
 ```{r}
 
-p5 <- gg_basic(math_perf,absences,G3)
+p5 <- gg_basic(math_perf,absences,G3, title = "Mathematics")
 p6 <- gg_basic(port_perf,absences,G3)
 p7 <- gg_basic(math_perf,failures,G3)
 p8 <- gg_basic(port_perf,failures,G3)

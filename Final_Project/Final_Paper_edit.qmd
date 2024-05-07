@@ -1,78 +1,354 @@
-## Functions
+---
+title: "Final_Project_Paper"
+author: "Ben Lawrence"
+format: pdf
+editor: visual
+---
 
-```{r}
-suppressMessages(source("setup.R"))
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+source("setup.R")
 ```
 
-## Model Edits
+```{r}
+# Custom functions to avoid redundant coding
+
+# Creates basic scatter plots using ggplot2 between two continuous variables
+gg_basic <- function(data, x, y, title="") {
+  plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
+          geom_point() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
+  return(plot)
+}
+
+# Similar to gg_basic but uses geom_count to plot counts of points at locations; useful when data has overlapping points
+gg_basic_count <- function(data, x, y, title="") {
+  plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
+          geom_count() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
+  return(plot)
+}
+```
 
 ```{r}
-math_perf <- read.csv("student-mat.csv", sep=";")
-port_perf <- read.csv("student-por.csv", sep=";")
+print_summary <- function(model, p_value = 0.05, predictors = NULL) {
+  # Extract the summary of the model
+  summary_model <- summary(model)
 
-math_perf <- read.csv("student-mat.csv", sep=";")
-port_perf <- read.csv("student-por.csv", sep=";")
+  # Filter significant coefficients
+  significant_coefs <- summary_model$coefficients[summary_model$coefficients[, "Pr(>|t|)"] < p_value, ]
 
+  # Print significant coefficients
+  cat("Significant Coefficients:\n")
+  print(significant_coefs)
+
+  # Print R-squared and Adjusted R-squared
+  cat("\nR-squared: ", summary_model$r.squared, "\n")
+  cat("Adjusted R-squared: ", summary_model$adj.r.squared, "\n")
+
+  # Print F-statistic
+  f_value <- summary_model$fstatistic[1]
+  f_df1 <- summary_model$fstatistic[2]
+  f_df2 <- summary_model$fstatistic[3]
+  f_pvalue <- pf(f_value, f_df1, f_df2, lower.tail = FALSE)
+  cat("F-statistic: ", f_value, " on ", f_df1, " and ", f_df2, " DF, p-value: ", f_pvalue, "\n")
+
+  # If predictors are provided, calculate and print the VIF for each predictor
+  if (!is.null(predictors) && length(predictors) > 0) {
+      vif_values <- vif(model)
+      cat("\nGVIF for provided predictors:\n")
+      # Loop through each predictor and print its VIF value
+      for (predictor in predictors) {
+          cat(predictor, ": ", vif_values[predictor, 1], "\n")
+      }
+  }
+}
+
+```
+
+```{r}
+#Creates a 2x2 grid of basic diagnostic plots of a lm object
+lm_diag <- function(lm_model, title = "", limResid = NULL, limSresid = NULL, limLev = NULL, limQQ = NULL) {
+  # Helper function to apply y-axis limits if provided
+  apply_limits <- function(plot, ylim) {
+    if (!is.null(ylim)) {
+      plot + coord_cartesian(ylim = ylim)
+    } else {
+      plot
+    }
+  }
+  
+  # Generate diagnostic plots
+  p1 <- gg_basic(lm_model$model, fitted(lm_model), residuals(lm_model)) + 
+    labs(x="Fitted Values", y="Residuals")
+  p1 <- apply_limits(p1, limResid)
+  
+  p2 <- gg_basic(lm_model$model, fitted(lm_model), rstandard(lm_model)) +
+    labs(x="Fitted Values", y="Standardized Residuals")
+  p2 <- apply_limits(p2, limSresid)
+  
+  p3 <- gg_basic(lm_model$model, fitted(lm_model), hatvalues(lm_model)) +
+    labs(x="Fitted Values", y="Leverage")
+  p3 <- apply_limits(p3, limLev)
+  
+  p4 <- ggplot(lm_model$model, aes(sample = rstandard(lm_model))) +
+        stat_qq() +
+        stat_qq_line(colour="red") + 
+        labs(x ="Theoretical Quantiles", y="Sample Quantiles")
+  p4 <- apply_limits(p4, limQQ)
+  
+  # Arrange all plots into a grid and return the combined plot
+  return(grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2, top = title))
+}
+```
+
+::: {align="center"}
+## Data Description
+:::
+
+We obtained the two datasets from the UC Irvine Machine Learning Repository (UCIMLR). They were donated by authors, Paulo Cortez and Alice Silva, of the article “Using Data Mining to Predict Secondary School Student Performance”. The authors belong to the University of Minho in Portugal and were interested in model efficacy in the prediction of the academic performance of Portuguese secondary students. 
+
+Each dataset aligns with a single subject, Portuguese and Mathematics, collected from two Portuguese secondary schools. The Mathematics dataset contains 395 observations and the Portuguese contains 649. They both have 33 columns.
+
+\
+Three of the columns are trimester grades of students with the third trimester grade **G3** taken as the student’s final grade. We will take this as our response and the previous two trimester grades as predictors. The remaining predictors consist of demographic survey data acquired for each student observation. These include number of absences, number of previous class failures, occupation of mother/father, etc. Most of the variables are categorical, taking ordinal and nominative values. There are also variables that take on binary and integer values. We will begin our analysis by visualizing the distribution of **G3** for the Mathematics and Portuguese data set. 
+
+```{r}
+# Histogram for math_perf data frame
+p1 <- ggplot(data = math_perf, aes(x = G3)) +
+      geom_histogram(fill = "blue", alpha = 0.5, binwidth = 1) +
+      scale_x_continuous(breaks = 0:20, labels = ifelse((0:20) %% 2 == 0, as.character(0:20), "")) +  # Label only even numbers
+      ylim(0, 110) +
+      labs(title = "Mathematics") +
+      theme(plot.title = element_text(hjust = 0.5))  # Center the title under the plot
+
+# Histogram for port_perf data frame
+p2 <- ggplot(data = port_perf, aes(x = G3)) +
+      geom_histogram(fill = "red", alpha = 0.5, binwidth = 1) +
+      scale_x_continuous(breaks = 0:20, labels = ifelse((0:20) %% 2 == 0, as.character(0:20), "")) +  # Label only even numbers
+      ylim(0, 110) +
+      labs(title = "Portuguese") +
+      theme(plot.title = element_text(hjust = 0.5))  # Center the title under the plot
+
+
+grid.arrange(p1, p2, ncol = 2, top = "Figure 1: Histogram of 3rd Trimester Grades by Subject")
+```
+
+In Figure 1 we can observe that the grades are skewed to the right. This is reasonable since we would expect a higher proportion of students passing (scoring over 10) than failing. There is a notable set of outlying points where a much higher proportion of students received 0s than we would reasonably expect. This is especially true in the mathematics class.
+
+Figure 2 below provides examples of the predictors available in our dataset. (Full list available HERE) We will use all of these in our full linear model. Before creating such a model however, we will take time to analyze the relationship between G1, G2, absences, and failures with the response G3 to see if transformations of these variables are warranted. The other variables are categorical and do not offer obvious visual correlations with G3 that can inform our transformation choices.
+
+![](predictor_examples.png)
+
+First we examine scatterplots of G3 vs. G1 and G2. We can observe a clear linear correlation between the response and both predictors in **Figure 3**. We can also observe that outliers exist where students who recieved varying grades for G2 and G3 suddenly received 0 grades for G3, contrasting the linear trend.
+
+```{r}
+p1 <- gg_basic_count(math_perf,G2,G3, title="Mathematics")
+p2 <- gg_basic_count(port_perf,G2,G3, title="Portuguese")
+p3 <- gg_basic_count(math_perf,G1,G3, title="Mathematics")
+p4 <- gg_basic_count(port_perf,G1,G3, title="Portuguese")
+
+grid.arrange(p1, p2,p3, p4, ncol=2, nrow=2, top="Figure 2")
+```
+
+In **Figure 4**, we examine the relationship between G3 and the predictors absences and failures. We can see a correlation between absences and G3 but it is not linear. This suggests a transformation is needed to appropriately fit absences into a linear model. We will use a square root transformation as this is normal practice when dealing with a count variable such as number of absences. We can observe that failures only takes on values 0-3 so although it may seem similar to absences in terms of being count data we will treat it as a categorical variable and thus not apply a transformation.
+
+```{r}
+p5 <- gg_basic_count(math_perf,absences,G3, title = "Mathematics")
+p6 <- gg_basic_count(port_perf,absences,G3, title = "Portuguese")
+p7 <- gg_basic_count(math_perf,failures,G3, title = "Mathematics")
+p8 <- gg_basic_count(port_perf,failures,G3, title = "Portuguese")
+
+grid.arrange(p5, p6, p7, p8, ncol=2, nrow=2, top="")
+```
+
+```{r}
 # Factor these data columns
-fcols <- c('school', 'sex', 'age', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu', 'Mjob', 'Fjob', 'traveltime', 'studytime', 'reason', 'guardian', 'schoolsup', 'famsup', 'paid', 'failures', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout', 'Dalc', 'Walc', 'health')
+fcols <- c('school', 'sex', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu', 'Mjob', 'Fjob', 'traveltime', 'studytime', 'reason', 'guardian', 'schoolsup', 'famsup', 'paid', 'failures', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout', 'Dalc', 'Walc', 'health')
 
 # Factorize columns in both dataframes
 math_perf[fcols] <- lapply(math_perf[fcols], factor)
-port_perf[fcols] <- lapply(port_perf[fcols], factor)
+port_perf[fcols] <- lapply(port_perf[fcols], factor)  # Corrected this line
+
+# Transform absences - Square Root
+math_perf$absences <- math_perf$absences^(0.5)
+port_perf$absences <- port_perf$absences^(0.5)
+```
+
+::: {align="center"}
+## Methods and Results
+:::
+
+Now we will construct our full model containing all predictors in our dataset, appropriately classifying all categorical variables as factors in R.
+
+```{r}
+cat("Figure 4: Summary for Mathematics Model \n")
+lm_full_math <- lm(G3 ~ . - G3, data=math_perf)
+print_summary(lm_full_math, predictors = c("G1","G2"))
 ```
 
 ```{r}
-math_perf$absences_trans <- math_perf$absences^(0.3)
-math_perf$G_avg <- (math_perf$G2 + math_perf$G3) / 2
+cat("Figure 5: Summary for Portuguese Model \n")
+lm_full_port <- lm(G3 ~ . - G3, data=port_perf)
+print_summary(lm_full_port, predictors = c("G1","G2"))
+```
 
-port_perf$absences_trans <- port_perf$absences^(0.3)
-port_perf$G_avg <- (port_perf$G2 + port_perf$G3) / 2
+In **Figure 5** and **Figure 6** we observe that our models explain more than 80% of the variance for their respective classes. G1 and G2 are very significant in both with low p-values. Absences is significant and having 1 previous class failure is also significant. The variables reason, traveltime, age, and Dalc (Weekday alcohol consumption) disagree between the classes on their significance in predicting G3. This could be a true population difference between academic subjects, but the relatively high p-values of these variables leads us to hypothesize these variables are not actually significant.
+
+We also can see the generalized variance inflation factors (GVIFs) for G1 and G2 are high, showing a likely issue with multicollinearity. This is reasonable since our hypothesis is that prior grades predict future grades, so it would naturally follow that G1 and G2 are highly correlated.
+
+Next we will examine our model diagnostics for the full model.
+
+```{r}
+p10 <- lm_diag(lm_full_math, title = "Full Math Diagnostics")
+p11 <- lm_diag(lm_full_port, title = "Full Portuguese Diagnostics")
+
+grid.arrange(p10, p11, ncol = 2, top = "Figure 6")
+```
+
+**Figure 7** and **Figure 8** show a clear division in the distribution of points in the plots of standardized residuals vs. fitted values. One set demonstrates relatively constant variance, and the other shows a clear linear pattern in its variance. Additionally we can see that the QQ plot shows drop off from rest of the points on the lower end of Theoretical Quantiles, meaning the sample quantiles are much lower than what we would expect from normally distributed data.
+
+To further examine our assumption of normality we will apply the Shapiro-Wilk test to both classes.
+
+```{r echo = TRUE}
+cat("Figure 7 \n")
+shapiro.test(rstandard(lm_full_math))
+shapiro.test(rstandard(lm_full_port))
+```
+
+**Figure 9** gives p-values for both classes that allow us to reject the null hypothesis that are residuals are normally distributed. Although the W values may allow us to claim that the full mathematics model may satisfy our assumptions enough to draw conclusions, we see a lower W value for the full portuguese model which was constructed from more observations than the mathematics model.
+
+Our diagnostics of the full multiple linear regression models showed multiple issues. These issues as discussed above, alongside non-normal results from Shapiro-Wilk tests and relatively high GVIF values provides evidence that our assumptions for MLR Regression in the full model are not satisfied. This leads us to attempt to reduce and adjust our full model into a model that will improve our diagnostics.
+
+Due to the large number of potentially important variables in our data sets, we elected to use an algorithm-based approach to create our reduced models. However, the diagnostics for both reduced models resulted QQ and residual plots with similar issues to the full model.
+
+Investigation into the points of the deviant standardized residual line for both models revealed that the 22 of 24 (Portuguese: 8/10, Mathematics: 14/14) had drop offs of their G3 grade to 0, and all 24 had no absences recorded. There is not information about what these 0s entail in the data set, nor in the research article where the data set was obtained. It is possible that these outliers were data entry errors, a non-pass being entered as a 0 instead of the actual G3 grade. However, this is only speculation and, per the article, students were "dropped due to missing data".
+
+Because of these facts, we decided to remove the points that exhibited the drop off of the G3 grade from the data sets due to the large bias caused by outliers and the lack of clarity on these points validity to the study.
+
+```{r}
+math_perf_remove <- subset(math_perf, G3 != 0)
+port_perf_remove <- subset(port_perf, G3 != 0)
+
+lm_full_math_remove <- lm(G3 ~ . - G3, data=math_perf_remove)
+lm_full_port_remove <- lm(G3 ~ . - G3, data=port_perf_remove)
 ```
 
 ```{r}
-head(math_perf)
-head(port_perf)
+# Extract standardized residuals
+resid_math_remove <- rstandard(lm_full_math_remove)
+resid_port_remove <- rstandard(lm_full_port_remove)
+resid_math <- rstandard(lm_full_math)
+resid_port <- rstandard(lm_full_port)
+
+# Create a data frame for plotting
+data_math <- data.frame(
+  Residuals = c(resid_math_remove, resid_math),
+  Condition = factor(rep(c("Zeros Removed", "Zeros Not Removed"),
+                         c(length(resid_math_remove), length(resid_math))),
+                     levels = c("Zeros Removed", "Zeros Not Removed"))
+)
+
+data_port <- data.frame(
+  Residuals = c(resid_port_remove, resid_port),
+  Condition = factor(rep(c("Zeros Removed", "Zeros Not Removed"),
+                         c(length(resid_port_remove), length(resid_port))),
+                     levels = c("Zeros Removed", "Zeros Not Removed"))
+)
+
+# Plot for Math models
+p9 <- ggplot(data_math, aes(x = Condition, y = Residuals)) +
+  geom_boxplot() +
+  labs(title = "Variance in Math Residuals",
+       x = "",
+       y = "Standardized Residuals") +
+  coord_cartesian(ylim = c(-8, 8)) +
+  theme_minimal()
+
+# Plot for Portuguese models
+p10 <- ggplot(data_port, aes(x = Condition, y = Residuals)) +
+  geom_boxplot() +
+  labs(title = "Variance in Port Residuals",
+       x = "",
+       y = "Standardized Residuals") +
+  coord_cartesian(ylim = c(-8, 8)) +
+  theme_minimal()
+
+grid.arrange(p9, p10, ncol = 2, top = "Figure 8")
 ```
 
 ```{r}
-lm1 <- lm(G_avg ~ G1 + absences_trans + failures, data=math_perf)
-summary(lm1)
-lm_diag(lm1)
+lm_diag(lm_full_math_remove, title = "Figure 9")
+```
 
+From the box plots in **Figure 10** we can see that there is a clear improvement in how uniformly dispersed the standardized residuals are once we remove the rows where G3 = 0. In **Figure 11** and **Figure 12** we also see improvement in our diagnostic plots, and apart from a few outlying points, most of the residuals seem randomly distributed with constant variance. However there appears to be a fundamental pattern in the residuals where they are divided into discrete groups that are arranged diagonally. This is actually a reasonable outcome since our response variable is a discrete integer. Thus it follows that each increment in G3 will have its own group of residual points distributed around it.
+
+Nonetheless this is a fundamental problem with our approach because a linear model assumes a continuous relationship between response and predictors. One way of solving this is to change our response variable into an average of the three grade variables (G1, G2, and G3).
+
+```{r}
+math_perf_remove$GPA <- (math_perf_remove$G1 + math_perf_remove$G2 + math_perf_remove$G3)/3
+port_perf_remove$GPA <- (port_perf_remove$G1 + port_perf_remove$G2 + port_perf_remove$G3)/3
+
+math_perf_remove$Pass <- as.numeric(math_perf_remove$G3 >= 10)
+port_perf_remove$Pass <- as.numeric(port_perf_remove$G3 >= 10)
+
+head(math_perf_remove)
 ```
 
 ```{r}
-lm_full <- lm(G_avg ~ . -G2 -G3-absences, data=math_perf)
-summary(lm_full)
-lm_diag(lm_full)
+log1 <- glm(Pass ~ . -G3 - G2 - G1 - GPA , data=math_perf_remove, family="binomial")
 
+log_reduced <- step(log1, trace = 0)
 ```
 
 ```{r}
-lm2 <- step(lm_full)
-summary(lm2)
-lm_diag(lm2)
-```
 
-## Two Part Model
-
-```{r}
-math_perf$log_outcome <- ifelse(math_perf$G3 == 0,0,1)
-head(math_perf)
+glm_diag(log_reduced)
 ```
 
 ```{r}
-# Model fitting
-log_full <- glm(log_outcome ~ . -G3-G_avg-absences, data=math_perf, family="binomial")
-glm_diag(log_full)
+log_final <- glm(Pass ~ G2 + failures + goout + absences + schoolsup, data = math_perf_remove)
+
+glm_diag(log_final)
 ```
 
 ```{r}
-log_trimmed <- step(log_full)
-glm_diag(log_trimmed)
+# Convert health to binary
+numeric_health <- as.numeric(as.character(math_perf_remove$health))
+math_perf_remove$health_binary <- factor(ifelse(numeric_health < 3, 0, 1))
+numeric_health <- as.numeric(as.character(port_perf_remove$health))
+port_perf_remove$health_binary <- factor(ifelse(numeric_health < 3, 0, 1))
+
+# Convert failures to binary
+
+
+head(math_perf_remove)
 ```
 
 ```{r}
-log1 <- glm(log_outcome ~ G2  + failures, data=math_perf, family="binomial")
-glm_diag(log1, 8907)
+lm_full_math_remove <- lm(GPA ~ . - G3 - G2 - G1 - health, data=math_perf_remove)
+lm_full_port_remove <- lm(GPA ~ . - G3 - G2 - G1 - health, data=port_perf_remove)
+```
+
+As we can see in **Figures 13 and 14**, the residuals are no longer in a set of diagonal patterns, meaning that our linear regression assumptions may be valid for these models. One the other hand, we have sacrificed our most significant predictors (G1 and G2) and it is likely these models will not explain as much of the variance in GPA as are previous models did with G3.
+
+```{r}
+lm_math_reduced <- step(lm_full_math_remove, trace = 0)
+lm_port_reduced <- step(lm_full_port_remove, trace = 0)
+```
+
+```{r}
+cat("Figure 10: Summary for Reduced Mathematics Model \n")
+print_summary(lm_math_reduced)
+cat("\n")
+
+cat("Figure 11: Summary for Reduced Portuguese Model \n")
+print_summary(lm_port_reduced)
+```
+
+```{r}
+lm_diag(lm_math_reduced)
+lm_diag(lm_port_reduced)
 ```

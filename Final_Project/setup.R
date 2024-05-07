@@ -7,41 +7,100 @@ library(MASS)
 library(pROC)
 library(car)
 library(caret)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+#Load data
+math_perf <- read.csv("student-mat.csv", sep=";")
+port_perf <- read.csv("student-por.csv", sep=";")
 
 #Custom functions to avoid redundant coding
 #Creates basic scatter plots
-gg_basic <- function(data, x, y) {
+gg_basic <- function(data, x, y, title="") {
   plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
-          geom_point()
+          geom_point() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
   return(plot)
 }
 
-gg_basic_count <- function(data, x, y) {
+gg_basic_count <- function(data, x, y, title="") {
   plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
-          geom_count()
+          geom_count() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
   return(plot)
 }
+
+
+print_summary <- function(model, p_value = 0.05, predictors = NULL) {
+  # Extract the summary of the model
+  summary_model <- summary(model)
+
+  # Filter significant coefficients
+  significant_coefs <- summary_model$coefficients[summary_model$coefficients[, "Pr(>|t|)"] < p_value, ]
+
+  # Print significant coefficients
+  cat("Significant Coefficients:\n")
+  print(significant_coefs)
+
+  # Print R-squared and Adjusted R-squared
+  cat("\nR-squared: ", summary_model$r.squared, "\n")
+  cat("Adjusted R-squared: ", summary_model$adj.r.squared, "\n")
+
+  # Print F-statistic
+  f_value <- summary_model$fstatistic[1]
+  f_df1 <- summary_model$fstatistic[2]
+  f_df2 <- summary_model$fstatistic[3]
+  f_pvalue <- pf(f_value, f_df1, f_df2, lower.tail = FALSE)
+  cat("F-statistic: ", f_value, " on ", f_df1, " and ", f_df2, " DF, p-value: ", f_pvalue, "\n")
+
+  # If predictors are provided, calculate and print the VIF for each predictor
+  if (!is.null(predictors) && length(predictors) > 0) {
+      vif_values <- vif(model)
+      cat("\nGVIF for provided predictors:\n")
+      # Loop through each predictor and print its VIF value
+      for (predictor in predictors) {
+          cat(predictor, ": ", vif_values[predictor, 1], "\n")
+      }
+  }
+}
+
 
 #Creates a 2x2 grid of basic diagnostic plots of a lm object
-lm_diag <- function(lm_model) {
+lm_diag <- function(lm_model, title = "", limResid = NULL, limSresid = NULL, limLev = NULL, limQQ = NULL) {
+  # Helper function to apply y-axis limits if provided
+  apply_limits <- function(plot, ylim) {
+    if (!is.null(ylim)) {
+      plot + coord_cartesian(ylim = ylim)
+    } else {
+      plot
+    }
+  }
+  
+  # Generate diagnostic plots
   p1 <- gg_basic(lm_model$model, fitted(lm_model), residuals(lm_model)) + 
     labs(x="Fitted Values", y="Residuals")
+  p1 <- apply_limits(p1, limResid)
+  
   p2 <- gg_basic(lm_model$model, fitted(lm_model), rstandard(lm_model)) +
     labs(x="Fitted Values", y="Standardized Residuals")
+  p2 <- apply_limits(p2, limSresid)
+  
   p3 <- gg_basic(lm_model$model, fitted(lm_model), hatvalues(lm_model)) +
     labs(x="Fitted Values", y="Leverage")
+  p3 <- apply_limits(p3, limLev)
   
-  # Create QQ plot of standardized residuals
   p4 <- ggplot(lm_model$model, aes(sample = rstandard(lm_model))) +
         stat_qq() +
         stat_qq_line(colour="red") + 
-        labs(x ="Theoretical Quantiles", y="Sample Quantiles") +
-        ggtitle("QQ Plot of Standardized Residuals")
-
-  # Arrange all plots into a grid
-  return(grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2))
+        labs(x ="Theoretical Quantiles", y="Sample Quantiles")
+  p4 <- apply_limits(p4, limQQ)
+  
+  # Arrange all plots into a grid and return the combined plot
+  return(grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2, top = title))
 }
-
 
 #Creates a correlation matrix for predictors in a lm model
 cor_matrix <- function(lm_model) {

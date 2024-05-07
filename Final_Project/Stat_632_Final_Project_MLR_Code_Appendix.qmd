@@ -1,0 +1,562 @@
+---
+title: "Stat 632 Final Project MLR Code Appendix"
+author: "Michael Xie"
+format: pdf
+editor: visual
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+source("setup.R")
+```
+
+#setup.R
+```{r}
+#Relevant libraries
+library(ggplot2)
+library(plotly)
+library(grid)
+library(gridExtra)
+library(MASS)
+library(pROC)
+library(car)
+library(caret)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+#Load data
+math_perf <- read.csv("student-mat.csv", sep=";")
+port_perf <- read.csv("student-por.csv", sep=";")
+
+#Custom functions to avoid redundant coding
+#Creates basic scatter plots
+gg_basic <- function(data, x, y, title="") {
+  plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
+          geom_point() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
+  return(plot)
+}
+
+gg_basic_count <- function(data, x, y, title="") {
+  plot <- ggplot(data = data, aes(x = {{x}}, y = {{y}})) + 
+          geom_count() +
+          labs(title=title) +
+          theme(plot.title = element_text(hjust = 0.5))
+  return(plot)
+}
+
+
+print_summary <- function(model, p_value = 0.05, predictors = NULL) {
+  # Extract the summary of the model
+  summary_model <- summary(model)
+
+  # Filter significant coefficients
+  significant_coefs <- summary_model$coefficients[summary_model$coefficients[, "Pr(>|t|)"] < p_value, ]
+  significant_coefs <- signif(significant_coefs, digits = 3)
+  # Print significant coefficients
+  cat("Significant Coefficients:\n")
+  print(significant_coefs)
+
+  # Print R-squared and Adjusted R-squared
+  cat("\nR-squared: ", summary_model$r.squared, "\n")
+  cat("Adjusted R-squared: ", summary_model$adj.r.squared, "\n")
+
+  # Print F-statistic
+  f_value <- summary_model$fstatistic[1]
+  f_df1 <- summary_model$fstatistic[2]
+  f_df2 <- summary_model$fstatistic[3]
+  f_pvalue <- pf(f_value, f_df1, f_df2, lower.tail = FALSE)
+  cat("F-statistic: ", f_value, " on ", f_df1, " and ", f_df2, " DF, p-value: ", f_pvalue, "\n")
+
+  # If predictors are provided, calculate and print the VIF for each predictor
+  if (!is.null(predictors) && length(predictors) > 0) {
+      vif_values <- vif(model)
+      cat("\nGVIF for provided predictors:\n")
+      # Loop through each predictor and print its VIF value
+      for (predictor in predictors) {
+          cat(predictor, ": ", vif_values[predictor, 1], "\n")
+      }
+  }
+}
+
+
+#Creates a 2x2 grid of basic diagnostic plots of a lm object
+lm_diag <- function(lm_model, title = "", limResid = NULL, limSresid = NULL, limLev = NULL, limQQ = NULL) {
+  # Helper function to apply y-axis limits if provided
+  apply_limits <- function(plot, ylim) {
+    if (!is.null(ylim)) {
+      plot + coord_cartesian(ylim = ylim)
+    } else {
+      plot
+    }
+  }
+  
+  # Generate diagnostic plots
+  p1 <- gg_basic(lm_model$model, fitted(lm_model), residuals(lm_model)) + 
+    labs(x="Fitted Values", y="Residuals")
+  p1 <- apply_limits(p1, limResid)
+  
+  p2 <- gg_basic(lm_model$model, fitted(lm_model), rstandard(lm_model)) +
+    labs(x="Fitted Values", y="Standardized Residuals")
+  p2 <- apply_limits(p2, limSresid)
+  
+  p3 <- gg_basic(lm_model$model, fitted(lm_model), hatvalues(lm_model)) +
+    labs(x="Fitted Values", y="Leverage")
+  p3 <- apply_limits(p3, limLev)
+  
+  p4 <- ggplot(lm_model$model, aes(sample = rstandard(lm_model))) +
+        stat_qq() +
+        stat_qq_line(colour="red") + 
+        labs(x ="Theoretical Quantiles", y="Sample Quantiles")
+  p4 <- apply_limits(p4, limQQ)
+  
+  # Arrange all plots into a grid and return the combined plot
+  return(grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2, top = title))
+}
+
+#Creates a correlation matrix for predictors in a lm model
+cor_matrix <- function(lm_model) {
+  model_data <- lm_model$model
+  
+  #Get names of predictors from model
+  predictors <- all.vars(update(formula(lm_model), . ~ . -1))
+
+  #Filter predictor columns  
+  pred_data <- model_data[predictors]
+
+  #Attempt to convert factors to numberic if not already
+  for(col in colnames(pred_data)) {
+    if(is.factor(pred_data[[col]])) {
+        pred_data[[col]] <- as.numeric(as.factor(pred_data[[col]]))
+    }
+  }  
+  
+  cor_matrix <- cor(pred_data, use = "complete.obs")  # using complete cases
+  return(cor_matrix)
+}
+
+
+glm_diag <- function(model, seed = 123) {
+  
+  # Retrieve the data used in the model
+  data <- model.frame(model)
+  outcome_var <- all.vars(formula(model))[1]  # Extracting the outcome variable from the formula
+
+  # Ensure that the outcome_var is correctly used as a variable name in data
+  if (!outcome_var %in% names(data)) {
+    stop("Outcome variable not found in the model's data frame.")
+  }
+  
+  # Set seed for reproducibility of the data split
+  set.seed(seed)
+
+  # Create data partitions
+  split <- createDataPartition(y = data[[outcome_var]], p = 0.7, list = FALSE)
+  training_set <- data[split, ]
+  test_set <- data[-split, ]
+
+  # Summarize the model (printing for immediate check, but can be stored or returned if needed)
+  print(summary(model))
+
+  # Predict and Evaluate on Test Set
+  predicted_probs_test <- predict(model, newdata=test_set, type = "response")
+  predicted_classes_test <- ifelse(predicted_probs_test > 0.5, 1, 0)
+
+  # Confusion Matrix
+  actual_classes_test <- factor(test_set[[outcome_var]], levels = c(0, 1))
+  predicted_classes_test <- factor(predicted_classes_test, levels = c(0, 1))
+  conf_mat_test <- confusionMatrix(predicted_classes_test, actual_classes_test)
+  print(conf_mat_test)
+
+  # ROC and AUC
+  roc_curve_test <- roc(response = actual_classes_test, predictor = predicted_probs_test)
+  plot(roc_curve_test, main="ROC Curve for Test Data", col="#1c61b6")
+  roc_auc_test <- auc(roc_curve_test)
+  print(paste("AUC for Test Data:", roc_auc_test))
+}
+
+print_summary_001 <- function(model, p_value = 0.001, predictors = NULL) {
+  # Extract the summary of the model
+  summary_model <- summary(model)
+
+  # Filter significant coefficients
+  significant_coefs <- summary_model$coefficients[summary_model$coefficients[, "Pr(>|t|)"] < p_value, ]
+  significant_coefs <- signif(significant_coefs, digits = 3)
+  # Print significant coefficients
+  cat("Significant Coefficients:\n")
+  print(significant_coefs)
+
+  # Print R-squared and Adjusted R-squared
+  cat("\nR-squared: ", summary_model$r.squared, "\n")
+  cat("Adjusted R-squared: ", summary_model$adj.r.squared, "\n")
+
+  # Print F-statistic
+  f_value <- summary_model$fstatistic[1]
+  f_df1 <- summary_model$fstatistic[2]
+  f_df2 <- summary_model$fstatistic[3]
+  f_pvalue <- pf(f_value, f_df1, f_df2, lower.tail = FALSE)
+  cat("F-statistic: ", f_value, " on ", f_df1, " and ", f_df2, " DF, p-value: ", f_pvalue, "\n")
+
+  # If predictors are provided, calculate and print the VIF for each predictor
+  if (!is.null(predictors) && length(predictors) > 0) {
+      vif_values <- vif(model)
+      cat("\nGVIF for provided predictors:\n")
+      # Loop through each predictor and print its VIF value
+      for (predictor in predictors) {
+          cat(predictor, ": ", vif_values[predictor, 1], "\n")
+      }
+  }
+}
+
+print_summary_0001 <- function(model, p_value = 0.0001, predictors = NULL) {
+  # Extract the summary of the model
+  summary_model <- summary(model)
+
+  # Filter significant coefficients
+  significant_coefs <- summary_model$coefficients[summary_model$coefficients[, "Pr(>|t|)"] < p_value, ]
+  significant_coefs <- signif(significant_coefs, digits = 3)
+  # Print significant coefficients
+  cat("Significant Coefficients:\n")
+  print(significant_coefs)
+
+  # Print R-squared and Adjusted R-squared
+  cat("\nR-squared: ", summary_model$r.squared, "\n")
+  cat("Adjusted R-squared: ", summary_model$adj.r.squared, "\n")
+
+  # Print F-statistic
+  f_value <- summary_model$fstatistic[1]
+  f_df1 <- summary_model$fstatistic[2]
+  f_df2 <- summary_model$fstatistic[3]
+  f_pvalue <- pf(f_value, f_df1, f_df2, lower.tail = FALSE)
+  cat("F-statistic: ", f_value, " on ", f_df1, " and ", f_df2, " DF, p-value: ", f_pvalue, "\n")
+
+  # If predictors are provided, calculate and print the VIF for each predictor
+  if (!is.null(predictors) && length(predictors) > 0) {
+      vif_values <- vif(model)
+      cat("\nGVIF for provided predictors:\n")
+      # Loop through each predictor and print its VIF value
+      for (predictor in predictors) {
+          cat(predictor, ": ", vif_values[predictor, 1], "\n")
+      }
+  }
+}
+```
+
+#MLR Analysis Code
+
+##Setup 
+
+```{r}
+#Import
+perf_port <- read.csv("student-por.csv", sep = ";")
+perf_math <- read.csv("student-mat.csv", sep = ";")
+
+# Factor data columns
+fcols <- c('school', 'sex', 'age', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu', 'Mjob', 'Fjob', 'traveltime', 'studytime', 'reason', 'guardian', 'schoolsup', 'famsup', 'paid', 'failures', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout', 'Dalc', 'Walc', 'health')
+
+perf_port[fcols] <- lapply(perf_port[fcols], factor)
+perf_math[fcols] <- lapply(perf_math[fcols], factor)
+
+#Setup Analysis Dataframes with Transformed Columns
+perf_tport <- perf_port
+perf_tport$absences <- sqrt(perf_port$absences)
+perf_tport$yes_absences <- ifelse(perf_tport$absences > 0, 1, 0)
+perf_tport$yes_absences <- as.factor(perf_tport$yes_absences) 
+
+perf_tmath <- perf_math
+perf_tmath$absences <- sqrt(perf_tmath$absences)
+perf_tmath$yes_absences <- ifelse(perf_tmath$absences > 0, 1, 0)
+perf_tmath$yes_absences <- as.factor(perf_tmath$yes_absences) 
+```
+
+###Portuguese MLR Model Analysis
+
+```{r}
+#Portuguese Full Model
+lm1_port <- lm(G3 ~ . - yes_absences, data = perf_tport) 
+summary(lm1_port)
+lm_diag(lm1_port)
+shapiro.test(rstandard(lm1_port))
+
+#Portuguese Reduced Model
+lm2_port <- step(lm(G3 ~ . - yes_absences, data = perf_tport), trace = 0)
+summary(lm2_port)
+lm_diag(lm2_port)
+shapiro.test(rstandard(lm1_port))
+vif(lm2_port) #G1 VIF is 4.19 in reduced model. Retain G1.
+
+#Absence as a Binary
+
+#Portuguese Full Model, Using Absence Binary
+lm1a_port <- lm(G3 ~ . - absences, data = perf_tport) 
+summary(lm1a_port)
+lm_diag(lm1a_port)
+shapiro.test(rstandard(lm1a_port))
+
+#Portuguese Reduced Model, Using Absence Binary
+lm2a_port <- step(lm(G3 ~ . - absences, data = perf_tport), trace = 0)
+summary(lm2a_port)
+lm_diag(lm2a_port)
+shapiro.test(rstandard(lm2a_port))
+```
+
+###Math MLR Model Analysis
+```{r}
+#Math
+lm1_math <- lm(G3 ~ . - yes_absences, data = perf_tmath) 
+summary(lm1_math)
+lm_diag(lm1_math)
+shapiro.test(rstandard(lm1_math))
+
+#Math Reduced Model
+lm2_math <- step(lm(G3 ~ . - yes_absences, data = perf_tmath), trace = 0)
+summary(lm2_math)
+lm_diag(lm2_math)
+shapiro.test(rstandard(lm1_math))
+vif(lm2_math) #G1 VIF is 4.19 in reduced model. Retain G1.
+
+#Absence as a Binary
+
+#Math Full Model, Using Absence Binary
+lm1a_math <- lm(G3 ~ . - absences, data = perf_tmath) 
+summary(lm1a_math)
+lm_diag(lm1a_math)
+shapiro.test(rstandard(lm1a_math))
+
+#Math Reduced Model, Using Absence Binary
+lm2a_math <- step(lm(G3 ~ . - absences, data = perf_tmath), trace = 0)
+summary(lm2a_math)
+lm_diag(lm2a_math)
+shapiro.test(rstandard(lm2a_math))
+```
+
+##G3 Transformation attempts
+
+###Log Transformations
+```{r}
+#Setup
+perf_lport <- perf_tport
+perf_lport$lG1 <- log(perf_lport$G1+1)
+perf_lport$lG2 <- log(perf_lport$G2+1)
+perf_lport$lG3 <- log(perf_lport$G3+1)
+
+perf_lmath <- perf_tmath
+perf_lmath$lG1 <- log(perf_lmath$G1+1)
+perf_lmath$lG2 <- log(perf_lmath$G2+1)
+perf_lmath$lG3 <- log(perf_lmath$G3+1)
+
+#Portuguese
+lm_log_port <- lm(lG3 ~ . -G3 - lG1 - lG2 - yes_absences, data = perf_lport)
+lm_diag(lm_log_port)
+
+lm2_log_port <- step(lm_log_port, trace = 0)
+lm_diag(lm2_log_port)
+
+#Math
+lm_log_math <- lm(lG3 ~ . -G3 - lG1 - lG2 - yes_absences, data = perf_lmath)
+lm_diag(lm_log_math)
+
+lm2_log_math <- step(lm_log_math, trace = 0)
+lm_diag(lm2_log_math)
+```
+
+###BoxCox Transformations
+```{r}
+#Portuguese Box Cox
+bport <- boxcox(G3+exp(-6) ~ ., data = perf_tport)
+lport <-ba$x[which.max(bport$y)]
+
+#Create separate BoxCox dataframe with BoxCox G3
+perf_bport <- perf_tport
+perf_bport$tG3 <- (perf_bport$G3^lport/lport)
+
+lm_box_port <- lm(tG3 ~ . - G3 - yes_absences, data = perf_bport) 
+lm_diag(lm_box_port)
+
+#Math Box Cox
+bmath <- boxcox(G3+exp(-6) ~ ., data = perf_tmath)
+lmath <-ba$x[which.max(bmath$y)]
+
+#Create separate BoxCox dataframe with BoxCox G3
+perf_bmath <- perf_tmath
+perf_bmath$tG3 <- (perf_bmath$G3^lmath/lmath)
+
+lm_box_math <- lm(tG3 ~ . - G3 - yes_absences, data = perf_bmath) 
+lm_diag(lm_box_math)
+```
+
+##Subset G3 == 0s Models
+```{r}
+#Setup removal of G3 == 0
+perf_port_remove <- subset(perf_tport, G3 != 0)
+perf_math_remove <- subset(perf_tmath, G3 != 0)
+```
+
+
+### Portuguese MLR Models, Post G3 Removal
+```{r}
+#Portuguese Full Model
+lm1_port_remove <- lm(G3 ~ . - yes_absences, data = perf_port_remove) 
+summary(lm1_port_remove)
+lm_diag(lm1_port_remove)
+shapiro.test(rstandard(lm1_port_remove))
+vif(lm1_port_remove) #Issues with multi-collinearity with G1 and G2 with removal of biasing G3s. 
+
+#Portuguese Reduced Model
+lm2_port_remove <- step(lm(G3 ~ . - yes_absences, data = perf_port_remove), trace = 0)
+summary(lm2_port_remove)
+lm_diag(lm2_port_remove)
+shapiro.test(rstandard(lm2_port_remove))
+vif(lm2_port_remove) #G1 VIF is 4.79 in reduced model. Retain G1 and G2. Notably stronger without G3 biasers. 
+
+#Removal of G1 drops Adjusted R-squared by 0.0078, change of predictors
+lm3_port_remove <- step(lm(G3 ~ . - yes_absences - G1, data = perf_port_remove), trace = 0)
+summary(lm3_port_remove)
+lm_diag(lm3_port_remove)
+shapiro.test(rstandard(lm3_port_remove))
+vif(lm3_port_remove)
+```
+
+###Math MLR Models, Post G3 Removal
+```{r}
+#Math Full Model
+lm1_math_remove <- lm(G3 ~ . - yes_absences, data = perf_math_remove) 
+summary(lm1_math_remove)
+lm_diag(lm1_math_remove)
+shapiro.test(rstandard(lm1_math_remove))
+vif(lm1_math_remove) #Increased issues with multi-collinearity with G1 and G2 with removal of biasing G3s. 
+
+#Math Reduced Model
+lm2_math_remove <- step(lm(G3 ~ . - yes_absences, data = perf_math_remove), trace = 0)
+summary(lm2_math_remove)
+lm_diag(lm2_math_remove)
+shapiro.test(rstandard(lm2_math_remove))
+vif(lm2_math_remove) 
+
+#G1 and G2 VIF is 5.72 in reduced model. Significant multi-collinearity issues with G1 and G2. Remove G1
+
+#Removal of G1 fixes VIF issues. 
+lm3_math_remove <- step(lm(G3 ~ . - yes_absences - G1, data = perf_math_remove), trace = 0)
+summary(lm3_math_remove)
+vif(lm3_math_remove)
+```
+
+###Portuguese Interaction Terms - Post-G3 Removal
+```{r}
+
+#Adjusted R-squared for Portuguese= 0.8853 versus (0.8867) (lm2) or 0.8789(lm3) 
+lm1_int_port <- lm(formula = G3 ~ (school + sex + age + failures + schoolsup + 
+    higher + G2)^2, data = perf_port_remove)
+lm2_int_port <- step(lm1_int_port, trace = 0)
+summary(lm2_int_port)
+print_summary(lm2_int_port)
+AIC(lm2_port_remove, lm2_int_port) #Worse AIC with addition of interaction terms
+```
+###Math Interaction Terms - Post G3 Removal
+```{r}
+lm1_int_math <- lm(formula = G3 ~ (traveltime + schoolsup + famrel + goout + health + 
+    G2)^2, data = perf_math_remove)
+lm2_int_math <- step(lm1_int_math, trace = 0)
+summary(lm2_int_math)
+print_summary(lm2_int_math)
+AIC(lm2_math_remove, lm2_int_math) #slightly lower AIC (869.45 vs 861.77). 
+```
+
+##Using GPA (Average of 3 Trimesters) as Response, G3 == 0 not included
+
+```{r}
+#Setup
+perf_avg_port <- perf_port_remove
+perf_avg_port$GPA <- (perf_port_remove$G1 + perf_port_remove$G2 + perf_port_remove$G3)/3
+
+perf_avg_math <- perf_math_remove
+perf_avg_math$GPA <- (perf_math_remove$G1 + perf_math_remove$G2 + perf_math_remove$G3)/3
+```
+
+###Portuguese GPA MLR Models
+```{r}
+#Portuguese GPA Full Model
+lm1_avg_port <- lm(GPA ~ (. - G1 - G2 - G3 - yes_absences), data = perf_avg_port)
+summary(lm1_avg_port)
+lm_diag(lm1_avg_port)
+shapiro.test(rstandard(lm1_avg_port))
+vif(lm1_avg_port)
+
+#Portuguese GPA Reduced Model
+lm2_avg_port <- step(lm1_avg_port, trace = 0)
+summary(lm2_avg_port)
+lm_diag(lm2_avg_port)
+shapiro.test(rstandard(lm2_avg_port))
+vif(lm2_avg_port)
+```
+
+###Math GPA MLR Models
+
+```{r}
+#Math GPA Full Model
+lm1_avg_math <- lm(GPA ~ (. - G1 - G2 - G3 - yes_absences), data = perf_avg_math)
+summary(lm1_avg_math)
+lm_diag(lm1_avg_math)
+shapiro.test(rstandard(lm1_avg_math))
+vif(lm1_avg_math)
+
+#Math GPA Reduced Model
+lm2_avg_math <- step(lm1_avg_math, trace = 0)
+summary(lm2_avg_math)
+lm_diag(lm2_avg_math)
+shapiro.test(rstandard(lm2_avg_math))
+vif(lm2_avg_math)
+```
+
+###Portuguese GPA Interaction Terms
+
+```{r}
+#Predictors taken from lm2_avg_port
+lm3_avg_port <- lm(formula = GPA ~ (school + sex + age + Medu + Fjob + reason + 
+    guardian + traveltime + studytime + failures + schoolsup + 
+    famsup + activities + higher + romantic + goout + absences)^2, data = perf_avg_port)
+summary(lm3_avg_port) #Adjusted R-squared of 0.3694
+
+#AIC - Will take a long time, thinks most interactions significant. 
+#Large increase in r-squared to 0.4881 from 0.3773 (lm2). 
+#Unable to reliably pull inferences due to sheer number of interaction terms. 
+lm4_avg_port <- step(lm3_avg_port, trace = 0)
+summary(lm4_avg_port)
+
+#BIC - Increase in r-squared to 0.6327 from 0.3694 
+lm5_avg_port <- step(lm3_avg_port, trace =0, k = log(nrow(perf_avg_port)))
+summary(lm5_avg_port)
+
+#AIC for interaction terms is lower (2762 vs 2218, 2269)
+AIC(lm2_avg_port, lm4_avg_port, lm5_avg_port)
+```
+
+###Math GPA Interaction Terms
+
+```{r}
+#Predictors taken from lm2_avg_math
+lm3_avg_math <- lm(formula = GPA ~ (school + sex + Mjob + Fjob + guardian + studytime + 
+    failures + schoolsup + famsup + goout + health + absences)^2, data = perf_avg_math)
+summary(lm3_avg_math) #Adjusted R-squared with all interaction terms: 0.4418
+lm_diag(lm3_avg_math)
+shapiro.test(rstandard(lm3_avg_math))
+print_summary_001(lm3_avg_math)
+
+#AIC - Will take a long time, thinks most interactions significant. 
+#Large increase in r-squared to 0.6736 from 0.2892 (lm2). 
+#Unable to reliably pull inferences due to sheer number of interaction terms
+lm4_avg_math <- step(lm3_avg_math, trace = 0)
+summary(lm4_avg_math)
+print_summary_0001(lm4_avg_math)
+
+#BIC - Roughly same as AIC, large increase in r-squared to 0.6736 
+lm5_avg_math <- step(lm3_avg_math, trace =0, k = log(nrow(perf_avg_math)))
+summary(lm5_avg_math)
+print_summary_0001(lm5_avg_math)
+
+#AIC for interaction terms is much, much lower (1733 vs 1176.61/1182.139)
+
+AIC(lm2_avg_math, lm4_avg_math, lm5_avg_math)
+```
+

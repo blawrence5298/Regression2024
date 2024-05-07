@@ -1,0 +1,52 @@
+---
+title: "Final_Project_Paper"
+author: "Ben Lawrence"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+source("setup.R")
+```
+
+::: {align="center"}
+## Data Description
+:::
+
+We obtained the two datasets from the UC Irvine Machine Learning Repository (UCIMLR). They were donated by authors, Paulo Cortez and Alice Silva, of the article “Using Data Mining to Predict Secondary School Student Performance”. The authors belong to the University of Minho in Portugal and were interested in model efficacy in the prediction of the academic performance of Portuguese secondary students. 
+
+Each dataset aligns with a single subject, Portuguese and Mathematics, collected from two Portuguese secondary schools. The Mathematics dataset contains 395 observations and the Portuguese contains 649. They both have 33 columns.  
+
+\
+Three of the columns are trimester grades of students with the third trimester grade **G3** taken as the student’s final grade. We will take this as our response and the previous two trimester grades as predictors. The remaining predictors consist of demographic survey data acquired for each student observation. These include number of absences, number of previous class failures, occupation of mother/father, etc. Most of the variables are categorical, taking ordinal and nominative values. There are also variables that take on binary and integer values. We will begin our analysis by visualizing the distribution of **G3** for the Mathematics and Portuguese data set. 
+
+```{r}
+# Histogram for math_perf data frame
+p1 <- ggplot(data = math_perf, aes(x = G3)) +
+      geom_histogram(fill = "blue", alpha = 0.5, binwidth = 1.1) +
+      xlim(-1,21) +
+      ylim(0,110) +
+      labs(title = "Mathematics") +
+      theme(plot.title = element_text(hjust = 0.5))  # Center the title under the plot
+
+# Histogram for port_perf data frame
+p2 <- ggplot(data = port_perf, aes(x = G3)) +
+      geom_histogram(fill = "red", alpha = 0.5, binwidth = 1.1) +
+      xlim(-1,21) +
+      ylim(0,110) +
+      labs(title = "Portuguese") +
+      theme(plot.title = element_text(hjust = 0.5))  # Center the title under the plot
+
+grid.arrange(p1, p2, ncol = 2, top = "Figure 1: Histogram of 3rd Trimester Grades by Subject")
+```
+
+Figure 2 below provides examples of the predictors available in our dataset. (Full list available HERE) We will use all of these in our full linear model. Before creating such a model however, we will take time to analyze the relationship between G1, G2, absences, and failures with the response G3 to see if transformations of these variables are warranted. The other variables are categorical and do not offer obvious visual correlations with G3 that can inform our transformation choices.
+
+```{r}
+predictors <- read.csv("predictors.csv")
+
+table <- kable(predictors, caption = "Figure 2: Available Predictors in Dataset", format = "html")
+styled_table <- kable_styling(table, full_width = F, position = "center")
+column_spec(styled_table, 1:ncol(predictors), border_right = TRUE, width = "4em")
+```
